@@ -1,0 +1,900 @@
+Exam Guide (CLF-C02)
+AWS Certified Cloud Practitioner
+Copyright © 2026 Amazon Web Services, Inc. and/or its affiliates. All rights reserved.
+
+-- 1 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+AWS Certified Cloud Practitioner: Exam Guide (CLF-C02)
+Copyright © 2026 Amazon Web Services, Inc. and/or its affiliates. All rights reserved.
+Amazon's trademarks and trade dress may not be used in connection with any product or service
+that is not Amazon's, in any manner that is likely to cause confusion among customers, or in any
+manner that disparages or discredits Amazon. All other trademarks not owned by Amazon are
+the property of their respective owners, who may or may not be affiliated with, connected to, or
+sponsored by Amazon.
+
+-- 2 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+Table of Contents
+AWS Certified Cloud Practitioner (CLF-C02) .................................................................................. 1
+Introduction ................................................................................................................................................... 1
+Target Candidate Description .................................................................................................................... 2
+Recommended AWS knowledge .......................................................................................................... 2
+Job tasks that are out of scope for the target candidate ............................................................... 2
+Exam Content ................................................................................................................................................ 2
+Unscored Content ................................................................................................................................... 3
+Exam Results ............................................................................................................................................ 3
+Content Outline ............................................................................................................................................ 3
+Service References ........................................................................................................................................ 4
+Content Domain 1: Cloud Concepts ......................................................................................................... 4
+Task Statement 1.1: Define the benefits of the AWS Cloud. ......................................................... 4
+Task Statement 1.2: Identify design principles of the AWS Cloud. ............................................... 5
+Task Statement 1.3: Understand the benefits of and strategies for migration to the AWS
+Cloud. ......................................................................................................................................................... 5
+Task Statement 1.4: Understand concepts of cloud economics. ................................................... 5
+Content Domain 2: Security and Compliance ........................................................................................ 6
+Task Statement 2.1: Understand the AWS shared responsibility model. ..................................... 6
+Task Statement 2.2: Understand AWS Cloud security, governance, and compliance
+concepts. .................................................................................................................................................... 7
+Task Statement 2.3: Identify AWS access management capabilities. ........................................... 7
+Task Statement 2.4: Identify components and resources for security. ......................................... 8
+Content Domain 3: Cloud Technology and Services ............................................................................. 8
+Task Statement 3.1: Define methods of deploying and operating in the AWS Cloud. .............. 9
+Task Statement 3.2: Define the AWS global infrastructure. ........................................................... 9
+Task Statement 3.3: Identify AWS compute services. ................................................................... 10
+Task Statement 3.4: Identify AWS database services. ................................................................... 10
+Task Statement 3.5: Identify AWS network services. .................................................................... 11
+Task Statement 3.6: Identify AWS storage services. ..................................................................... 11
+Task Statement 3.7: Identify AWS artificial intelligence and machine learning (AI/ML)
+services and analytics services. .......................................................................................................... 12
+Task Statement 3.8: Identify services from other in-scope AWS service categories. ............... 12
+Content Domain 4: Billing, Pricing, and Support ................................................................................ 13
+Task Statement 4.1: Compare AWS pricing models. ..................................................................... 13
+iii
+
+-- 3 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+Task Statement 4.2: Understand resources for billing, budget, and cost management. ........ 14
+Task Statement 4.3: Identify AWS technical resources and AWS Support options. ................. 14
+Technologies and Concepts ..................................................................................................................... 15
+In-Scope AWS Services .............................................................................................................................. 16
+Analytics .................................................................................................................................................. 17
+Application Integration ........................................................................................................................ 18
+Business Applications ........................................................................................................................... 18
+Cloud Financial Management ............................................................................................................. 18
+Compute .................................................................................................................................................. 18
+Containers ............................................................................................................................................... 18
+Customer Enablement ......................................................................................................................... 19
+Database ................................................................................................................................................. 19
+Developer Tools ..................................................................................................................................... 19
+End User Computing ............................................................................................................................ 19
+Frontend Web and Mobile .................................................................................................................. 19
+Internet of Things (IoT) ....................................................................................................................... 20
+Machine Learning .................................................................................................................................. 20
+Management and Governance ........................................................................................................... 20
+Migration and Transfer ........................................................................................................................ 21
+Networking and Content Delivery ..................................................................................................... 21
+Security, Identity, and Compliance .................................................................................................... 21
+Serverless ................................................................................................................................................ 22
+Storage .................................................................................................................................................... 22
+Out-of-Scope AWS Services ..................................................................................................................... 23
+Analytics .................................................................................................................................................. 23
+Application Integration ........................................................................................................................ 24
+Business Applications ........................................................................................................................... 24
+Compute .................................................................................................................................................. 24
+Cost Management ................................................................................................................................. 24
+Customer Enablement ......................................................................................................................... 24
+Cloud Financial Management ............................................................................................................. 24
+Database ................................................................................................................................................. 25
+Developer Tools ..................................................................................................................................... 25
+Game Tech .............................................................................................................................................. 25
+Internet of Things (IoT) ....................................................................................................................... 25
+Machine Learning .................................................................................................................................. 25
+iv
+
+-- 4 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+Management and Governance ........................................................................................................... 26
+Media Services ....................................................................................................................................... 26
+Migration and Transfer ........................................................................................................................ 26
+Networking and Content Delivery ..................................................................................................... 26
+Security, Identity, and Compliance .................................................................................................... 27
+Robotics ................................................................................................................................................... 27
+Storage .................................................................................................................................................... 27
+Survey ........................................................................................................................................................... 27
+v
+
+-- 5 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+AWS Certified Cloud Practitioner (CLF-C02)
+The AWS Certified Cloud Practitioner (CLF-C02) exam is intended for individuals who can
+effectively demonstrate overall knowledge of the AWS Cloud, independent of a specific job role.
+Topics
+• Introduction
+• Target Candidate Description
+• Exam Content
+• Content Outline
+• Service References
+• Content Domain 1: Cloud Concepts
+• Content Domain 2: Security and Compliance
+• Content Domain 3: Cloud Technology and Services
+• Content Domain 4: Billing, Pricing, and Support
+• Technologies and Concepts
+• In-Scope AWS Services
+• Out-of-Scope AWS Services
+• Survey
+Introduction
+The AWS Certified Cloud Practitioner (CLF-C02) exam is intended for individuals who can
+effectively demonstrate overall knowledge of the AWS Cloud, independent of a specific job role.
+The exam also validates a candidate's ability to complete the following tasks:
+• Explain the value of the AWS Cloud.
+• Understand and explain the AWS shared responsibility model.
+• Understand the AWS Well-Architected Framework.
+• Understand security best practices.
+• Understand AWS Cloud costs, economics, and billing practices.
+Introduction 1
+
+-- 6 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• Describe and position the core AWS services, including compute, network, database, and storage
+services.
+• Identify AWS services for common use cases.
+Target Candidate Description
+The target candidate has up to 6 months of exposure to AWS Cloud design, implementation, and/
+or operations. The candidate might be in the early stages of pursuing an AWS Cloud career or the
+candidate might work with people in AWS Cloud roles.
+Recommended AWS knowledge
+The target candidate should have AWS knowledge in the following areas:
+• AWS Cloud concepts
+• Security and compliance in the AWS Cloud
+• Core AWS services
+• Economics of the AWS Cloud
+Job tasks that are out of scope for the target candidate
+The following list contains job tasks that the target candidate is not expected to be able to
+perform. This list is non-exhaustive. These tasks are out of scope for the exam:
+• Coding
+• Designing cloud architecture
+• Troubleshooting
+• Implementation
+• Load and performance testing
+Exam Content
+There are two types of questions on the exam:
+• Multiple choice: Has one correct response and three incorrect responses (distractors)
+Target Candidate Description 2
+
+-- 7 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• Multiple response: Has two or more correct responses out of five or more response options
+Select one or more responses that best complete the statement or answer the question.
+Distractors, or incorrect answers, are response options that a candidate with incomplete knowledge
+or skill might choose. Distractors are generally plausible responses that match the content area.
+Unanswered questions are scored as incorrect; there is no penalty for guessing. The exam includes
+50 questions that affect your score.
+Unscored Content
+The exam includes 15 unscored questions that do not affect your score. AWS collects information
+about performance on these unscored questions to evaluate these questions for future use as
+scored questions. These unscored questions are not identified on the exam.
+Exam Results
+The AWS Certified Cloud Practitioner (CLF-C02) exam has a pass or fail designation. The exam is
+scored against a minimum standard established by AWS professionals who follow certification
+industry best practices and guidelines.
+Your results for the exam are reported as a scaled score of 100–1,000. The minimum passing score
+is 700. Your score shows how you performed on the exam as a whole and whether you passed.
+Scaled scoring models help equate scores across multiple exam forms that might have slightly
+different difficulty levels.
+Your score report could contain a table of classifications of your performance at each section level.
+The exam uses a compensatory scoring model, which means that you do not need to achieve a
+passing score in each section. You need to pass only the overall exam.
+Each section of the exam has a specific weighting, so some sections have more questions than
+other sections have. The table of classifications contains general information that highlights your
+strengths and weaknesses. Use caution when you interpret section-level feedback.
+Content Outline
+This exam guide includes weightings, content domains, and task statements for the exam. This
+guide does not provide a comprehensive list of the content on the exam. However, additional
+context for each task statement is available to help you prepare for the exam.
+Unscored Content 3
+
+-- 8 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+The exam has the following content domains and weightings:
+• Content Domain 1: Cloud Concepts (24% of scored content)
+• Content Domain 2: Security and Compliance (30% of scored content)
+• Content Domain 3: Cloud Technology and Services (34% of scored content)
+• Content Domain 4: Billing, Pricing, and Support (12% of scored content)
+Service References
+The following sections provide detailed information about AWS services, technologies, and
+concepts relevant to this certification exam:
+• In-Scope AWS Services
+• Out-of-Scope AWS Services
+• Technologies and Concepts
+Content Domain 1: Cloud Concepts
+Domain 1 covers Cloud Concepts and represents 24% of the scored content on the exam.
+Tasks
+• Task Statement 1.1: Define the benefits of the AWS Cloud.
+• Task Statement 1.2: Identify design principles of the AWS Cloud.
+• Task Statement 1.3: Understand the benefits of and strategies for migration to the AWS Cloud.
+• Task Statement 1.4: Understand concepts of cloud economics.
+Task Statement 1.1: Define the benefits of the AWS Cloud.
+Knowledge of:
+• Value proposition of the AWS Cloud
+Skills in:
+Service References 4
+
+-- 9 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• Understanding the benefits of global infrastructure (for example, speed of deployment, global
+reach)
+• Understanding the advantages of high availability, elasticity, and agility
+Task Statement 1.2: Identify design principles of the AWS Cloud.
+Knowledge of:
+• AWS Well-Architected Framework
+Skills in:
+• Understanding the pillars of the Well-Architected Framework (for example, operational
+excellence, security, reliability, performance efficiency, cost optimization, sustainability)
+• Identifying differences between the pillars of the Well-Architected Framework
+Task Statement 1.3: Understand the benefits of and strategies for
+migration to the AWS Cloud.
+Knowledge of:
+• Cloud adoption strategies
+• Resources to support the cloud migration journey
+Skills in:
+• Understanding the components of the AWS Cloud Adoption Framework (AWS CAF) (for example,
+reduced business risk; improved environmental, social, and governance [ESG] performance;
+increased revenue; increased operational efficiency)
+• Identifying appropriate migration strategies (for example, database replication)
+Task Statement 1.4: Understand concepts of cloud economics.
+Knowledge of:
+• Aspects of cloud economics
+Task Statement 1.2: Identify design principles of the AWS Cloud. 5
+
+-- 10 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• Cost savings of moving to the cloud
+Skills in:
+• Understanding the role of fixed costs compared with variable costs
+• Understanding costs that are associated with on-premises environments
+• Understanding the differences between licensing strategies (for example, Bring Your Own
+License [BYOL] model compared with included licenses)
+• Understanding the concept of rightsizing
+• Identifying benefits of automation
+• Understanding the economies of scale (for example, cost savings)
+Content Domain 2: Security and Compliance
+Domain 2 covers Security and Compliance and represents 30% of the scored content on the exam.
+Tasks
+• Task Statement 2.1: Understand the AWS shared responsibility model.
+• Task Statement 2.2: Understand AWS Cloud security, governance, and compliance concepts.
+• Task Statement 2.3: Identify AWS access management capabilities.
+• Task Statement 2.4: Identify components and resources for security.
+Task Statement 2.1: Understand the AWS shared responsibility model.
+Knowledge of:
+• AWS shared responsibility model
+Skills in:
+• Recognizing the components of the AWS shared responsibility model
+• Describing the customer's responsibilities on AWS
+• Describing AWS responsibilities
+Content Domain 2: Security and Compliance 6
+
+-- 11 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• Describing responsibilities that the customer and AWS share
+• Describing how AWS responsibilities and customer responsibilities can shift, depending on the
+service used (for example, Amazon RDS, AWS Lambda, Amazon EC2)
+Task Statement 2.2: Understand AWS Cloud security, governance, and
+compliance concepts.
+Knowledge of:
+• AWS compliance and governance concepts
+• Benefits of cloud security (for example, encryption)
+• Where to capture and locate logs that are associated with cloud security
+Skills in:
+• Identifying where to find AWS compliance information (for example, AWS Artifact)
+• Understanding compliance needs among geographic locations or industries (for example, AWS
+compliance)
+• Describing how customers secure resources on AWS (for example, Amazon Inspector, AWS
+Security Hub, Amazon GuardDuty, AWS Shield)
+• Identifying encryption options (for example, encryption in transit, encryption at rest)
+• Recognizing services that aid in governance and compliance (for example, monitoring with
+Amazon CloudWatch; auditing with AWS CloudTrail and AWS Config; reporting with access
+reports)
+• Recognizing compliance requirements that vary among AWS services
+Task Statement 2.3: Identify AWS access management capabilities.
+Knowledge of:
+• Identity and access management (for example, AWS Identity and Access Management [IAM])
+• Importance of protecting the AWS root user account
+• Principle of least privilege
+• AWS IAM Identity Center
+Task Statement 2.2: Understand AWS Cloud security, governance, and compliance concepts. 7
+
+-- 12 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+Skills in:
+• Understanding access keys, password policies, and credential storage (for example, AWS Secrets
+Manager, AWS Systems Manager)
+• Identifying authentication methods in AWS (for example, multi-factor authentication [MFA], IAM
+Identity Center, cross-account IAM roles)
+• Defining groups, users, custom policies, and managed policies in compliance with the principle of
+least privilege
+• Identifying tasks that only the account root user can perform
+• Understanding which methods can achieve root user protection
+• Understanding the types of identity management (for example, federated)
+Task Statement 2.4: Identify components and resources for security.
+Knowledge of:
+• Security capabilities that AWS provides
+• Security-related documentation that AWS provides
+Skills in:
+• Describing AWS security features and services (for example, AWS WAF, AWS Firewall Manager,
+AWS Shield, Amazon GuardDuty)
+• Understanding that third-party security products are available from AWS Marketplace
+• Identifying where AWS security information is available (for example, AWS Knowledge Center,
+AWS Security Center, AWS Security Blog)
+• Understanding the use of AWS services for identifying security issues (for example, AWS Trusted
+Advisor)
+Content Domain 3: Cloud Technology and Services
+Domain 3 covers Cloud Technology and Services and represents 34% of the scored content on the
+exam.
+Tasks
+Task Statement 2.4: Identify components and resources for security. 8
+
+-- 13 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• Task Statement 3.1: Define methods of deploying and operating in the AWS Cloud.
+• Task Statement 3.2: Define the AWS global infrastructure.
+• Task Statement 3.3: Identify AWS compute services.
+• Task Statement 3.4: Identify AWS database services.
+• Task Statement 3.5: Identify AWS network services.
+• Task Statement 3.6: Identify AWS storage services.
+• Task Statement 3.7: Identify AWS artificial intelligence and machine learning (AI/ML) services
+and analytics services.
+• Task Statement 3.8: Identify services from other in-scope AWS service categories.
+Task Statement 3.1: Define methods of deploying and operating in the
+AWS Cloud.
+Knowledge of:
+• Various ways of provisioning and operating in the AWS Cloud
+• Various ways to access AWS services
+• Types of cloud deployment models
+Skills in:
+• Deciding between options such as programmatic access (for example, APIs, SDKs, CLI), the AWS
+Management Console, and infrastructure as code (IaC)
+• Evaluating requirements to determine whether to use one-time operations or repeatable
+processes
+• Identifying deployment models (for example, cloud, hybrid, on-premises)
+Task Statement 3.2: Define the AWS global infrastructure.
+Knowledge of:
+• AWS Regions, Availability Zones, and edge locations
+• High availability
+Task Statement 3.1: Define methods of deploying and operating in the AWS Cloud. 9
+
+-- 14 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• Use of multiple Regions
+• Benefits of edge locations
+Skills in:
+• Describing relationships among Regions, Availability Zones, and edge locations
+• Describing how to achieve high availability by using multiple Availability Zones
+• Recognizing that Availability Zones do not share single points of failure
+• Describing when to use multiple Regions (for example, disaster recovery, business continuity, low
+latency for end users, data sovereignty)
+Task Statement 3.3: Identify AWS compute services.
+Knowledge of:
+• AWS compute services
+Skills in:
+• Recognizing the appropriate use of various Amazon EC2 instance types (for example, compute
+optimized, storage optimized)
+• Recognizing the appropriate use of various container options (for example, Amazon Elastic
+Container Service [Amazon ECS], Amazon Elastic Kubernetes Service [Amazon EKS])
+• Recognizing the appropriate use of various serverless compute options (for example, AWS
+Fargate, AWS Lambda)
+• Recognizing that auto scaling provides elasticity
+• Identifying the purposes of load balancers
+Task Statement 3.4: Identify AWS database services.
+Knowledge of:
+• AWS database services
+• Database migration
+Task Statement 3.3: Identify AWS compute services. 10
+
+-- 15 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+Skills in:
+• Deciding when to use EC2 hosted databases or AWS managed databases
+• Identifying relational databases (for example, Amazon RDS, Amazon Aurora)
+• Identifying NoSQL databases (for example, Amazon DynamoDB)
+• Identifying memory-based databases (for example, Amazon ElastiCache)
+• Identifying database migration tools (for example, AWS Database Migration Service [AWS DMS],
+AWS Schema Conversion Tool [AWS SCT])
+Task Statement 3.5: Identify AWS network services.
+Knowledge of:
+• AWS network services
+Skills in:
+• Identifying the components of a VPC (for example, subnets, gateways)
+• Understanding security in a VPC (for example, network ACLs, security groups, Amazon Inspector)
+• Understanding the purpose of Amazon Route 53
+• Identifying network connectivity options to AWS (for example, AWS VPN, AWS Direct Connect)
+Task Statement 3.6: Identify AWS storage services.
+Knowledge of:
+• AWS storage services
+Skills in:
+• Identifying the uses for object storage
+• Recognizing the differences in Amazon S3 storage classes
+• Identifying block storage solutions (for example, Amazon Elastic Block Store [Amazon EBS],
+instance store)
+• Identifying file services (for example, Amazon Elastic File System [Amazon EFS], Amazon FSx)
+Task Statement 3.5: Identify AWS network services. 11
+
+-- 16 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• Identifying cached file systems (for example, AWS Storage Gateway)
+• Understanding use cases for lifecycle policies
+• Understanding use cases for AWS Backup
+Task Statement 3.7: Identify AWS artificial intelligence and machine
+learning (AI/ML) services and analytics services.
+Knowledge of:
+• AWS AI/ML services
+• AWS analytics services
+Skills in:
+• Understanding AI/ML services and the tasks that they accomplish (for example, Amazon
+SageMaker AI, Amazon Lex)
+• Identifying the services for data analytics (for example, Amazon Athena, Amazon Kinesis, AWS
+Glue, Amazon Quick Sight)
+Task Statement 3.8: Identify services from other in-scope AWS service
+categories.
+Knowledge of:
+• Application integration services of Amazon EventBridge, Amazon Simple Notification Service
+(Amazon SNS), and Amazon Simple Queue Service (Amazon SQS)
+• Business application services of Amazon Connect and Amazon Simple Email Service (Amazon
+SES)
+• Customer enablement services (for example, AWS Support)
+• Developer tool services and capabilities (for example, AWS CodeBuild, AWS CodePipeline, and
+AWS X-Ray)
+• End-user computing services of Amazon AppStream 2.0, Amazon WorkSpaces, and Amazon
+WorkSpaces Secure Browser
+• Frontend web and mobile services of AWS Amplify
+Task Statement 3.7: Identify AWS artificial intelligence and machine learning (AI/ML) services and
+analytics services. 12
+
+-- 17 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• IoT services (for example, AWS IoT Core)
+Skills in:
+• Choosing the appropriate service to deliver messages and to send alerts and notifications
+• Choosing the appropriate service to meet business application needs
+• Choosing the appropriate option for business support assistance
+• Identifying the tools to develop, deploy, and troubleshoot applications
+• Identifying the services that can present the output of virtual machines (VMs) on end-user
+machines
+• Identifying the services that can create and deploy frontend and mobile services
+• Identifying the services that manage IoT devices
+Content Domain 4: Billing, Pricing, and Support
+Domain 4 covers Billing, Pricing, and Support and represents 12% of the scored content on the
+exam.
+Tasks
+• Task Statement 4.1: Compare AWS pricing models.
+• Task Statement 4.2: Understand resources for billing, budget, and cost management.
+• Task Statement 4.3: Identify AWS technical resources and AWS Support options.
+Task Statement 4.1: Compare AWS pricing models.
+Knowledge of:
+• Compute purchasing options (for example, On-Demand Instances, Reserved Instances, Spot
+Instances, AWS Savings Plans, Dedicated Hosts, Dedicated Instances, Capacity Reservations)
+• Storage options and tiers
+Skills in:
+• Identifying when to use various compute purchasing options
+Content Domain 4: Billing, Pricing, and Support 13
+
+-- 18 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• Describing Reserved Instance flexibility
+• Describing Reserved Instance behavior in AWS Organizations
+• Understanding incoming data transfer costs and outgoing data transfer costs (for example, from
+one AWS Region to another Region, within the same Region)
+• Understanding pricing options for various storage options and tiers
+Task Statement 4.2: Understand resources for billing, budget, and cost
+management.
+Knowledge of:
+• Billing support and information
+• Pricing information for AWS services
+• AWS Organizations
+• AWS cost allocation tags
+Skills in:
+• Understanding the appropriate uses and capabilities of AWS Budgets and AWS Cost Explorer
+• Understanding the appropriate uses and capabilities of AWS Pricing Calculator
+• Understanding AWS Organizations consolidated billing and allocation of costs
+• Understanding various types of cost allocation tags and their relation to billing reports (for
+example, AWS Cost and Usage Report)
+Task Statement 4.3: Identify AWS technical resources and AWS Support
+options.
+Knowledge of:
+• Resources and documentation available on official AWS websites
+• AWS Support plans
+• Role of the AWS Partner Network, including independent software vendors and system
+integrators
+Task Statement 4.2: Understand resources for billing, budget, and cost management. 14
+
+-- 19 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• AWS Support Center
+Skills in:
+• Locating AWS whitepapers, blogs, and documentation on official AWS websites
+• Identifying and locating AWS technical resources (for example, AWS Prescriptive Guidance, AWS
+Knowledge Center, AWS re:Post)
+• Identifying AWS Support options for AWS customers (for example, customer service and
+communities, Basic Support, AWS Business Support+, AWS Enterprise Support, AWS Unified
+Operations)
+• Identifying the role of AWS Trusted Advisor, AWS Health Dashboard, and the AWS Health API to
+help manage and monitor environments for cost optimization
+• Identifying the role of the AWS Trust and Safety team to report abuse of AWS resources
+• Understanding the role of AWS Partners (for example, AWS Marketplace, independent software
+vendors, system integrators)
+• Identifying the benefits of being an AWS Partner (for example, partner training and certification,
+partner events, partner volume discounts)
+• Identifying the key services that AWS Marketplace offers (for example, cost management,
+governance and entitlement)
+• Identifying technical assistance options available at AWS (for example, AWS Professional
+Services, AWS solutions architects)
+Technologies and Concepts
+The following list contains technologies and concepts that might appear on the exam. This list is
+non-exhaustive and is subject to change. The order and placement of the items in this list is no
+indication of their relative weight or importance on the exam:
+• APIs
+• Benefits of migrating to the AWS Cloud
+• AWS Cloud Adoption Framework (AWS CAF)
+• AWS Compliance
+• Compute
+• Cost management
+Technologies and Concepts 15
+
+-- 20 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• Databases
+• Amazon EC2 instance types (for example, Reserved Instances, On-Demand Instances, Spot
+Instances)
+• AWS global infrastructure (for example, AWS Regions, Availability Zones)
+• Infrastructure as code (IaC)
+• AWS Knowledge Center
+• Machine learning
+• Management and governance
+• Migration and data transfer
+• Network services
+• AWS Partner Network (APN)
+• AWS Prescriptive Guidance
+• AWS Pricing Calculator
+• AWS Professional Services
+• AWS re:Post
+• AWS SDKs
+• Security
+• AWS Security Blog
+• AWS shared responsibility model
+• AWS solutions architects
+• Storage
+• AWS Support Center
+• AWS Support plans
+• AWS Well-Architected Framework
+In-Scope AWS Services
+The following list contains AWS services and features that are in scope for the AWS Certified Cloud
+Practitioner (CLF-C02) exam. This list is non-exhaustive and is subject to change. AWS offerings
+appear in categories that align with the offerings' primary functions.
+In-Scope AWS Services 16
+
+-- 21 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+Topics
+• Analytics
+• Application Integration
+• Business Applications
+• Cloud Financial Management
+• Compute
+• Containers
+• Customer Enablement
+• Database
+• Developer Tools
+• End User Computing
+• Frontend Web and Mobile
+• Internet of Things (IoT)
+• Machine Learning
+• Management and Governance
+• Migration and Transfer
+• Networking and Content Delivery
+• Security, Identity, and Compliance
+• Serverless
+• Storage
+Analytics
+• Amazon Athena
+• Amazon EMR
+• AWS Glue
+• Amazon Kinesis
+• Amazon OpenSearch Service
+• Amazon Quick Sight
+Analytics 17
+
+-- 22 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• Amazon Redshift
+Application Integration
+• Amazon EventBridge
+• Amazon Simple Notification Service (Amazon SNS)
+• Amazon Simple Queue Service (Amazon SQS)
+• AWS Step Functions
+Business Applications
+• Amazon Connect
+• Amazon Simple Email Service (Amazon SES)
+Cloud Financial Management
+• AWS Budgets
+• AWS Cost and Usage Reports
+• AWS Cost Explorer
+• AWS Marketplace
+Compute
+• AWS Batch
+• Amazon EC2
+• AWS Elastic Beanstalk
+• Amazon Lightsail
+• AWS Outposts
+Containers
+• Amazon Elastic Container Registry (Amazon ECR)
+Application Integration 18
+
+-- 23 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• Amazon Elastic Container Service (Amazon ECS)
+• Amazon Elastic Kubernetes Service (Amazon EKS)
+Customer Enablement
+• AWS Support
+Database
+• Amazon Aurora
+• Amazon DocumentDB
+• Amazon DynamoDB
+• Amazon ElastiCache
+• Amazon Neptune
+• Amazon RDS
+Developer Tools
+• AWS CLI
+• AWS CodeBuild
+• AWS CodePipeline
+• AWS X-Ray
+End User Computing
+• Amazon AppStream 2.0
+• Amazon WorkSpaces
+• Amazon WorkSpaces Secure Browser
+Frontend Web and Mobile
+• AWS Amplify
+Customer Enablement 19
+
+-- 24 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+Internet of Things (IoT)
+• AWS IoT Core
+Machine Learning
+• Amazon Comprehend
+• Amazon Lex
+• Amazon Polly
+• Amazon Q
+• Amazon Rekognition
+• Amazon SageMaker AI
+• Amazon Textract
+• Amazon Transcribe
+• Amazon Translate
+Management and Governance
+• AWS Auto Scaling
+• AWS CloudFormation
+• AWS CloudTrail
+• Amazon CloudWatch
+• AWS Compute Optimizer
+• AWS Config
+• AWS Control Tower
+• AWS Health Dashboard
+• AWS License Manager
+• AWS Management Console
+• AWS Organizations
+• AWS Service Catalog
+• Service Quotas
+Internet of Things (IoT) 20
+
+-- 25 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• AWS Systems Manager
+• AWS Trusted Advisor
+• AWS Well-Architected Tool
+Migration and Transfer
+• AWS Application Discovery Service
+• AWS Application Migration Service
+• AWS Database Migration Service (AWS DMS)
+• Migration Evaluator
+• AWS Migration Hub
+• AWS Schema Conversion Tool (AWS SCT)
+Networking and Content Delivery
+• Amazon API Gateway
+• Amazon CloudFront
+• AWS Direct Connect
+• AWS Global Accelerator
+• AWS PrivateLink
+• Amazon Route 53
+• AWS Transit Gateway
+• Amazon VPC
+• AWS VPN
+• AWS Site-to-Site VPN
+• AWS Client VPN
+Security, Identity, and Compliance
+• AWS Artifact
+• AWS Certificate Manager (ACM)
+Migration and Transfer 21
+
+-- 26 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• AWS CloudHSM
+• Amazon Cognito
+• Amazon Detective
+• AWS Directory Service
+• AWS Firewall Manager
+• Amazon GuardDuty
+• AWS Identity and Access Management (IAM)
+• AWS IAM Identity Center
+• Amazon Inspector
+• AWS Key Management Service (AWS KMS)
+• Amazon Macie
+• AWS Resource Access Manager (AWS RAM)
+• AWS Secrets Manager
+• AWS Security Hub
+• AWS Shield
+• AWS WAF
+Serverless
+• AWS Fargate
+• AWS Lambda
+Storage
+• AWS Backup
+• Amazon Elastic Block Store (Amazon EBS)
+• Amazon Elastic File System (Amazon EFS)
+• AWS Elastic Disaster Recovery
+• Amazon FSx
+• Amazon S3
+• Amazon S3 Glacier
+Serverless 22
+
+-- 27 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• AWS Storage Gateway
+Out-of-Scope AWS Services
+The following list contains AWS services and features that are out of scope for the AWS Certified
+Cloud Practitioner (CLF-C02) exam. This list is non-exhaustive and is subject to change.
+Topics
+• Analytics
+• Application Integration
+• Business Applications
+• Compute
+• Cost Management
+• Customer Enablement
+• Cloud Financial Management
+• Database
+• Developer Tools
+• Game Tech
+• Internet of Things (IoT)
+• Machine Learning
+• Management and Governance
+• Media Services
+• Migration and Transfer
+• Networking and Content Delivery
+• Security, Identity, and Compliance
+• Robotics
+• Storage
+Analytics
+• Amazon AppFlow
+Out-of-Scope AWS Services 23
+
+-- 28 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+• AWS Clean Rooms
+• AWS Data Exchange
+• Amazon DataZone
+• Amazon Managed Streaming for Apache Kafka (Amazon MSK)
+Application Integration
+• AWS AppFabric
+• Amazon Simple Workflow Service
+Business Applications
+• Amazon WorkDocs
+Compute
+• AWS Copilot
+• AWS Wavelength
+Cost Management
+• AWS Application Cost Profiler
+• Amazon DevPay
+Customer Enablement
+• AWS Activate
+• AWS IQ
+• AWS Managed Services (AMS)
+Cloud Financial Management
+• AWS Billing Conductor
+Application Integration 24
+
+-- 29 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+Database
+• Amazon Keyspaces (for Apache Cassandra)
+• Amazon MemoryDB for Redis OSS
+• AWS AppConfig
+Developer Tools
+• AWS Application Composer
+• AWS CodeArtifact
+• AWS CodeDeploy
+• Amazon CodeGuru
+• AWS CloudShell
+• AWS Device Farm
+Game Tech
+• Amazon GameLift
+• Amazon Lumberyard
+Internet of Things (IoT)
+• AWS IoT Device Defender
+• AWS IoT Greengrass
+• Amazon Monitron
+Machine Learning
+• Amazon Fraud Detector
+• Amazon Lookout for Metrics
+• AWS Panorama
+• Amazon Personalize
+Database 25
+
+-- 30 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+Management and Governance
+• AWS Chatbot
+• Amazon Data Lifecycle Manager
+• Amazon Elastic Transcoder
+• AWS Launch Wizard
+Media Services
+• AWS Elemental Appliances and Software
+• AWS Elemental MediaConnect
+• AWS Elemental MediaConvert
+• AWS Elemental MediaLive
+• AWS Elemental MediaPackage
+• AWS Elemental MediaStore
+• AWS Elemental MediaTailor
+• Amazon Interactive Video Service (Amazon IVS)
+Migration and Transfer
+• AWS Migration Hub Refactor Spaces
+• AWS Transfer Family
+Networking and Content Delivery
+• AWS Cloud Map
+• AWS Network Access Analyzer
+• AWS Ground Station
+• Amazon VPC Lattice
+Management and Governance 26
+
+-- 31 of 32 --
+
+AWS Certified Cloud Practitioner Exam Guide (CLF-C02)
+Security, Identity, and Compliance
+• Amazon Cloud Directory
+• AWS Network Firewall
+Robotics
+• AWS RoboMaker
+Storage
+• Amazon FSx for Lustre
+Survey
+How useful was this exam guide? Let us know by taking our survey.
+Security, Identity, and Compliance 27
+
+-- 32 of 32 --
+
