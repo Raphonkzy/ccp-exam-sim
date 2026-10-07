@@ -55,10 +55,10 @@ export default function ExamRun() {
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_16rem]">
       <div className="grid gap-4">
-        <div className="card flex flex-wrap items-center gap-3 !py-3">
+        <div className="card flex flex-wrap items-center justify-between gap-2.5 !py-2.5 sm:!py-3 px-3 sm:px-5">
           <Timer seconds={left} label={t('exam.timeLeft')} />
           <span className="text-xs text-[var(--color-forest-ink)]/70 font-mono font-medium">{t('exam.answered')}: {answeredCount}/{questions.length}</span>
-          <button type="button" className="btn-primary !py-1.5 !px-4 !text-xs ml-auto" onClick={() => setConfirm(true)}>{t('exam.submit')}</button>
+          <button type="button" className="btn-primary !py-1.5 !px-3.5 sm:!px-4 !text-xs" onClick={() => setConfirm(true)}>{t('exam.submit')}</button>
         </div>
 
         {timeUp && <p className="chip chip-bad !whitespace-normal !text-sm" role="alert">{t('exam.timeUp')}</p>}
@@ -72,11 +72,11 @@ export default function ExamRun() {
           onChange={(v) => patch({ selections: { ...exam.selections, [q.id]: v } })}
         />
 
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <button type="button" className="btn !rounded-[6px]" disabled={exam.index === 0} onClick={() => go(exam.index - 1)}>← {t('common.previous')}</button>
+        <div className="flex items-center justify-between gap-2">
+          <button type="button" className="btn !rounded-[6px] !px-3 sm:!px-4 !text-xs sm:!text-sm" disabled={exam.index === 0} onClick={() => go(exam.index - 1)}>← {t('common.previous')}</button>
           <button
             type="button"
-            className="btn !rounded-[6px] inline-flex items-center gap-1.5 text-xs font-semibold"
+            className="btn !rounded-[6px] inline-flex items-center gap-1.5 !px-2.5 sm:!px-4 text-xs font-semibold"
             aria-pressed={flagged}
             onClick={() => patch({ flagged: flagged ? exam.flagged.filter((x) => x !== q.id) : [...exam.flagged, q.id] })}
           >
@@ -96,7 +96,7 @@ export default function ExamRun() {
               </>
             )}
           </button>
-          <button type="button" className="btn-primary" disabled={exam.index === questions.length - 1} onClick={() => go(exam.index + 1)}>{t('common.next')} →</button>
+          <button type="button" className="btn-primary !px-3 sm:!px-4 !text-xs sm:!text-sm" disabled={exam.index === questions.length - 1} onClick={() => go(exam.index + 1)}>{t('common.next')} →</button>
         </div>
       </div>
 

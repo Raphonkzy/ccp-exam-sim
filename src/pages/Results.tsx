@@ -120,18 +120,18 @@ export default function Results() {
               Sign in or create an account to save your exam history online, track recurring mistakes, and review detailed answer breakdowns anytime.
             </p>
           </div>
-          <div className="flex items-center gap-2 self-start sm:self-center">
+          <div className="flex flex-wrap items-center gap-2 self-stretch sm:self-center">
             <button
               type="button"
               onClick={() => setAuthModal({ open: true, mode: 'login' })}
-              className="btn-outline !h-8 !py-1 !px-3 !text-xs font-semibold whitespace-nowrap bg-white/70"
+              className="btn-outline !h-8 !py-1 !px-3 !text-xs font-semibold whitespace-nowrap bg-white/70 flex-1 sm:flex-initial text-center"
             >
               Sign In
             </button>
             <button
               type="button"
               onClick={() => setAuthModal({ open: true, mode: 'register' })}
-              className="btn-primary !h-8 !py-1 !px-3.5 !text-xs font-semibold whitespace-nowrap"
+              className="btn-primary !h-8 !py-1 !px-3.5 !text-xs font-semibold whitespace-nowrap flex-1 sm:flex-initial text-center"
             >
               Create Free Account →
             </button>

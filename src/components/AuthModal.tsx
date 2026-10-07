@@ -155,7 +155,7 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
       />
 
       {/* Panel */}
-      <div className="relative w-full max-w-sm rounded-2xl border border-[#b6b6b6] bg-[#fcfaf5] p-6 shadow-xl">
+      <div className="relative w-full max-w-sm max-h-[92vh] overflow-y-auto rounded-2xl border border-[#b6b6b6] bg-[#fcfaf5] p-5 sm:p-6 shadow-xl no-scrollbar">
         {/* Close */}
         <button
           type="button"
@@ -192,11 +192,14 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
             {error && <ErrorBox msg={error} />}
 
             {showRegisterHint && (
-              <div className="rounded-lg bg-[#ffe95c]/40 border border-[#ffe95c] px-3 py-2 text-xs text-[#1a3300]">
-                No account found with that email.{' '}
-                <button type="button" onClick={() => goTo('register')}
-                  className="font-bold underline underline-offset-2">
-                  Register instead?
+              <div className="flex items-center justify-between rounded-lg bg-[#ffe95c]/40 border border-[#ffe95c] px-3 py-2 text-xs text-[#1a3300]">
+                <span>Need to create a new account?</span>
+                <button
+                  type="button"
+                  onClick={() => goTo('register')}
+                  className="font-bold underline underline-offset-2 hover:text-black ml-2 whitespace-nowrap"
+                >
+                  Register here →
                 </button>
               </div>
             )}

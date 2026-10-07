@@ -57,9 +57,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const data = await safeJson(r)
     if (!r.ok) {
       const msg = (data.error as string) ?? 'Login failed'
-      // 401 with "not found" wording → hint user to register
-      const notFound = r.status === 401 && msg.toLowerCase().includes('invalid')
-      return { error: notFound ? 'No account found with that email.' : msg, notFound }
+      const notFound = data.code === 'USER_NOT_FOUND' || r.status === 404
+      return { error: msg, notFound }
     }
     setUser(data.user as AuthUser)
     return {}

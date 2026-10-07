@@ -46,10 +46,12 @@ export function ReviewPanel({ question: q, selected }: Props) {
                 borderColor: right ? 'var(--good-border)' : 'var(--border)',
               }}
             >
-              <div className="mb-1 flex items-center gap-2 font-semibold">
-                <span className="letter" aria-hidden="true">{o.id}</span>
-                <span className="text-[var(--color-forest-ink)]">{o.text}</span>
-                <span className={`chip !text-[11px] ml-auto ${right ? 'chip-good' : 'chip-bad'}`}>
+              <div className="mb-1.5 flex flex-wrap items-center justify-between gap-1.5 font-semibold">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="letter" aria-hidden="true">{o.id}</span>
+                  <span className="text-[var(--color-forest-ink)]">{o.text}</span>
+                </div>
+                <span className={`chip !text-[11px] shrink-0 ${right ? 'chip-good' : 'chip-bad'}`}>
                   {right ? t('review.optionRight') : t('review.optionWrong')}
                 </span>
               </div>

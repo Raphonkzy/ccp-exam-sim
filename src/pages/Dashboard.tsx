@@ -158,7 +158,7 @@ export default function Dashboard() {
           <button
             type="button"
             onClick={() => setAuthModal({ open: true, mode: 'register' })}
-            className="btn-primary !py-2 !px-4 !text-xs font-bold inline-flex items-center gap-1.5 whitespace-nowrap self-start md:self-center"
+            className="btn-primary !py-2.5 !px-4 !text-xs font-bold inline-flex items-center justify-center gap-1.5 whitespace-nowrap self-stretch sm:self-auto md:self-center"
           >
             <span>Create Free Account</span>
             <span className="font-mono">→</span>

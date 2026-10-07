@@ -78,6 +78,15 @@ CREATE TABLE IF NOT EXISTS reset_tokens (
 
 CREATE INDEX IF NOT EXISTS idx_reset_tokens_token ON reset_tokens(token);
 
+-- ── User Study Progress (Answers, Confusing, Settings) ────────────────────────
+CREATE TABLE IF NOT EXISTS user_progress (
+  user_id     UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  answers     JSONB NOT NULL DEFAULT '{}',
+  confusing   JSONB NOT NULL DEFAULT '[]',
+  settings    JSONB NOT NULL DEFAULT '{}',
+  updated_at  TIMESTAMPTZ DEFAULT now()
+);
+
 -- ── Auto-update updated_at ────────────────────────────────────────────────────
 CREATE OR REPLACE FUNCTION update_updated_at()
 RETURNS TRIGGER AS $$

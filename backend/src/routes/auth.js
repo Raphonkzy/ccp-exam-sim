@@ -11,40 +11,48 @@ const SESSION_DAYS = 30;
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
-  if (password.length < 8) return res.status(400).json({ error: 'Password must be 8+ characters' });
+  if (!email || !password) return res.status(400).json({ error: 'Email and password required.' });
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) return res.status(400).json({ error: 'Please enter a valid email address.' });
+  if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
 
   try {
     const hash = await bcrypt.hash(password, 12);
-    // First registered user with ADMIN_EMAIL gets admin role
-    const role = email === process.env.ADMIN_EMAIL ? 'admin' : 'user';
+    const normalizedEmail = email.toLowerCase().trim();
+    const role = normalizedEmail === process.env.ADMIN_EMAIL?.toLowerCase()?.trim() ? 'admin' : 'user';
     const result = await query(
       'INSERT INTO users (email, password_hash, role) VALUES ($1, $2, $3) RETURNING id, email, role',
-      [email.toLowerCase(), hash, role]
+      [normalizedEmail, hash, role]
     );
     res.status(201).json({ user: result.rows[0] });
   } catch (err) {
-    if (err.code === '23505') return res.status(409).json({ error: 'Email already registered' });
+    if (err.code === '23505') return res.status(409).json({ error: 'An account with this email already exists. Try signing in.', code: 'EMAIL_EXISTS' });
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    if (err.code === 'ECONNREFUSED') return res.status(503).json({ error: 'Database service is currently unreachable.' });
+    res.status(500).json({ error: 'Server error during registration.' });
   }
 });
 
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
+  if (!email || !password) return res.status(400).json({ error: 'Email and password required.' });
 
   try {
+    const normalizedEmail = email.toLowerCase().trim();
     const userResult = await query(
       'SELECT id, email, role, password_hash FROM users WHERE email = $1',
-      [email.toLowerCase()]
+      [normalizedEmail]
     );
-    if (userResult.rows.length === 0) return res.status(401).json({ error: 'Invalid credentials' });
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'No account found with this email.', code: 'USER_NOT_FOUND' });
+    }
 
     const user = userResult.rows[0];
     const valid = await bcrypt.compare(password, user.password_hash);
-    if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
+    if (!valid) {
+      return res.status(401).json({ error: 'Incorrect password. Please try again.', code: 'INVALID_PASSWORD' });
+    }
 
     // Create session token
     const token = crypto.randomBytes(48).toString('hex');
@@ -65,7 +73,10 @@ router.post('/login', async (req, res) => {
     res.json({ user: { id: user.id, email: user.email, role: user.role } });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    if (err.code === 'ECONNREFUSED') {
+      return res.status(503).json({ error: 'Database service is currently unreachable.' });
+    }
+    res.status(500).json({ error: 'Server error during sign in.' });
   }
 });
 

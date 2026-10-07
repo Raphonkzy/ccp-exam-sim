@@ -125,7 +125,7 @@ export default function Browse() {
         <ul className="grid gap-3.5 p-0 list-none">
           {results.map((q) => (
             <li key={q.id} className="card card-hover list-none !p-4.5 sm:!p-5">
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="mb-2 flex flex-wrap items-center gap-2">
                     <span className="chip chip-primary !text-[11px] font-bold">

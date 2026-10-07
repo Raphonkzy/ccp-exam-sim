@@ -1,10 +1,11 @@
-﻿// backend/src/index.js
+// backend/src/index.js
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { authMiddleware } from './middleware/auth.js';
 import authRouter from './routes/auth.js';
 import userRouter from './routes/user.js';
+import { initDb } from './db/pool.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -26,6 +27,7 @@ app.use('/api/user', userRouter);
 app.get('/api/health', (req, res) => res.json({ ok: true }));
 
 // ── Start ──────────────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`[backend] Listening on port ${PORT}`);
+  await initDb();
 });
