@@ -10,14 +10,11 @@ const NAV_PUBLIC: { to: string; key: DictKey; end?: boolean }[] = [
   { to: '/', key: 'nav.dashboard', end: true },
   { to: '/practice', key: 'nav.practice' },
   { to: '/exam', key: 'nav.exam' },
-  { to: '/settings', key: 'nav.settings' },
 ]
 
-// Auth-gated nav (only when logged in)
+// Auth-gated nav (only when logged in) — secondary links live in the user dropdown
 const NAV_AUTH: { to: string; key: DictKey }[] = [
-  { to: '/mistakes', key: 'nav.mistakes' },
   { to: '/browse', key: 'nav.browse' },
-  { to: '/history', key: 'nav.history' },
 ]
 
 function NavSearchBar() {
