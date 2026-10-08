@@ -101,9 +101,71 @@ const DOMAIN_NAMES: Record<number, string> = {
   4: 'Billing & Pricing',
 }
 
+interface VisitorStats {
+  summary: {
+    active_now: number
+    total_visitors: number
+    visitors_today: number
+    visitors_7d: number
+    total_page_views: number
+    views_today: number
+    returning_visitors: number
+  }
+  top_pages: Array<{
+    path: string
+    total_views: number
+    unique_visitors: number
+  }>
+  devices: Array<{
+    device: string
+    count: number
+  }>
+  browsers: Array<{
+    browser: string
+    count: number
+  }>
+  operating_systems: Array<{
+    os: string
+    count: number
+  }>
+  daily_trend: Array<{
+    date: string
+    label: string
+    visitors: number
+    page_views: number
+  }>
+  recent_visitors: Array<{
+    visitor_id: string
+    user_id?: string
+    username?: string
+    email?: string
+    role?: string
+    browser: string
+    os: string
+    device: string
+    last_path: string
+    visit_count: number
+    first_seen: string
+    last_seen: string
+    is_active: boolean
+  }>
+}
+
+function formatRelativeTime(dateStr?: string | null): string {
+  if (!dateStr) return 'Never'
+  const time = new Date(dateStr).getTime()
+  const diffSec = Math.floor((Date.now() - time) / 1000)
+  if (diffSec < 45) return 'Just now'
+  if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m ago`
+  if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}h ago`
+  const days = Math.floor(diffSec / 86400)
+  if (days < 30) return `${days}d ago`
+  return new Date(dateStr).toLocaleDateString()
+}
+
 export default function DevDashboard() {
   const { user: currentAdmin } = useAuth()
-  const [tab, setTab] = useState<'monitor' | 'users'>('monitor')
+  const [tab, setTab] = useState<'monitor' | 'visitors' | 'users'>('monitor')
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -112,6 +174,10 @@ export default function DevDashboard() {
   // Data
   const [overview, setOverview] = useState<AdminOverview | null>(null)
   const [users, setUsers] = useState<AdminUserItem[]>([])
+  const [visitorStats, setVisitorStats] = useState<VisitorStats | null>(null)
+  const [visitorAutoRefresh, setVisitorAutoRefresh] = useState(true)
+  const [visitorFilter, setVisitorFilter] = useState<'all' | 'active' | 'members' | 'guests'>('all')
+  const [visitorQuery, setVisitorQuery] = useState('')
 
   // Filtering & Search for Users tab
   const [userQuery, setUserQuery] = useState('')
@@ -177,15 +243,28 @@ export default function DevDashboard() {
     }
   }
 
+  const loadVisitorStats = async () => {
+    try {
+      const res = await fetch('/api/visitors/stats', { credentials: 'include' })
+      if (res.ok) {
+        const data = await res.json()
+        setVisitorStats(data)
+      }
+    } catch {
+      // ignore
+    }
+  }
+
   const loadData = async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true)
     else setLoading(true)
     setError(null)
 
     try {
-      const [ovRes, usrRes] = await Promise.all([
+      const [ovRes, usrRes, visRes] = await Promise.all([
         fetch('/api/user/admin/overview', { credentials: 'include' }),
         fetch('/api/user/admin/users', { credentials: 'include' }),
+        fetch('/api/visitors/stats', { credentials: 'include' }),
       ])
 
       if (!ovRes.ok || !usrRes.ok) {
@@ -195,6 +274,11 @@ export default function DevDashboard() {
       const [ovData, usrData] = await Promise.all([ovRes.json(), usrRes.json()])
       setOverview(ovData)
       setUsers(usrData)
+
+      if (visRes.ok) {
+        const visData = await visRes.json()
+        setVisitorStats(visData)
+      }
     } catch (err: any) {
       setError(err.message || 'Error loading dashboard')
     } finally {
@@ -206,6 +290,15 @@ export default function DevDashboard() {
   useEffect(() => {
     loadData()
   }, [])
+
+  // Auto-refresh polling for visitor monitoring
+  useEffect(() => {
+    if (tab !== 'visitors' || !visitorAutoRefresh) return
+    const interval = setInterval(() => {
+      loadVisitorStats()
+    }, 15000)
+    return () => clearInterval(interval)
+  }, [tab, visitorAutoRefresh])
 
   const handleInspectUser = async (userId: string) => {
     setInspectUserId(userId)
@@ -409,6 +502,53 @@ export default function DevDashboard() {
     return attemptQuestionList
   }, [attemptQuestionList, reviewFilter])
 
+  // Visitor analytics computed properties
+  const filteredVisitors = useMemo(() => {
+    if (!visitorStats?.recent_visitors) return []
+    const q = visitorQuery.trim().toLowerCase()
+    return visitorStats.recent_visitors.filter((v) => {
+      if (visitorFilter === 'active' && !v.is_active) return false
+      if (visitorFilter === 'members' && !v.user_id) return false
+      if (visitorFilter === 'guests' && v.user_id) return false
+
+      if (q) {
+        const matchesVid = v.visitor_id.toLowerCase().includes(q)
+        const matchesUser = v.username ? v.username.toLowerCase().includes(q) : false
+        const matchesEmail = v.email ? v.email.toLowerCase().includes(q) : false
+        const matchesPath = v.last_path ? v.last_path.toLowerCase().includes(q) : false
+        const matchesBrowser = v.browser ? v.browser.toLowerCase().includes(q) : false
+        const matchesOs = v.os ? v.os.toLowerCase().includes(q) : false
+        if (!matchesVid && !matchesUser && !matchesEmail && !matchesPath && !matchesBrowser && !matchesOs) {
+          return false
+        }
+      }
+      return true
+    })
+  }, [visitorStats?.recent_visitors, visitorFilter, visitorQuery])
+
+  const maxTrendValue = useMemo(() => {
+    if (!visitorStats?.daily_trend?.length) return 10
+    return Math.max(
+      ...visitorStats.daily_trend.map((d) => Math.max(d.visitors, d.page_views)),
+      1
+    )
+  }, [visitorStats?.daily_trend])
+
+  const totalDeviceVisits = useMemo(() => {
+    if (!visitorStats?.devices?.length) return 0
+    return visitorStats.devices.reduce((acc, d) => acc + d.count, 0)
+  }, [visitorStats?.devices])
+
+  const totalBrowserVisits = useMemo(() => {
+    if (!visitorStats?.browsers?.length) return 0
+    return visitorStats.browsers.reduce((acc, b) => acc + b.count, 0)
+  }, [visitorStats?.browsers])
+
+  const totalOsVisits = useMemo(() => {
+    if (!visitorStats?.operating_systems?.length) return 0
+    return visitorStats.operating_systems.reduce((acc, o) => acc + o.count, 0)
+  }, [visitorStats?.operating_systems])
+
   return (
     <div className="grid gap-6">
       {/* Header */}
@@ -492,6 +632,33 @@ export default function DevDashboard() {
           {overview && (
             <span className="rounded-full bg-[var(--surface-2)] px-2 py-0.2 text-[10px] font-mono font-bold text-[var(--color-forest-ink)]">
               {overview.summary.total_attempts} exams
+            </span>
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setTab('visitors')}
+          className={`pb-3 px-4 text-sm font-bold border-b-2 transition-colors inline-flex items-center gap-2 ${
+            tab === 'visitors'
+              ? 'border-[var(--color-forest-ink)] text-[var(--color-forest-ink)]'
+              : 'border-transparent text-[var(--muted)] hover:text-[var(--color-forest-ink)]'
+          }`}
+        >
+          <div className="relative flex h-2.5 w-2.5">
+            {visitorStats && visitorStats.summary.active_now > 0 && (
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+            )}
+            <span
+              className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
+                visitorStats && visitorStats.summary.active_now > 0 ? 'bg-emerald-500' : 'bg-slate-400'
+              }`}
+            />
+          </div>
+          <span>Visitor Monitoring</span>
+          {visitorStats && (
+            <span className="rounded-full bg-emerald-100 border border-emerald-300 px-2 py-0.2 text-[10px] font-mono font-bold text-emerald-900">
+              {visitorStats.summary.active_now} active
             </span>
           )}
         </button>
@@ -772,6 +939,489 @@ export default function DevDashboard() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      ) : tab === 'visitors' ? (
+        /* TAB 2: VISITOR MONITORING */
+        <div className="grid gap-6">
+          {/* Controls & Live Pulse Status Bar */}
+          <div className="card !p-3 sm:!p-4 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="relative flex h-3.5 w-3.5">
+                {(visitorStats?.summary.active_now ?? 0) > 0 ? (
+                  <>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500" />
+                  </>
+                ) : (
+                  <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-slate-400" />
+                )}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-sm font-bold text-[var(--color-forest-ink)]">
+                    Site Traffic & Live Telemetry
+                  </h2>
+                  <span className="rounded bg-emerald-100 border border-emerald-300 px-1.5 py-0.2 text-[10px] font-mono font-bold text-emerald-900">
+                    {visitorStats?.summary.active_now ?? 0} CURRENTLY ACTIVE
+                  </span>
+                </div>
+                <p className="text-[11px] text-[var(--muted)]">
+                  Live presence heartbeat sent every 45s while visitor has active tab open.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <label className="flex items-center gap-1.5 text-xs font-semibold text-[var(--color-forest-ink)] cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={visitorAutoRefresh}
+                  onChange={(e) => setVisitorAutoRefresh(e.target.checked)}
+                  className="rounded border-[var(--border)] text-[var(--color-forest-ink)] focus:ring-0"
+                />
+                <span>Auto-refresh (15s)</span>
+              </label>
+
+              <button
+                type="button"
+                onClick={() => loadVisitorStats()}
+                className="btn !py-1 !px-2.5 !text-xs font-semibold inline-flex items-center gap-1"
+                title="Refresh visitor metrics now"
+              >
+                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span>Refresh</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 4 Big KPI Cards */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="card !p-4 flex flex-col justify-between border-l-4 border-l-emerald-500">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-[var(--muted)] uppercase tracking-wider">
+                  Currently Visiting
+                </span>
+                <span className="relative flex h-2.5 w-2.5">
+                  {(visitorStats?.summary.active_now ?? 0) > 0 && (
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  )}
+                  <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
+                    (visitorStats?.summary.active_now ?? 0) > 0 ? 'bg-emerald-500' : 'bg-slate-400'
+                  }`} />
+                </span>
+              </div>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="text-3xl sm:text-4xl font-extrabold text-[var(--color-forest-ink)] font-mono">
+                  {visitorStats?.summary.active_now ?? 0}
+                </span>
+                <span className="text-[11px] text-emerald-800 font-bold">active now</span>
+              </div>
+              <p className="mt-1 text-[10px] text-[var(--muted)]">
+                Active within the last 5 minutes
+              </p>
+            </div>
+
+            <div className="card !p-4 flex flex-col justify-between border-l-4 border-l-blue-500">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-[var(--muted)] uppercase tracking-wider">
+                  Total Site Visitors
+                </span>
+                <span className="chip !text-[10px] !py-0.2">Unique</span>
+              </div>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="text-3xl sm:text-4xl font-extrabold text-[var(--color-forest-ink)] font-mono">
+                  {visitorStats?.summary.total_visitors ?? 0}
+                </span>
+                <span className="text-[11px] text-[var(--muted)]">visitors</span>
+              </div>
+              <p className="mt-1 text-[10px] text-[var(--muted)]">
+                <strong>+{visitorStats?.summary.visitors_today ?? 0}</strong> today · <strong>{visitorStats?.summary.visitors_7d ?? 0}</strong> in last 7d
+              </p>
+            </div>
+
+            <div className="card !p-4 flex flex-col justify-between border-l-4 border-l-purple-500">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-[var(--muted)] uppercase tracking-wider">
+                  Total Page Views
+                </span>
+                <span className="chip !text-[10px] !py-0.2">Impressions</span>
+              </div>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="text-3xl sm:text-4xl font-extrabold text-[var(--color-forest-ink)] font-mono">
+                  {visitorStats?.summary.total_page_views ?? 0}
+                </span>
+                <span className="text-[11px] text-[var(--muted)]">views</span>
+              </div>
+              <p className="mt-1 text-[10px] text-[var(--muted)]">
+                <strong>+{visitorStats?.summary.views_today ?? 0}</strong> views recorded today
+              </p>
+            </div>
+
+            <div className="card !p-4 flex flex-col justify-between border-l-4 border-l-amber-500">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-[var(--muted)] uppercase tracking-wider">
+                  Returning Visitors
+                </span>
+                <span className="chip !text-[10px] !py-0.2">Loyalty</span>
+              </div>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="text-3xl sm:text-4xl font-extrabold text-[var(--color-forest-ink)] font-mono">
+                  {visitorStats?.summary.total_visitors
+                    ? Math.round((visitorStats.summary.returning_visitors / visitorStats.summary.total_visitors) * 100)
+                    : 0}%
+                </span>
+                <span className="text-[11px] text-[var(--muted)]">repeat users</span>
+              </div>
+              <p className="mt-1 text-[10px] text-[var(--muted)]">
+                {visitorStats?.summary.returning_visitors ?? 0} users with &gt; 1 visits
+              </p>
+            </div>
+          </div>
+
+          {/* 14-Day Traffic Trend Bar Chart */}
+          <div className="card">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+              <div>
+                <h2 className="text-base font-bold text-[var(--color-forest-ink)]">
+                  Daily Traffic Trend (Last 14 Days)
+                </h2>
+                <p className="text-xs text-[var(--muted)]">
+                  Comparison of daily unique visitors vs total page views.
+                </p>
+              </div>
+              <div className="flex items-center gap-4 text-xs font-semibold">
+                <div className="flex items-center gap-1.5">
+                  <span className="h-3 w-3 rounded bg-[var(--accent)] border border-[var(--border)]" />
+                  <span className="text-[var(--color-forest-ink)]">Unique Visitors</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="h-3 w-3 rounded bg-[var(--color-forest-ink)]" />
+                  <span className="text-[var(--color-forest-ink)]">Page Views</span>
+                </div>
+              </div>
+            </div>
+
+            {(!visitorStats?.daily_trend || visitorStats.daily_trend.length === 0) ? (
+              <div className="py-12 text-center text-xs text-[var(--muted)]">
+                No historical traffic collected yet.
+              </div>
+            ) : (
+              <div className="mt-4">
+                <div className="h-44 w-full flex items-end gap-1.5 sm:gap-3 pt-6 pb-2 border-b border-[var(--border)]">
+                  {visitorStats.daily_trend.map((day) => {
+                    const vHeight = maxTrendValue > 0 ? Math.max(4, (day.visitors / maxTrendValue) * 100) : 4
+                    const pvHeight = maxTrendValue > 0 ? Math.max(4, (day.page_views / maxTrendValue) * 100) : 4
+
+                    return (
+                      <div key={day.date} className="flex-1 flex flex-col items-center h-full justify-end group relative">
+                        {/* Hover Tooltip */}
+                        <div className="opacity-0 group-hover:opacity-100 pointer-events-none absolute -top-12 z-20 transition-opacity bg-[#0a192f] text-white text-[10px] font-mono py-1 px-2 rounded-md shadow-lg whitespace-nowrap">
+                          <p className="font-bold">{day.label}</p>
+                          <p>{day.visitors} visitors · {day.page_views} views</p>
+                        </div>
+
+                        {/* Double bar */}
+                        <div className="w-full flex items-end justify-center gap-1 h-full">
+                          <div
+                            className="w-1/2 max-w-[14px] rounded-t bg-[var(--accent)] border border-[var(--border)] transition-all duration-300 group-hover:brightness-95"
+                            style={{ height: `${vHeight}%` }}
+                            title={`${day.visitors} visitors`}
+                          />
+                          <div
+                            className="w-1/2 max-w-[14px] rounded-t bg-[var(--color-forest-ink)] transition-all duration-300 group-hover:opacity-80"
+                            style={{ height: `${pvHeight}%` }}
+                            title={`${day.page_views} views`}
+                          />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+                {/* Date Labels */}
+                <div className="flex gap-1.5 sm:gap-3 mt-2">
+                  {visitorStats.daily_trend.map((day) => (
+                    <div key={day.date} className="flex-1 text-center font-mono text-[9px] sm:text-[10px] text-[var(--muted)] truncate">
+                      {day.label.split(' ')[1]}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 2-Column: Top Visited Pages & Technology Breakdown */}
+          <div className="grid gap-6 lg:grid-cols-2">
+            {/* Top Visited Pages */}
+            <div className="card">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h2 className="text-base font-bold text-[var(--color-forest-ink)]">Top Visited Pages</h2>
+                  <p className="text-xs text-[var(--muted)]">Most frequented pages and modules by all visitors.</p>
+                </div>
+                <span className="text-xs font-mono text-[var(--muted)]">{visitorStats?.top_pages?.length || 0} paths</span>
+              </div>
+
+              {(!visitorStats?.top_pages || visitorStats.top_pages.length === 0) ? (
+                <div className="py-10 text-center text-xs text-[var(--muted)]">
+                  No page views recorded yet.
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr className="border-b border-[var(--border)] text-[var(--muted)] font-semibold">
+                        <th className="py-2 pr-3">Route / URL</th>
+                        <th className="py-2 px-3 text-right">Views</th>
+                        <th className="py-2 px-3 text-right">Unique</th>
+                        <th className="py-2 pl-3 text-right">Share</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[var(--border)]/60">
+                      {visitorStats.top_pages.map((p) => {
+                        const totalViews = visitorStats.summary.total_page_views || 1
+                        const pct = Math.round((p.total_views / totalViews) * 100)
+
+                        return (
+                          <tr key={p.path} className="hover:bg-[var(--surface-2)]/40 transition-colors">
+                            <td className="py-2.5 pr-3 font-mono font-bold text-[var(--color-forest-ink)]">
+                              <Link to={p.path} className="hover:underline">
+                                {p.path}
+                              </Link>
+                            </td>
+                            <td className="py-2.5 px-3 text-right font-mono font-bold text-[var(--color-forest-ink)]">
+                              {p.total_views}
+                            </td>
+                            <td className="py-2.5 px-3 text-right font-mono text-[var(--muted)]">
+                              {p.unique_visitors}
+                            </td>
+                            <td className="py-2.5 pl-3 text-right font-mono text-[11px] text-[var(--muted)]">
+                              <div className="flex items-center justify-end gap-2">
+                                <div className="h-1.5 w-12 rounded-full bg-[var(--border)] overflow-hidden hidden sm:block">
+                                  <div className="h-full bg-[var(--color-forest-ink)] rounded-full" style={{ width: `${pct}%` }} />
+                                </div>
+                                <span>{pct}%</span>
+                              </div>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            {/* Technology & Platforms Breakdown */}
+            <div className="grid gap-4">
+              {/* Device Types */}
+              <div className="card !p-4">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--muted)] mb-3">
+                  Device Categories
+                </h3>
+                <div className="space-y-2.5">
+                  {(!visitorStats?.devices || visitorStats.devices.length === 0) ? (
+                    <p className="text-xs text-[var(--muted)]">No device data</p>
+                  ) : (
+                    visitorStats.devices.map((d) => {
+                      const pct = totalDeviceVisits > 0 ? Math.round((d.count / totalDeviceVisits) * 100) : 0
+                      return (
+                        <div key={d.device} className="text-xs">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="font-semibold capitalize text-[var(--color-forest-ink)]">{d.device}</span>
+                            <span className="font-mono text-[var(--muted)]">{d.count} ({pct}%)</span>
+                          </div>
+                          <div className="h-2 w-full rounded-full bg-[var(--border)] overflow-hidden">
+                            <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${pct}%` }} />
+                          </div>
+                        </div>
+                      )
+                    })
+                  )}
+                </div>
+              </div>
+
+              {/* Operating Systems & Browsers */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="card !p-3.5">
+                  <h3 className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)] mb-2">
+                    Browsers
+                  </h3>
+                  <div className="space-y-1.5 text-xs">
+                    {visitorStats?.browsers?.slice(0, 5).map((b) => {
+                      const pct = totalBrowserVisits > 0 ? Math.round((b.count / totalBrowserVisits) * 100) : 0
+                      return (
+                        <div key={b.browser} className="flex items-center justify-between py-1 border-b border-[var(--border)]/40 last:border-none">
+                          <span className="font-medium text-[var(--color-forest-ink)]">{b.browser}</span>
+                          <span className="font-mono text-[var(--muted)]">{b.count} ({pct}%)</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                <div className="card !p-3.5">
+                  <h3 className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)] mb-2">
+                    Operating Systems
+                  </h3>
+                  <div className="space-y-1.5 text-xs">
+                    {visitorStats?.operating_systems?.slice(0, 5).map((o) => {
+                      const pct = totalOsVisits > 0 ? Math.round((o.count / totalOsVisits) * 100) : 0
+                      return (
+                        <div key={o.os} className="flex items-center justify-between py-1 border-b border-[var(--border)]/40 last:border-none">
+                          <span className="font-medium text-[var(--color-forest-ink)]">{o.os}</span>
+                          <span className="font-mono text-[var(--muted)]">{o.count} ({pct}%)</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Live Visitor Activity Stream Table */}
+          <div className="card">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div>
+                <h2 className="text-base font-bold text-[var(--color-forest-ink)]">
+                  Live Visitor Activity Stream
+                </h2>
+                <p className="text-xs text-[var(--muted)]">
+                  Real-time list of visitors, their current session path, devices, and activity timestamps.
+                </p>
+              </div>
+
+              {/* Filters */}
+              <div className="flex flex-wrap items-center gap-2">
+                <input
+                  type="search"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck={false}
+                  value={visitorQuery}
+                  onChange={(e) => setVisitorQuery(e.target.value)}
+                  placeholder="Filter by user, route, or OS…"
+                  className="field !py-1 !px-2.5 text-xs w-48 sm:w-56"
+                />
+
+                <select
+                  value={visitorFilter}
+                  onChange={(e) => setVisitorFilter(e.target.value as any)}
+                  className="field !py-1 !px-2 text-xs"
+                >
+                  <option value="all">All ({visitorStats?.recent_visitors?.length || 0})</option>
+                  <option value="active">Active Now ({visitorStats?.recent_visitors?.filter(v => v.is_active).length || 0})</option>
+                  <option value="members">Members ({visitorStats?.recent_visitors?.filter(v => v.user_id).length || 0})</option>
+                  <option value="guests">Guests ({visitorStats?.recent_visitors?.filter(v => !v.user_id).length || 0})</option>
+                </select>
+              </div>
+            </div>
+
+            {filteredVisitors.length === 0 ? (
+              <div className="py-12 text-center text-xs text-[var(--muted)]">
+                No visitors matching your filter.
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="border-b border-[var(--border)] text-[var(--muted)] font-semibold">
+                      <th className="py-2.5 px-3">Visitor Identity</th>
+                      <th className="py-2.5 px-3">Status</th>
+                      <th className="py-2.5 px-3">Current / Last Page</th>
+                      <th className="py-2.5 px-3">Device & Environment</th>
+                      <th className="py-2.5 px-3 text-center">Visits</th>
+                      <th className="py-2.5 px-3 text-right">Last Active</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[var(--border)]/60">
+                    {filteredVisitors.map((v) => {
+                      const isMember = Boolean(v.user_id)
+                      const initial = isMember ? (v.username ? v.username[0] : v.email ? v.email[0] : 'U').toUpperCase() : 'G'
+
+                      return (
+                        <tr key={v.visitor_id} className="hover:bg-[var(--surface-2)]/40 transition-colors">
+                          <td className="py-2.5 px-3">
+                            <div className="flex items-center gap-2">
+                              <span className={`grid h-6 w-6 place-items-center rounded-full font-mono font-bold text-[10px] border border-[var(--border)] ${
+                                isMember ? 'bg-[var(--accent)] text-[var(--color-forest-ink)]' : 'bg-slate-200 text-slate-700'
+                              }`}>
+                                {initial}
+                              </span>
+                              <div>
+                                {isMember ? (
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="font-bold text-[var(--color-forest-ink)]">
+                                      {v.username ? `@${v.username}` : v.email?.split('@')[0]}
+                                    </span>
+                                    <span className="rounded bg-sky-100 border border-sky-300 px-1 py-0.2 text-[9px] font-mono font-bold text-sky-800">
+                                      {v.role?.toUpperCase() || 'STUDENT'}
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="font-semibold text-[var(--color-forest-ink)]">Guest Visitor</span>
+                                    <span className="text-[10px] font-mono text-[var(--muted)]">
+                                      #{v.visitor_id.substring(0, 8)}
+                                    </span>
+                                  </div>
+                                )}
+                                {v.email && (
+                                  <div className="text-[10px] text-[var(--muted)] truncate max-w-[150px]">{v.email}</div>
+                                )}
+                              </div>
+                            </div>
+                          </td>
+
+                          <td className="py-2.5 px-3">
+                            {v.is_active ? (
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 border border-emerald-300 px-2 py-0.5 text-[10px] font-mono font-bold text-emerald-900">
+                                <span className="relative flex h-2 w-2">
+                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                                </span>
+                                Active Now
+                              </span>
+                            ) : (
+                              <span className="text-[11px] text-[var(--muted)] font-mono">
+                                {formatRelativeTime(v.last_seen)}
+                              </span>
+                            )}
+                          </td>
+
+                          <td className="py-2.5 px-3">
+                            <span className="rounded bg-[var(--surface-2)] border border-[var(--border)] px-2 py-0.5 font-mono text-[11px] font-bold text-[var(--color-forest-ink)]">
+                              {v.last_path || '/'}
+                            </span>
+                          </td>
+
+                          <td className="py-2.5 px-3">
+                            <div className="font-medium text-[var(--color-forest-ink)]">
+                              {v.os} · {v.browser}
+                            </div>
+                            <div className="text-[10px] text-[var(--muted)] capitalize">
+                              {v.device}
+                            </div>
+                          </td>
+
+                          <td className="py-2.5 px-3 text-center font-mono font-bold text-[var(--color-forest-ink)]">
+                            {v.visit_count}
+                          </td>
+
+                          <td className="py-2.5 px-3 text-right font-mono text-[11px] text-[var(--muted)] whitespace-nowrap">
+                            {new Date(v.last_seen).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
       ) : tab === 'users' ? (

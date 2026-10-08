@@ -5,6 +5,7 @@ import type { DictKey } from '../i18n/en'
 import { useAuth } from '../context/AuthContext'
 import { useApp } from '../context/AppContext'
 import { AuthModal } from './AuthModal'
+import { useVisitorTracker } from '../lib/visitorTracker'
 
 // Public nav (always visible)
 const NAV_PUBLIC: { to: string; key: DictKey; end?: boolean }[] = [
@@ -70,6 +71,7 @@ function NavSearchBar() {
 }
 
 export function Layout() {
+  useVisitorTracker()
   const { t } = useT()
   const { user } = useAuth()
   const { handleLogout } = useApp()
