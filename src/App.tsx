@@ -1,4 +1,4 @@
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
 import { AuthProvider } from './context/AuthContext'
 import { Layout } from './components/Layout'
@@ -18,7 +18,7 @@ import NotFound from './pages/NotFound'
 
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <AuthProvider>
         <AppProvider>
           <Routes>
@@ -35,7 +35,7 @@ export default function App() {
               <Route path="history" element={<RequireAuth><History /></RequireAuth>} />
               <Route path="mistakes" element={<RequireAuth><MistakeBank /></RequireAuth>} />
               <Route path="browse" element={<RequireAuth><Browse /></RequireAuth>} />
-              <Route path="settings" element={<RequireAuth><Settings /></RequireAuth>} />
+              <Route path="settings" element={<Settings />} />
 
               {/* ── Admin-only route ─────────────────────── */}
               <Route path="dev/review" element={<RequireAdmin><DevReview /></RequireAdmin>} />
@@ -45,6 +45,6 @@ export default function App() {
           </Routes>
         </AppProvider>
       </AuthProvider>
-    </HashRouter>
+    </BrowserRouter>
   )
 }

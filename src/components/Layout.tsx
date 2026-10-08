@@ -10,6 +10,7 @@ const NAV_PUBLIC: { to: string; key: DictKey; end?: boolean }[] = [
   { to: '/', key: 'nav.dashboard', end: true },
   { to: '/practice', key: 'nav.practice' },
   { to: '/exam', key: 'nav.exam' },
+  { to: '/settings', key: 'nav.settings' },
 ]
 
 // Auth-gated nav (only when logged in)
@@ -17,7 +18,6 @@ const NAV_AUTH: { to: string; key: DictKey }[] = [
   { to: '/mistakes', key: 'nav.mistakes' },
   { to: '/browse', key: 'nav.browse' },
   { to: '/history', key: 'nav.history' },
-  { to: '/settings', key: 'nav.settings' },
 ]
 
 function NavSearchBar() {
@@ -218,20 +218,16 @@ export function Layout() {
                     >
                       {/* User Info Header */}
                       <div className="rounded-lg bg-white/80 border border-[#b6b6b6]/40 p-2.5 mb-1.5">
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-2">
                           <span className="grid h-6 w-6 place-items-center rounded-full bg-[#ffe95c] font-mono font-black text-xs text-[#1a3300]">
                             {user.email[0].toUpperCase()}
                           </span>
                           <div className="min-w-0 flex-1">
                             <div className="truncate text-xs font-bold text-[#1a3300]">{user.email}</div>
-                            <div className="flex items-center gap-1.5 text-[10px] text-[#1a3300]/70">
-                              <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-600" />
-                              <span>{user.role === 'admin' ? 'Administrator' : 'Student Account'}</span>
-                            </div>
+                            {user.role === 'admin' && (
+                              <div className="text-[10px] text-[#1a3300]/60">Administrator</div>
+                            )}
                           </div>
-                        </div>
-                        <div className="text-[10px] font-mono text-emerald-800 bg-emerald-50 rounded px-1.5 py-0.5 border border-emerald-200/60 mt-1">
-                          🟢 PostgreSQL Database Connected
                         </div>
                       </div>
 
@@ -258,8 +254,7 @@ export function Layout() {
                           onClick={() => setUserMenuOpen(false)}
                           className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-[#1a3300] hover:bg-black/5 transition-colors no-underline"
                         >
-                          <span>⚙️</span>
-                          <span>Settings & Sync</span>
+                          <span>Settings</span>
                         </NavLink>
 
                         <NavLink
@@ -267,7 +262,6 @@ export function Layout() {
                           onClick={() => setUserMenuOpen(false)}
                           className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-[#1a3300] hover:bg-black/5 transition-colors no-underline"
                         >
-                          <span>📜</span>
                           <span>Exam History</span>
                         </NavLink>
 
@@ -276,7 +270,6 @@ export function Layout() {
                           onClick={() => setUserMenuOpen(false)}
                           className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-[#1a3300] hover:bg-black/5 transition-colors no-underline"
                         >
-                          <span>🎯</span>
                           <span>Mistake Bank</span>
                         </NavLink>
                       </div>

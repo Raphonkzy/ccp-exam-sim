@@ -30,10 +30,43 @@ router.post('/attempts', requireAuth, async (req, res) => {
   res.status(201).json({ id: result.rows[0].id });
 });
 
-// DELETE /api/user/attempts/:id - delete a session
+// DELETE /api/user/attempts/:id - delete a session and scrub its answers from progress
 router.delete('/attempts/:id', requireAuth, async (req, res) => {
-  await query('DELETE FROM exam_attempts WHERE id = $1 AND user_id = $2', [req.params.id, req.user.id]);
-  res.json({ ok: true });
+  try {
+    // 1. Fetch the attempt first so we know which question IDs to scrub
+    const attemptRes = await query(
+      'SELECT answers FROM exam_attempts WHERE id = $1 AND user_id = $2',
+      [req.params.id, req.user.id]
+    );
+
+    if (attemptRes.rows.length === 0) {
+      return res.status(404).json({ error: 'Attempt not found' });
+    }
+
+    // 2. Delete the attempt
+    await query('DELETE FROM exam_attempts WHERE id = $1 AND user_id = $2', [req.params.id, req.user.id]);
+
+    // 3. Scrub each answered question from user_progress.answers
+    let answers = attemptRes.rows[0].answers;
+    if (typeof answers === 'string') {
+      try { answers = JSON.parse(answers); } catch { answers = {}; }
+    }
+    const qids = Object.keys(answers || {});
+    if (qids.length > 0) {
+      // Build a jsonb - operator chain to remove all keys in one query
+      // e.g. answers - 'q1' - 'q2' - ...
+      const removes = qids.map((_, i) => `- $${i + 2}::text`).join(' ');
+      await query(
+        `UPDATE user_progress SET answers = answers ${removes}, updated_at = now() WHERE user_id = $1`,
+        [req.user.id, ...qids]
+      );
+    }
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('Failed to delete attempt:', err);
+    res.status(500).json({ error: 'Failed to delete attempt' });
+  }
 });
 
 // ── Bookmarks ─────────────────────────────────────────────────────────────────

@@ -244,8 +244,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const deleteSession = useCallback(
     (id: string) => {
-      setData((d) => ({ ...d, sessions: d.sessions.filter((s) => s.id !== id) }))
+      setData((d) => {
+        const session = d.sessions.find((s) => s.id === id)
+        // Also remove the answered questions that belong to this session
+        const qidsToRemove = new Set(session ? Object.keys(session.selections ?? {}) : [])
+        const nextAnswers = qidsToRemove.size > 0
+          ? Object.fromEntries(Object.entries(d.answers).filter(([k]) => !qidsToRemove.has(k)))
+          : d.answers
+        return {
+          ...d,
+          sessions: d.sessions.filter((s) => s.id !== id),
+          answers: nextAnswers,
+        }
+      })
       if (user) {
+        // Backend now handles scrubbing answers from user_progress too
         fetch(`/api/user/attempts/${encodeURIComponent(id)}`, {
           method: 'DELETE',
           credentials: 'include',
@@ -270,10 +283,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
         console.error('Failed to reset DB data:', err)
       }
     }
+    // Always wipe localStorage — for guests this is their only storage,
+    // for DB users we don't want stale local data to re-sync on next login
+    const { STORAGE_KEY } = await import('../lib/storage')
+    localStorage.removeItem(STORAGE_KEY)
     const clean = defaultData()
     setData(clean)
-    saveData(clean)
-    setLastSyncedAt(new Date())
+    setLastSyncedAt(null)
   }, [user])
 
   const value = useMemo(
