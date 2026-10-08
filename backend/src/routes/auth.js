@@ -10,23 +10,55 @@ const SESSION_DAYS = 30;
 
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'Email and password required.' });
+  const { username, email, password } = req.body;
+  if (!username || !email || !password) {
+    return res.status(400).json({ error: 'Username, email, and password are required.' });
+  }
+
+  const normalizedUsername = username.trim().toLowerCase();
+  const usernameRegex = /^[a-zA-Z0-9_-]{3,30}$/;
+  if (!usernameRegex.test(normalizedUsername)) {
+    return res.status(400).json({
+      error: 'Username must be 3–30 characters and contain only letters, numbers, underscores, or hyphens.',
+      code: 'INVALID_USERNAME'
+    });
+  }
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) return res.status(400).json({ error: 'Please enter a valid email address.' });
-  if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+  const normalizedEmail = email.trim().toLowerCase();
+  if (!emailRegex.test(normalizedEmail)) {
+    return res.status(400).json({ error: 'Please enter a valid email address.', code: 'INVALID_EMAIL' });
+  }
+
+  if (password.length < 8) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters.', code: 'WEAK_PASSWORD' });
+  }
 
   try {
+    const existing = await query(
+      'SELECT username, email FROM users WHERE LOWER(username) = $1 OR LOWER(email) = $2',
+      [normalizedUsername, normalizedEmail]
+    );
+
+    if (existing.rows.length > 0) {
+      const match = existing.rows.find(r => r.username && r.username.toLowerCase() === normalizedUsername);
+      if (match) {
+        return res.status(409).json({ error: 'This username is already taken. Please choose another.', code: 'USERNAME_EXISTS' });
+      }
+      return res.status(409).json({ error: 'An account with this email already exists. Try signing in.', code: 'EMAIL_EXISTS' });
+    }
+
     const hash = await bcrypt.hash(password, 12);
-    const normalizedEmail = email.toLowerCase().trim();
     const role = normalizedEmail === process.env.ADMIN_EMAIL?.toLowerCase()?.trim() ? 'admin' : 'user';
     const result = await query(
-      'INSERT INTO users (email, password_hash, role) VALUES ($1, $2, $3) RETURNING id, email, role',
-      [normalizedEmail, hash, role]
+      'INSERT INTO users (username, email, password_hash, role) VALUES ($1, $2, $3, $4) RETURNING id, username, email, role',
+      [normalizedUsername, normalizedEmail, hash, role]
     );
     res.status(201).json({ user: result.rows[0] });
   } catch (err) {
-    if (err.code === '23505') return res.status(409).json({ error: 'An account with this email already exists. Try signing in.', code: 'EMAIL_EXISTS' });
+    if (err.code === '23505') {
+      return res.status(409).json({ error: 'Username or email already exists.', code: 'ACCOUNT_EXISTS' });
+    }
     console.error(err);
     if (err.code === 'ECONNREFUSED') return res.status(503).json({ error: 'Database service is currently unreachable.' });
     res.status(500).json({ error: 'Server error during registration.' });
@@ -35,17 +67,20 @@ router.post('/register', async (req, res) => {
 
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'Email and password required.' });
+  const rawIdentifier = req.body.identifier || req.body.email || req.body.username;
+  const { password } = req.body;
+  if (!rawIdentifier || !password) {
+    return res.status(400).json({ error: 'Username or email, and password are required.' });
+  }
 
   try {
-    const normalizedEmail = email.toLowerCase().trim();
+    const identifier = rawIdentifier.trim().toLowerCase();
     const userResult = await query(
-      'SELECT id, email, role, password_hash FROM users WHERE email = $1',
-      [normalizedEmail]
+      'SELECT id, username, email, role, password_hash FROM users WHERE LOWER(email) = $1 OR LOWER(username) = $1',
+      [identifier]
     );
     if (userResult.rows.length === 0) {
-      return res.status(404).json({ error: 'No account found with this email.', code: 'USER_NOT_FOUND' });
+      return res.status(404).json({ error: 'No account found with this username or email.', code: 'USER_NOT_FOUND' });
     }
 
     const user = userResult.rows[0];
@@ -70,7 +105,7 @@ router.post('/login', async (req, res) => {
       expires: expiresAt,
     });
 
-    res.json({ user: { id: user.id, email: user.email, role: user.role } });
+    res.json({ user: { id: user.id, username: user.username, email: user.email, role: user.role } });
   } catch (err) {
     console.error(err);
     if (err.code === 'ECONNREFUSED') {

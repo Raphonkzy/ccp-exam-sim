@@ -17,6 +17,8 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
   const { login, register, requestReset, resetPassword } = useAuth()
   const { clearGuestCache, migrateGuestData } = useApp()
   const [mode, setMode] = useState<AuthMode>(initialMode)
+  const [loginIdentifier, setLoginIdentifier] = useState('')
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -46,6 +48,8 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
     onClose()
     setTimeout(() => {
       setMode(initialMode)
+      setLoginIdentifier('')
+      setUsername('')
       setEmail('')
       setPassword('')
       setConfirmPassword('')
@@ -71,10 +75,12 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
     e.preventDefault()
     setError('')
     setShowRegisterHint(false)
+    if (!loginIdentifier.trim()) { setError('Please enter your email or username.'); return }
+    if (!password) { setError('Please enter your password.'); return }
     setLoading(true)
     // Clear any guest cache before signing in so guest data is never brought into an existing account
     clearGuestCache()
-    const result = await login(email, password)
+    const result = await login(loginIdentifier.trim(), password)
     setLoading(false)
     if (result.error) {
       setError(result.error)
@@ -87,14 +93,22 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    if (password !== confirmPassword) { setError('Passwords do not match.'); return }
+    const trimmedUsername = username.trim()
+    const trimmedEmail = email.trim()
+    if (!trimmedUsername) { setError('Username is required.'); return }
+    if (!/^[a-zA-Z0-9_-]{3,30}$/.test(trimmedUsername)) {
+      setError('Username must be 3–30 characters (letters, numbers, hyphens, underscores).')
+      return
+    }
+    if (!trimmedEmail) { setError('Email is required.'); return }
     if (password.length < 8) { setError('Password must be at least 8 characters.'); return }
+    if (password !== confirmPassword) { setError('Passwords do not match.'); return }
     setLoading(true)
 
     // Snapshot guest progress from cache before account creation
     const guestSnapshot = loadData()
 
-    const result = await register(email, password)
+    const result = await register(trimmedUsername, trimmedEmail, password)
     if (result.error) {
       setLoading(false)
       setError(result.error)
@@ -197,8 +211,8 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
 
         {mode === 'login' && (
           <form onSubmit={handleLoginSubmit} className="space-y-3" noValidate>
-            <Field id="auth-email" label="Email" type="email" autoComplete="email"
-              value={email} onChange={setEmail} placeholder="you@example.com" />
+            <Field id="auth-identifier" label="Email or Username" type="text" autoComplete="username"
+              value={loginIdentifier} onChange={setLoginIdentifier} placeholder="you@example.com or username" />
             <Field id="auth-password" label="Password" type="password" autoComplete="current-password"
               value={password} onChange={setPassword} placeholder="••••••••" />
 
@@ -246,6 +260,8 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
               </div>
             </div>
 
+            <Field id="reg-username" label="Username" type="text" autoComplete="username"
+              value={username} onChange={setUsername} placeholder="cloudguru" />
             <Field id="reg-email" label="Email" type="email" autoComplete="email"
               value={email} onChange={setEmail} placeholder="you@example.com" />
             <Field id="reg-password" label="Password" type="password" autoComplete="new-password"

@@ -9,12 +9,15 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 -- ── Users ─────────────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS users (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  username      TEXT UNIQUE,
   email         TEXT UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
   role          TEXT NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'admin')),
   created_at    TIMESTAMPTZ DEFAULT now(),
   updated_at    TIMESTAMPTZ DEFAULT now()
 );
+
+CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 
 -- ── Auth Sessions ─────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS auth_sessions (

@@ -14,6 +14,7 @@ import MistakeBank from './pages/MistakeBank'
 import Browse from './pages/Browse'
 import Settings from './pages/Settings'
 import DevReview from './pages/DevReview'
+import DevDashboard from './pages/DevDashboard'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -36,6 +37,7 @@ export default function App() {
               <Route path="settings" element={<Settings />} />
               <Route path="palette" element={<Navigate to="/settings" replace />} />
 
+              <Route path="dev" element={<RequireAdmin><DevDashboard /></RequireAdmin>} />
               <Route path="dev/review" element={<RequireAdmin><DevReview /></RequireAdmin>} />
 
               <Route path="*" element={<NotFound />} />

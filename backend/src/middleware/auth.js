@@ -1,4 +1,4 @@
-﻿// backend/src/middleware/auth.js
+// backend/src/middleware/auth.js
 import { query } from '../db/pool.js';
 
 /**
@@ -11,7 +11,7 @@ export async function authMiddleware(req, res, next) {
 
   try {
     const result = await query(
-      `SELECT u.id, u.email, u.role
+      `SELECT u.id, u.username, u.email, u.role
        FROM auth_sessions s
        JOIN users u ON u.id = s.user_id
        WHERE s.token = $1 AND s.expires_at > now()`,

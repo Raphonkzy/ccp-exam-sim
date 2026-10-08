@@ -143,16 +143,29 @@ export function Layout() {
                 </NavLink>
               ))}
               {user?.role === 'admin' && (
-                <NavLink
-                  to="/dev/review"
-                  className={({ isActive }) =>
-                    `nav-link !px-2 !py-1 !text-xs xl:!px-2.5 xl:!text-[13px] text-amber-950 bg-amber-100/60 border-amber-300/80 ${
-                      isActive ? 'active !bg-[#ffe95c]' : ''
-                    }`
-                  }
-                >
-                  <span>{t('nav.devReview')}</span>
-                </NavLink>
+                <>
+                  <NavLink
+                    to="/dev"
+                    end
+                    className={({ isActive }) =>
+                      `nav-link !px-2 !py-1 !text-xs xl:!px-2.5 xl:!text-[13px] text-amber-950 bg-amber-100/60 border-amber-300/80 ${
+                        isActive ? 'active !bg-[#ffe95c]' : ''
+                      }`
+                    }
+                  >
+                    <span>{t('nav.devDashboard')}</span>
+                  </NavLink>
+                  <NavLink
+                    to="/dev/review"
+                    className={({ isActive }) =>
+                      `nav-link !px-2 !py-1 !text-xs xl:!px-2.5 xl:!text-[13px] text-amber-950 bg-amber-100/60 border-amber-300/80 ${
+                        isActive ? 'active !bg-[#ffe95c]' : ''
+                      }`
+                    }
+                  >
+                    <span>{t('nav.devReview')}</span>
+                  </NavLink>
+                </>
               )}
             </nav>
 
@@ -177,10 +190,10 @@ export function Layout() {
                     className="flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] py-1 pl-1.5 pr-2.5 text-xs font-semibold text-[var(--color-forest-ink)] hover:border-[var(--color-forest-ink)] transition-all shadow-2xs"
                   >
                     <span className="grid h-5 w-5 sm:h-6 sm:w-6 place-items-center rounded-full bg-[var(--accent)] border border-[var(--border)] text-[10px] font-black text-[var(--color-forest-ink)]">
-                      {user.email[0].toUpperCase()}
+                      {(user.username ? user.username[0] : user.email[0]).toUpperCase()}
                     </span>
                     <span className="hidden sm:inline-block max-w-[85px] lg:max-w-[120px] truncate text-xs">
-                      {user.email.split('@')[0]}
+                      {user.username || user.email.split('@')[0]}
                     </span>
                     {user.role === 'admin' && (
                       <span className="rounded bg-amber-100 border border-amber-300 px-1 py-0.2 text-[9px] font-mono font-bold text-amber-900">
@@ -205,12 +218,17 @@ export function Layout() {
                       <div className="rounded-lg bg-[var(--surface-2)] border border-[var(--border)]/50 p-2.5 mb-1.5">
                         <div className="flex items-center gap-2">
                           <span className="grid h-6 w-6 place-items-center rounded-full bg-[var(--accent)] font-mono font-black text-xs text-[var(--color-forest-ink)] border border-[var(--border)]">
-                            {user.email[0].toUpperCase()}
+                            {(user.username ? user.username[0] : user.email[0]).toUpperCase()}
                           </span>
                           <div className="min-w-0 flex-1">
-                            <div className="truncate text-xs font-bold text-[var(--color-forest-ink)]">{user.email}</div>
+                            <div className="truncate text-xs font-bold text-[var(--color-forest-ink)]">
+                              {user.username ? `@${user.username}` : user.email.split('@')[0]}
+                            </div>
+                            <div className="truncate text-[10px] text-[var(--color-forest-ink)]/70">
+                              {user.email}
+                            </div>
                             {user.role === 'admin' && (
-                              <div className="text-[10px] text-[var(--color-forest-ink)]/60">Administrator</div>
+                              <div className="text-[10px] font-semibold text-amber-900">Administrator</div>
                             )}
                           </div>
                         </div>
@@ -218,16 +236,29 @@ export function Layout() {
 
                       <div className="space-y-0.5">
                         {user.role === 'admin' && (
-                          <NavLink
-                            to="/dev/review"
-                            onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center justify-between rounded-lg px-2.5 py-2 text-xs font-semibold text-[var(--color-forest-ink)] hover:bg-[var(--surface-2)] transition-colors no-underline"
-                          >
-                            <span>Dev Review</span>
-                            <span className="rounded bg-amber-100 border border-amber-300 px-1 text-[9px] font-mono font-bold text-amber-900">
-                              ADMIN
-                            </span>
-                          </NavLink>
+                          <>
+                            <NavLink
+                              to="/dev"
+                              end
+                              onClick={() => setUserMenuOpen(false)}
+                              className="flex items-center justify-between rounded-lg px-2.5 py-2 text-xs font-semibold text-[var(--color-forest-ink)] hover:bg-[var(--surface-2)] transition-colors no-underline"
+                            >
+                              <span>Dev Dashboard</span>
+                              <span className="rounded bg-amber-100 border border-amber-300 px-1 text-[9px] font-mono font-bold text-amber-900">
+                                ADMIN
+                              </span>
+                            </NavLink>
+                            <NavLink
+                              to="/dev/review"
+                              onClick={() => setUserMenuOpen(false)}
+                              className="flex items-center justify-between rounded-lg px-2.5 py-2 text-xs font-semibold text-[var(--color-forest-ink)] hover:bg-[var(--surface-2)] transition-colors no-underline"
+                            >
+                              <span>Questions Review</span>
+                              <span className="rounded bg-amber-100 border border-amber-300 px-1 text-[9px] font-mono font-bold text-amber-900">
+                                DEV
+                              </span>
+                            </NavLink>
+                          </>
                         )}
 
                         <NavLink
@@ -322,16 +353,29 @@ export function Layout() {
               </NavLink>
             ))}
             {user?.role === 'admin' && (
-              <NavLink
-                to="/dev/review"
-                className={({ isActive }) =>
-                  `nav-link !text-xs !py-1 !px-2.5 whitespace-nowrap shrink-0 text-amber-950 bg-amber-100/60 border-amber-300/80 ${
-                    isActive ? 'active !bg-[var(--accent)]' : ''
-                  }`
-                }
-              >
-                <span>{t('nav.devReview')}</span>
-              </NavLink>
+              <>
+                <NavLink
+                  to="/dev"
+                  end
+                  className={({ isActive }) =>
+                    `nav-link !text-xs !py-1 !px-2.5 whitespace-nowrap shrink-0 text-amber-950 bg-amber-100/60 border-amber-300/80 ${
+                      isActive ? 'active !bg-[var(--accent)]' : ''
+                    }`
+                  }
+                >
+                  <span>Dev Dashboard</span>
+                </NavLink>
+                <NavLink
+                  to="/dev/review"
+                  className={({ isActive }) =>
+                    `nav-link !text-xs !py-1 !px-2.5 whitespace-nowrap shrink-0 text-amber-950 bg-amber-100/60 border-amber-300/80 ${
+                      isActive ? 'active !bg-[var(--accent)]' : ''
+                    }`
+                  }
+                >
+                  <span>{t('nav.devReview')}</span>
+                </NavLink>
+              </>
             )}
           </nav>
         </div>

@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 
 export interface AuthUser {
   id: string
+  username?: string
   email: string
   role: 'user' | 'admin'
 }
@@ -9,9 +10,9 @@ export interface AuthUser {
 interface AuthContextValue {
   user: AuthUser | null
   loading: boolean
-  login: (email: string, password: string) => Promise<{ error?: string; notFound?: boolean }>
+  login: (identifier: string, password: string) => Promise<{ error?: string; notFound?: boolean }>
   logout: () => Promise<void>
-  register: (email: string, password: string) => Promise<{ error?: string }>
+  register: (username: string, email: string, password: string) => Promise<{ error?: string }>
   requestReset: (email: string) => Promise<{ error?: string; token?: string }>
   resetPassword: (token: string, password: string) => Promise<{ error?: string }>
 }
@@ -42,14 +43,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .finally(() => setLoading(false))
   }, [])
 
-  const login = useCallback(async (email: string, password: string) => {
+  const login = useCallback(async (identifier: string, password: string) => {
     let r: Response
     try {
       r = await fetch(`${API}/auth/login`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ identifier, password }),
       })
     } catch {
       return { error: 'Cannot reach the server. Is the backend running?' }
@@ -64,14 +65,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return {}
   }, [])
 
-  const register = useCallback(async (email: string, password: string) => {
+  const register = useCallback(async (username: string, email: string, password: string) => {
     let r: Response
     try {
       r = await fetch(`${API}/auth/register`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, email, password }),
       })
     } catch {
       return { error: 'Cannot reach the server. Is the backend running?' }
@@ -79,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const data = await safeJson(r)
     if (!r.ok) return { error: (data.error as string) ?? 'Registration failed' }
     // Auto-login after register
-    return login(email, password)
+    return login(username, password)
   }, [login])
 
   const logout = useCallback(async () => {

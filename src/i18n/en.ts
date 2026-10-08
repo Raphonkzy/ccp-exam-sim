@@ -14,7 +14,8 @@ export const en = {
   'nav.settings': 'Settings',
   'nav.palette': 'Palettes',
   'nav.menu': 'Menu',
-  'nav.devReview': 'Dev review',
+  'nav.devDashboard': 'Dev dashboard',
+  'nav.devReview': 'Question review',
 
   'header.theme': 'Theme',
 
