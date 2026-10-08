@@ -13,37 +13,33 @@ const DOMAIN_CARDS_BASE = [
   {
     domain: 1,
     weight: '24%',
-    badgeBg: 'var(--color-sticky-note-teal)',
     badgeBorder: '#0d9488',
-    cardBg: '#f2fbfb',
     borderTop: '#0d9488',
+    color: '#0d9488',
     shortName: 'Concepts',
   },
   {
     domain: 2,
     weight: '30%',
-    badgeBg: 'var(--color-sticky-note-mint)',
     badgeBorder: '#16a34a',
-    cardBg: '#f4fbf0',
     borderTop: '#16a34a',
+    color: '#16a34a',
     shortName: 'Security',
   },
   {
     domain: 3,
     weight: '34%',
-    badgeBg: 'var(--color-sticky-note-blush)',
     badgeBorder: '#9333ea',
-    cardBg: '#faf4fd',
     borderTop: '#9333ea',
+    color: '#9333ea',
     shortName: 'Technology',
   },
   {
     domain: 4,
     weight: '12%',
-    badgeBg: '#ffdcd1',
-    badgeBorder: 'var(--color-terracotta)',
-    cardBg: '#fef6f3',
-    borderTop: 'var(--color-terracotta)',
+    badgeBorder: '#cb5521',
+    borderTop: '#cb5521',
+    color: '#cb5521',
     shortName: 'Billing',
   },
 ]
@@ -97,11 +93,10 @@ export default function Dashboard() {
 
   return (
     <div className="grid gap-8">
-      {/* Say Briefly Display Hero Banner */}
       <section
-        className="relative overflow-hidden rounded-2xl border-[1.5px] border-[var(--color-pencil-gray)] bg-[var(--surface-cream)] p-6 sm:p-10"
+        className="relative overflow-hidden rounded-2xl border-[1.5px] border-[var(--border)] bg-[var(--surface)] p-6 sm:p-10"
         style={{
-          boxShadow: 'rgba(255, 235, 90, 0.15) 0px 10px 30px 0px',
+          boxShadow: '0 4px 18px -4px var(--glow)',
         }}
       >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -127,24 +122,23 @@ export default function Dashboard() {
               <span>{t('dashboard.startPractice')}</span>
               <span className="font-mono">→</span>
             </Link>
-            <Link to="/exam" className="btn-outline no-underline text-center text-base py-3 px-6 bg-[var(--surface-cream)]">
+            <Link to="/exam" className="btn-outline no-underline text-center text-base py-3 px-6 bg-[var(--surface)]">
               <span>{t('dashboard.startExam')}</span>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Guest Mode & Account Benefits Banner */}
       {!user && (
         <section
-          className="card flex flex-col md:flex-row md:items-center justify-between gap-4 border-[1.5px] border-[var(--color-forest-ink)]/25 bg-[#fffdf5]"
+          className="card flex flex-col md:flex-row md:items-center justify-between gap-4 border-[1.5px] border-[var(--border)] bg-[var(--surface-2)]"
           style={{
-            boxShadow: 'rgba(255, 233, 92, 0.25) 0px 4px 16px 0px',
+            boxShadow: '0 2px 10px -2px var(--glow)',
           }}
         >
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-[#ffe95c] border border-[#1a3300]/25 px-2 py-0.5 text-[10px] font-mono font-bold text-[#1a3300]">
+              <span className="rounded-full bg-[var(--accent)] border border-[var(--border-strong)] px-2.5 py-0.5 text-[10px] font-mono font-bold text-[var(--accent-text)] shadow-2xs">
                 STUDY ANYWHERE
               </span>
               <span className="text-sm font-bold text-[var(--color-forest-ink)]">
@@ -166,7 +160,6 @@ export default function Dashboard() {
         </section>
       )}
 
-      {/* 4 Stat Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           icon={
@@ -185,7 +178,7 @@ export default function Dashboard() {
             </svg>
           }
           label={t('dashboard.accuracy')}
-          value={o.pct === null ? '—' : `${o.pct}%`}
+          value={o.pct === null ? 'N/A' : `${o.pct}%`}
           hint={o.total ? `${o.correct}/${o.total} ${t('review.correct')}` : undefined}
         />
         <StatCard
@@ -210,7 +203,6 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* Domain Sticky Note Cards */}
       <section aria-labelledby="domains-heading">
         <div className="mb-4 flex items-baseline justify-between">
           <h2 id="domains-heading" className="h2 text-[var(--color-forest-ink)]">
@@ -230,7 +222,6 @@ export default function Dashboard() {
                 key={card.domain}
                 className="domain-card flex flex-col justify-between"
                 style={{
-                  backgroundColor: card.cardBg,
                   borderTop: `4px solid ${card.borderTop}`,
                 }}
               >
@@ -239,9 +230,9 @@ export default function Dashboard() {
                     <span
                       className="chip font-mono font-bold text-xs"
                       style={{
-                        background: card.badgeBg,
-                        color: 'var(--color-forest-ink)',
-                        border: '1px solid var(--color-forest-ink)',
+                        background: `color-mix(in srgb, ${card.color} 18%, var(--surface))`,
+                        color: card.color,
+                        borderColor: card.badgeBorder,
                       }}
                     >
                       Domain {card.domain} · {card.weight}
@@ -257,7 +248,7 @@ export default function Dashboard() {
                   </p>
                 </div>
 
-                <div className="mt-5 pt-3 border-t border-[var(--color-pencil-gray)]/40 flex items-center justify-between">
+                <div className="mt-5 pt-3 border-t border-[var(--border)]/50 flex items-center justify-between">
                   <div>
                     <span className="text-[11px] block font-mono text-[var(--color-forest-ink)]/70 font-semibold">Mastery</span>
                     <span className="text-sm font-extrabold text-[var(--color-forest-ink)]">
@@ -267,7 +258,7 @@ export default function Dashboard() {
                   <button
                     type="button"
                     onClick={() => navigate('/practice', { state: { domain: card.domain } })}
-                    className="btn btn-sm !rounded-[6px] text-xs font-semibold hover:bg-[var(--color-forest-ink)] hover:text-[var(--color-cream-paper)]"
+                    className="btn btn-sm !rounded-[6px] text-xs font-semibold hover:border-[var(--border-strong)]"
                   >
                     Study →
                   </button>
@@ -278,7 +269,6 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* Domain Accuracy Chart & Focus Recommendation */}
       <div className="grid gap-6 lg:grid-cols-3">
         <section className="card lg:col-span-2" aria-labelledby="dom-acc">
           <div className="mb-4 flex items-baseline justify-between">

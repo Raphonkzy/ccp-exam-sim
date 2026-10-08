@@ -17,14 +17,17 @@ export default function PracticeSession() {
   const practice = data.activePractice
   const [confirmEnd, setConfirmEnd] = useState(false)
   const [confirmDiscard, setConfirmDiscard] = useState(false)
+  const [isEnding, setIsEnding] = useState(false)
 
   const questions = useMemo(
     () => (practice?.questionIds ?? []).map(getQuestion).filter((q): q is Question => !!q),
     [practice?.questionIds],
   )
 
-  // No active session → go back to setup
-  if (!practice || questions.length === 0) return <Navigate to="/practice" replace />
+  if (!practice || questions.length === 0) {
+    if (isEnding) return null
+    return <Navigate to="/practice" replace />
+  }
 
   const q = questions[practice.index]
   const sel = practice.selections[q.id] ?? []
@@ -41,6 +44,7 @@ export default function PracticeSession() {
   }
 
   const finish = (answeredOnly: boolean) => {
+    if (isEnding) return
     const done = answeredOnly
       ? questions.filter((x) => practice.checked.includes(x.id))
       : questions
@@ -48,7 +52,7 @@ export default function PracticeSession() {
       discardPractice()
       return navigate('/practice', { replace: true })
     }
-    // Only save answers when session is completed/ended
+    setIsEnding(true)
     const answeredQuestions = questions.filter((x) => practice.checked.includes(x.id))
     const toRecord = answeredQuestions.map((item) => {
       const itemSel = practice.selections[item.id] ?? []
@@ -61,9 +65,9 @@ export default function PracticeSession() {
     })
     recordAnswersBatch(toRecord)
     const session = summarize(practice.id, 'practice', practice.startedAt, done, practice.selections, [])
-    setActivePractice(null)
     addSession(session)
-    navigate(`/results/${session.id}`, { replace: true })
+    setActivePractice(null)
+    navigate(`/results/${session.id}`, { replace: true, state: { session } })
   }
 
   const discard = () => {
@@ -73,7 +77,6 @@ export default function PracticeSession() {
 
   return (
     <div className="mx-auto grid max-w-3xl gap-4">
-      {/* Resume banner — shown when user returns to a session they left mid-way */}
       {practice.checked.length > 0 && (
         <div className="card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 border-l-[var(--color-forest-ink)] !py-3">
           <div>
@@ -88,7 +91,6 @@ export default function PracticeSession() {
         </div>
       )}
 
-      {/* Progress bar */}
       <div className="flex items-center gap-3">
         <div
           className="h-2 flex-1 overflow-hidden rounded-full bg-[var(--surface-2)] border border-[var(--color-pencil-gray)]/50"
@@ -152,7 +154,6 @@ export default function PracticeSession() {
         )}
       </div>
 
-      {/* End early confirm */}
       <ConfirmDialog
         open={confirmEnd}
         title={t('practice.endConfirmTitle')}
@@ -163,7 +164,6 @@ export default function PracticeSession() {
         {t('practice.endConfirmBody')}
       </ConfirmDialog>
 
-      {/* Discard confirm */}
       <ConfirmDialog
         open={confirmDiscard}
         title={t('practice.discardConfirmTitle')}

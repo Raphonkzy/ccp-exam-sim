@@ -1,0 +1,3069 @@
+[
+  {
+    "id": "d4-0001",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "A company runs a fault-tolerant, flexible batch processing job that can be interrupted and restarted. Which Amazon EC2 purchasing option offers the lowest cost for this workload?",
+    "options": [
+      {
+        "id": "A",
+        "text": "On-Demand Instances"
+      },
+      {
+        "id": "B",
+        "text": "Dedicated Hosts"
+      },
+      {
+        "id": "C",
+        "text": "Capacity Reservations"
+      },
+      {
+        "id": "D",
+        "text": "Spot Instances"
+      }
+    ],
+    "correctOptionIds": [
+      "D"
+    ],
+    "explanation": "Spot Instances use spare EC2 capacity at a steep discount but can be interrupted, making them ideal for fault-tolerant, flexible workloads.",
+    "optionExplanations": {
+      "A": "On-Demand costs more than Spot.",
+      "B": "Dedicated Hosts are for licensing/compliance, at higher cost.",
+      "C": "Capacity Reservations guarantee capacity but provide no discount on their own.",
+      "D": "Correct. Spot offers the deepest discount for interruption-tolerant workloads."
+    },
+    "keyConcept": "Spot Instances = lowest cost for fault-tolerant interruptible jobs (up to 90% off On-Demand).",
+    "difficulty": "easy",
+    "tags": [
+      "EC2",
+      "spot-instances",
+      "pricing"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0002",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "A company has steady compute usage and wants to commit for 1–3 years for lower prices. It also wants discounts to apply even if it changes instance families or uses AWS Fargate and Lambda. Which pricing model should it choose?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Spot Instances"
+      },
+      {
+        "id": "B",
+        "text": "Compute Savings Plans"
+      },
+      {
+        "id": "C",
+        "text": "On-Demand Instances"
+      },
+      {
+        "id": "D",
+        "text": "Dedicated Instances"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "Compute Savings Plans provide lower prices for a 1- or 3-year usage commitment and apply flexibly across EC2 families, Regions, Fargate, and Lambda.",
+    "optionExplanations": {
+      "A": "Spot is not a commitment model and can be interrupted.",
+      "B": "Correct. Compute Savings Plans offer the broadest flexibility across compute services.",
+      "C": "On-Demand has no commitment and no discount.",
+      "D": "Dedicated Instances are a tenancy model, not a commitment discount."
+    },
+    "keyConcept": "Compute Savings Plans: 1 or 3-year commitment — applies to EC2, Fargate, and Lambda.",
+    "difficulty": "medium",
+    "tags": [
+      "savings-plans",
+      "pricing",
+      "EC2"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0003",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "A database server must run 24/7 for 3 years on a specific EC2 instance type in a specific Region. Which pricing option provides the greatest discount?",
+    "options": [
+      {
+        "id": "A",
+        "text": "On-Demand Instances"
+      },
+      {
+        "id": "B",
+        "text": "Spot Instances"
+      },
+      {
+        "id": "C",
+        "text": "Standard Reserved Instances with a 3-year term and all-upfront payment"
+      },
+      {
+        "id": "D",
+        "text": "Compute Savings Plans with a 1-year term"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "Standard Reserved Instances with a 3-year all-upfront payment offer the maximum EC2 discount (up to 72%) for a specific instance type, size, and Region.",
+    "optionExplanations": {
+      "A": "On-Demand is the baseline with no discount.",
+      "B": "Spot can be cheaper but is interruptible — unsuitable for a 24/7 database.",
+      "C": "Correct. 3-year all-upfront Standard RIs deliver the maximum discount for predictable, specific workloads.",
+      "D": "Compute Savings Plans are flexible but slightly less discounted than Standard RIs for exact workloads."
+    },
+    "keyConcept": "Standard RI (3-year, all-upfront): maximum discount for predictable, specific instance workloads.",
+    "difficulty": "medium",
+    "tags": [
+      "reserved-instances",
+      "pricing",
+      "EC2"
+    ],
+    "sourceUrl": "https://aws.amazon.com/ec2/pricing/reserved-instances/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0004",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "Amazon S3 pricing is based on several factors. Which of the following is NOT a component of Amazon S3 pricing?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Amount of data stored per month"
+      },
+      {
+        "id": "B",
+        "text": "Data transferred out of S3 to the internet"
+      },
+      {
+        "id": "C",
+        "text": "Number of GET, PUT, LIST, and other API requests"
+      },
+      {
+        "id": "D",
+        "text": "The number of EC2 vCPUs used to process S3 requests"
+      }
+    ],
+    "correctOptionIds": [
+      "D"
+    ],
+    "explanation": "S3 pricing covers storage, data transfer out, and request counts. EC2 compute is not billed as part of S3 — it is a managed service.",
+    "optionExplanations": {
+      "A": "Storage (GB-months) is a primary S3 pricing dimension.",
+      "B": "Data transfer out to the internet is charged per GB.",
+      "C": "API requests are charged per 1,000 requests.",
+      "D": "Correct — NOT charged. S3 is managed; customers never pay for the compute behind it."
+    },
+    "keyConcept": "S3 pricing: storage + data transfer out + requests — not compute vCPUs.",
+    "difficulty": "medium",
+    "tags": [
+      "S3",
+      "pricing"
+    ],
+    "sourceUrl": "https://aws.amazon.com/s3/pricing/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0005",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "multiple",
+    "question": "Which TWO pricing options for Amazon EC2 provide discounted hourly rates in exchange for committing to a consistent amount of usage over a 1- or 3-year term?",
+    "options": [
+      {
+        "id": "A",
+        "text": "EC2 Savings Plans"
+      },
+      {
+        "id": "B",
+        "text": "On-Demand Instances"
+      },
+      {
+        "id": "C",
+        "text": "Standard Reserved Instances"
+      },
+      {
+        "id": "D",
+        "text": "Spot Instances"
+      },
+      {
+        "id": "E",
+        "text": "Dedicated Hosts without term commitment"
+      }
+    ],
+    "correctOptionIds": [
+      "A",
+      "C"
+    ],
+    "explanation": "Savings Plans and Reserved Instances both offer significant discounts (up to 72%) off On-Demand pricing in exchange for committing to a specific usage level over a 1- or 3-year period.",
+    "optionExplanations": {
+      "A": "Correct. Savings Plans offer deep discounts for 1- or 3-year hourly spend commitments.",
+      "B": "On-Demand instances have no commitment and no discount.",
+      "C": "Correct. Reserved Instances provide discounted pricing for 1- or 3-year term commitments.",
+      "D": "Spot Instances offer steep discounts on spare capacity without any term commitment.",
+      "E": "On-demand Dedicated Hosts do not provide term commitment discounts."
+    },
+    "keyConcept": "On-Demand: pay by hour/second, no commitment, no interruption — the baseline pricing model.",
+    "difficulty": "easy",
+    "tags": [
+      "pricing",
+      "EC2",
+      "on-demand"
+    ],
+    "sourceUrl": "https://aws.amazon.com/ec2/pricing/on-demand/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0006",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "A company needs to guarantee EC2 capacity in a specific AZ without a term commitment. Which option provides this?",
+    "options": [
+      {
+        "id": "A",
+        "text": "On-Demand Instances"
+      },
+      {
+        "id": "B",
+        "text": "Spot Instances"
+      },
+      {
+        "id": "C",
+        "text": "On-Demand Capacity Reservations"
+      },
+      {
+        "id": "D",
+        "text": "Savings Plans"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "On-Demand Capacity Reservations reserve compute capacity in a specific AZ for any duration with no usage commitment, ensuring availability when needed.",
+    "optionExplanations": {
+      "A": "On-Demand Instances can launch when capacity is available but capacity is not pre-reserved.",
+      "B": "Spot Instances can be interrupted — no capacity guarantee.",
+      "C": "Correct. Capacity Reservations guarantee EC2 capacity in a specific AZ without a term commitment.",
+      "D": "Savings Plans provide discounts but do not reserve physical capacity."
+    },
+    "keyConcept": "Capacity Reservations: guarantee EC2 capacity in a specific AZ — no term commitment required.",
+    "difficulty": "hard",
+    "tags": [
+      "EC2",
+      "pricing",
+      "capacity-reservations"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-capacity-reservations.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0007",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "multiple",
+    "question": "Which TWO AWS pricing principles describe how AWS pricing generally works?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Pay only for the services and resources you actually use"
+      },
+      {
+        "id": "B",
+        "text": "Pay a flat annual fee regardless of consumption"
+      },
+      {
+        "id": "C",
+        "text": "Pay less per unit as usage increases (volume discounts)"
+      },
+      {
+        "id": "D",
+        "text": "Pay a one-time setup fee for each AWS service"
+      },
+      {
+        "id": "E",
+        "text": "Pay the same price regardless of AWS Region"
+      }
+    ],
+    "correctOptionIds": [
+      "A",
+      "C"
+    ],
+    "explanation": "AWS pricing is built on paying only for what you use and offering volume-based discounts where per-unit cost decreases as usage grows.",
+    "optionExplanations": {
+      "A": "Correct. Pay-as-you-go — pay only for consumed resources.",
+      "B": "AWS does not charge flat annual fees for services.",
+      "C": "Correct. Volume discounts apply in many services.",
+      "D": "There are no one-time setup fees for most AWS services.",
+      "E": "Pricing varies by Region."
+    },
+    "keyConcept": "AWS pricing: pay-as-you-go + volume discounts — the more you use, the less per unit.",
+    "difficulty": "easy",
+    "tags": [
+      "pricing",
+      "cloud-economics"
+    ],
+    "sourceUrl": "https://aws.amazon.com/pricing/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0008",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "AWS Lambda pricing is based on which combination of dimensions?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Number of function invocations and duration of each execution (GB-seconds)"
+      },
+      {
+        "id": "B",
+        "text": "Number of EC2 instances the function runs on"
+      },
+      {
+        "id": "C",
+        "text": "Amount of S3 storage the function consumes"
+      },
+      {
+        "id": "D",
+        "text": "Number of IAM roles attached to the function"
+      }
+    ],
+    "correctOptionIds": [
+      "A"
+    ],
+    "explanation": "Lambda charges based on the number of requests (invocations) and the duration of execution measured in GB-seconds (memory × execution time).",
+    "optionExplanations": {
+      "A": "Correct. Lambda pricing = number of invocations + duration in GB-seconds.",
+      "B": "Lambda is serverless — you do not pay for EC2 instances.",
+      "C": "S3 storage is billed separately through S3 pricing, not Lambda.",
+      "D": "IAM roles are not a Lambda billing dimension."
+    },
+    "keyConcept": "Lambda pricing: invocations + duration (GB-seconds = memory × execution time).",
+    "difficulty": "medium",
+    "tags": [
+      "lambda",
+      "pricing",
+      "serverless"
+    ],
+    "sourceUrl": "https://aws.amazon.com/lambda/pricing/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0009",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "A company evaluating a move to AWS wants to compare the total cost of on-premises infrastructure with equivalent AWS services. Which tool provides this TCO comparison?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Pricing Calculator"
+      },
+      {
+        "id": "B",
+        "text": "AWS Migration Evaluator"
+      },
+      {
+        "id": "C",
+        "text": "AWS Cost Explorer"
+      },
+      {
+        "id": "D",
+        "text": "AWS Trusted Advisor"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "AWS Migration Evaluator analyses on-premises costs (hardware, power, cooling, staff) versus equivalent AWS services to produce a business case showing projected savings from migration.",
+    "optionExplanations": {
+      "A": "Pricing Calculator estimates AWS costs but doesn't compare against on-premises.",
+      "B": "Correct. Migration Evaluator provides a TCO comparison and migration business case.",
+      "C": "Cost Explorer analyses existing AWS spend; it doesn't compare with on-premises.",
+      "D": "Trusted Advisor gives best-practice recommendations, not TCO comparisons."
+    },
+    "keyConcept": "AWS Migration Evaluator: compare on-premises TCO vs. equivalent AWS cost.",
+    "difficulty": "medium",
+    "tags": [
+      "pricing",
+      "TCO",
+      "migration"
+    ],
+    "sourceUrl": "https://aws.amazon.com/migration-evaluator/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0010",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "A new startup wants to use EC2, S3, and Lambda for free within defined usage limits for 12 months after account creation. Which AWS offering allows this?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Savings Plans"
+      },
+      {
+        "id": "B",
+        "text": "AWS Free Tier (12-month free tier)"
+      },
+      {
+        "id": "C",
+        "text": "AWS Developer Support"
+      },
+      {
+        "id": "D",
+        "text": "AWS Reserved Instances"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "The AWS Free Tier includes a 12-month free offer for many services starting from account creation (e.g., 750 hours EC2 t2.micro/month, 5 GB S3 Standard, 1M Lambda invocations/month).",
+    "optionExplanations": {
+      "A": "Savings Plans require a usage commitment — they are not free.",
+      "B": "Correct. The 12-month Free Tier provides limited free usage across many services.",
+      "C": "Developer Support is a paid support plan.",
+      "D": "Reserved Instances require upfront commitment and payment."
+    },
+    "keyConcept": "AWS 12-month Free Tier: 750 EC2 hrs, 5 GB S3, 1M Lambda invocations/month free for 12 months.",
+    "difficulty": "easy",
+    "tags": [
+      "free-tier",
+      "pricing"
+    ],
+    "sourceUrl": "https://aws.amazon.com/free/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0011",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "Which AWS Free Tier category provides services — such as Lambda (1M requests/month) and DynamoDB (25 GB storage) — free permanently regardless of when the account was created?",
+    "options": [
+      {
+        "id": "A",
+        "text": "12-month free tier"
+      },
+      {
+        "id": "B",
+        "text": "Always-free tier"
+      },
+      {
+        "id": "C",
+        "text": "Free trials"
+      },
+      {
+        "id": "D",
+        "text": "Spot pricing tier"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "The always-free tier offers certain services at no charge permanently within their stated limits — including Lambda (1M requests), DynamoDB (25 GB), CloudWatch (10 custom metrics), and more.",
+    "optionExplanations": {
+      "A": "The 12-month free tier starts at account creation and expires after 12 months.",
+      "B": "Correct. Always-free services are permanently free within their limits.",
+      "C": "Free trials are short-term introductory offers for specific services.",
+      "D": "Spot pricing is a discounted EC2 purchasing model, not a Free Tier category."
+    },
+    "keyConcept": "Always-free tier: Lambda 1M reqs, DynamoDB 25 GB, CloudWatch 10 metrics — permanently free.",
+    "difficulty": "medium",
+    "tags": [
+      "free-tier",
+      "pricing"
+    ],
+    "sourceUrl": "https://aws.amazon.com/free/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0012",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "Which of the following data transfers into or out of AWS is typically FREE?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Data transferred from Amazon S3 to the internet"
+      },
+      {
+        "id": "B",
+        "text": "Data transferred between EC2 and S3 in different Regions"
+      },
+      {
+        "id": "C",
+        "text": "Data transferred into AWS from the internet (inbound)"
+      },
+      {
+        "id": "D",
+        "text": "Data transferred from EC2 in one Region to RDS in another Region"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "Inbound data transfer into AWS from the internet is generally free. Outbound (to internet) and cross-Region transfers typically incur charges.",
+    "optionExplanations": {
+      "A": "Data from S3 to the internet (egress) is charged per GB.",
+      "B": "Cross-Region data transfer between EC2/S3 incurs per-GB charges.",
+      "C": "Correct. Inbound data transfer into AWS is generally free.",
+      "D": "Cross-Region data transfer incurs per-GB charges."
+    },
+    "keyConcept": "Inbound data transfer to AWS = free; outbound to the internet = charged per GB.",
+    "difficulty": "medium",
+    "tags": [
+      "pricing",
+      "data-transfer"
+    ],
+    "sourceUrl": "https://aws.amazon.com/ec2/pricing/on-demand/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0013",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "Amazon RDS pricing includes which of the following billing dimensions?",
+    "options": [
+      {
+        "id": "A",
+        "text": "The physical data center rack space for the database"
+      },
+      {
+        "id": "B",
+        "text": "DB instance hours, storage, I/O requests, and data transfer out"
+      },
+      {
+        "id": "C",
+        "text": "The cost of patching the RDS database engine"
+      },
+      {
+        "id": "D",
+        "text": "Unlimited free backup storage regardless of database size"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "RDS pricing includes DB instance hours, allocated storage, I/O requests (magnetic storage), and data transfer out. OS and engine patching is handled by AWS at no extra charge.",
+    "optionExplanations": {
+      "A": "Physical rack space is AWS's infrastructure cost — not passed to customers.",
+      "B": "Correct. These are the customer-facing billing dimensions for RDS.",
+      "C": "OS and engine patching is done by AWS at no extra charge.",
+      "D": "Backup storage beyond 100% of your DB storage size incurs charges."
+    },
+    "keyConcept": "RDS pricing: DB instance hours + storage + I/O + data transfer out.",
+    "difficulty": "hard",
+    "tags": [
+      "RDS",
+      "pricing",
+      "databases"
+    ],
+    "sourceUrl": "https://aws.amazon.com/rds/pricing/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0014",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "multiple",
+    "question": "Which TWO AWS tools help customers track, visualize, and forecast their AWS cloud spending and usage?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Cost Explorer"
+      },
+      {
+        "id": "B",
+        "text": "Amazon Route 53"
+      },
+      {
+        "id": "C",
+        "text": "AWS Budgets"
+      },
+      {
+        "id": "D",
+        "text": "Amazon Polly"
+      },
+      {
+        "id": "E",
+        "text": "AWS Direct Connect"
+      }
+    ],
+    "correctOptionIds": [
+      "A",
+      "C"
+    ],
+    "explanation": "AWS Cost Explorer lets you visualize, understand, and manage your AWS costs and usage over time. AWS Budgets lets you set custom budgets that alert you when costs or usage exceed your budgeted amounts.",
+    "optionExplanations": {
+      "A": "Correct. Cost Explorer provides visual charts, usage breakdowns, and cost forecasting.",
+      "B": "Route 53 is a DNS service.",
+      "C": "Correct. AWS Budgets sets custom spending and usage thresholds with email/SNS alerts.",
+      "D": "Polly is a text-to-speech AI service.",
+      "E": "Direct Connect establishes physical private networking."
+    },
+    "keyConcept": "AWS Compute Optimizer: ML-based rightsizing recommendations for EC2, Lambda, EBS, and ECS.",
+    "difficulty": "medium",
+    "tags": [
+      "compute-optimizer",
+      "rightsizing",
+      "cost-optimization"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/compute-optimizer/latest/ug/what-is-compute-optimizer.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0015",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "Which AWS service provides the most granular billing data — including every line item — that can be exported to S3 for analysis with Athena or Redshift?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Cost Explorer"
+      },
+      {
+        "id": "B",
+        "text": "AWS Budgets"
+      },
+      {
+        "id": "C",
+        "text": "AWS Cost and Usage Report (CUR)"
+      },
+      {
+        "id": "D",
+        "text": "AWS Trusted Advisor"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "The AWS Cost and Usage Report (CUR) is the most comprehensive billing dataset, containing every line item of every service with hourly or daily granularity, deliverable to S3.",
+    "optionExplanations": {
+      "A": "Cost Explorer provides pre-built visualizations; CUR has greater granularity for custom analysis.",
+      "B": "Budgets sets alerts; it doesn't provide raw billing data exports.",
+      "C": "Correct. CUR is the most detailed billing dataset, exportable to S3 for deep analysis.",
+      "D": "Trusted Advisor provides recommendations; it doesn't export billing data."
+    },
+    "keyConcept": "AWS Cost and Usage Report (CUR): most granular billing data, exported to S3 for custom analysis.",
+    "difficulty": "hard",
+    "tags": [
+      "CUR",
+      "billing",
+      "cost-management"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0016",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "A company is comparing running a workload on AWS versus on-premises. Which statement best describes the CapEx vs. OpEx difference with AWS?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS requires a large upfront capital expenditure for reserved hardware"
+      },
+      {
+        "id": "B",
+        "text": "AWS converts large capital expenditures into smaller, variable operational expenses"
+      },
+      {
+        "id": "C",
+        "text": "AWS and on-premises have identical total cost structures"
+      },
+      {
+        "id": "D",
+        "text": "AWS charges a fixed monthly fee regardless of resource consumption"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "On-premises requires significant CapEx for hardware. AWS replaces this with OpEx — pay only for what you consume with no large upfront capital commitment.",
+    "optionExplanations": {
+      "A": "AWS does not require large upfront CapEx.",
+      "B": "Correct. AWS converts CapEx to variable OpEx — a core cloud economic benefit.",
+      "C": "The total cost structures are fundamentally different.",
+      "D": "AWS charges vary with consumption; there is no fixed monthly fee for compute."
+    },
+    "keyConcept": "AWS converts CapEx (hardware purchases) to variable OpEx (pay-as-you-go usage).",
+    "difficulty": "easy",
+    "tags": [
+      "pricing",
+      "capex-vs-opex",
+      "cloud-economics"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/whitepapers/latest/aws-overview/six-advantages-of-cloud-computing.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0017",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "A finance team wants to receive an email alert when the company's monthly AWS spending is forecast to exceed a threshold it defines. Which AWS service should the team use?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Budgets"
+      },
+      {
+        "id": "B",
+        "text": "AWS Pricing Calculator"
+      },
+      {
+        "id": "C",
+        "text": "AWS Artifact"
+      },
+      {
+        "id": "D",
+        "text": "AWS Health Dashboard"
+      }
+    ],
+    "correctOptionIds": [
+      "A"
+    ],
+    "explanation": "AWS Budgets lets you set custom cost and usage budgets and sends alerts when actual or forecasted values exceed your defined thresholds.",
+    "optionExplanations": {
+      "A": "Correct. AWS Budgets supports threshold alerts on actual and forecasted spending.",
+      "B": "Pricing Calculator estimates costs for planned architectures, not live account alerts.",
+      "C": "Artifact provides compliance documents; it has no billing alert capability.",
+      "D": "Health Dashboard reports on service events; it is not a billing alert service."
+    },
+    "keyConcept": "AWS Budgets = set custom cost/usage thresholds with email or SNS alerts.",
+    "difficulty": "easy",
+    "tags": [
+      "budgets",
+      "cost-management"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0018",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "A company wants to visualise its AWS spending over time, identify cost trends, and forecast next month's spend. Which service provides this?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Budgets"
+      },
+      {
+        "id": "B",
+        "text": "AWS Pricing Calculator"
+      },
+      {
+        "id": "C",
+        "text": "AWS Cost Explorer"
+      },
+      {
+        "id": "D",
+        "text": "AWS Organizations"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "AWS Cost Explorer provides an interactive visualization of AWS cost and usage data with filtering by service, region, tag, or account, and built-in spend forecasting.",
+    "optionExplanations": {
+      "A": "Budgets sets thresholds and alerts; it doesn't provide historical trend visualization.",
+      "B": "Pricing Calculator estimates costs for new architectures before deployment.",
+      "C": "Correct. Cost Explorer visualizes historical data and forecasts future spend.",
+      "D": "Organizations manages multiple accounts; Cost Explorer is the visualization tool."
+    },
+    "keyConcept": "AWS Cost Explorer: interactive cost visualization with filtering, grouping, and spend forecasting.",
+    "difficulty": "easy",
+    "tags": [
+      "cost-explorer",
+      "cost-management"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0019",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "A company wants to consolidate billing from 12 AWS accounts into a single invoice and share volume discounts across all accounts. Which service enables this?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Budgets"
+      },
+      {
+        "id": "B",
+        "text": "AWS Cost Explorer"
+      },
+      {
+        "id": "C",
+        "text": "AWS Organizations with consolidated billing"
+      },
+      {
+        "id": "D",
+        "text": "AWS IAM Identity Center"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "AWS Organizations with consolidated billing combines usage and costs of all member accounts into a single bill and aggregates usage for volume discounts.",
+    "optionExplanations": {
+      "A": "Budgets sets spending thresholds; it doesn't consolidate billing.",
+      "B": "Cost Explorer visualizes costs; it doesn't consolidate billing across accounts.",
+      "C": "Correct. Consolidated billing produces one invoice and pools usage for volume discounts.",
+      "D": "IAM Identity Center provides SSO; it doesn't manage billing."
+    },
+    "keyConcept": "Consolidated billing: one invoice + pooled usage across accounts = shared volume discounts.",
+    "difficulty": "medium",
+    "tags": [
+      "organizations",
+      "billing",
+      "cost-management"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/consolidated-billing.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0020",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "A company wants to estimate the monthly cost of a planned architecture before building it. Which tool should they use?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Cost Explorer"
+      },
+      {
+        "id": "B",
+        "text": "AWS Budgets"
+      },
+      {
+        "id": "C",
+        "text": "AWS Pricing Calculator"
+      },
+      {
+        "id": "D",
+        "text": "Amazon QuickSight"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "The AWS Pricing Calculator allows you to model a planned AWS architecture and get an estimated monthly cost, helping inform decisions before deployment.",
+    "optionExplanations": {
+      "A": "Cost Explorer analyses existing account costs; it doesn't estimate hypothetical architectures.",
+      "B": "Budgets monitors and alerts on live spending; not a pre-deployment estimator.",
+      "C": "Correct. The Pricing Calculator generates cost estimates for planned architectures.",
+      "D": "QuickSight is a BI visualization tool, not a cost estimator."
+    },
+    "keyConcept": "AWS Pricing Calculator: estimate monthly costs for planned architectures before deployment.",
+    "difficulty": "easy",
+    "tags": [
+      "pricing-calculator",
+      "cost-management"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/pricing-calculator/latest/userguide/what-is-pricing-calculator.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0021",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "A company tags all resources with 'CostCenter' tags. Which AWS feature lets them view cost breakdowns by these tags?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Config rules"
+      },
+      {
+        "id": "B",
+        "text": "Cost allocation tags and AWS Cost Explorer"
+      },
+      {
+        "id": "C",
+        "text": "Amazon CloudWatch dashboards"
+      },
+      {
+        "id": "D",
+        "text": "AWS CloudTrail logs"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "By activating tags as cost allocation tags in the Billing console, AWS tracks costs per tag value. Cost Explorer lets you filter and group costs by those tags.",
+    "optionExplanations": {
+      "A": "Config rules evaluate resource compliance; they don't break down costs by tag.",
+      "B": "Correct. Cost allocation tags + Cost Explorer provide cost views by business dimension.",
+      "C": "CloudWatch shows operational metrics, not billing breakdowns.",
+      "D": "CloudTrail logs API activity; it doesn't aggregate cost data by tag."
+    },
+    "keyConcept": "Cost allocation tags + Cost Explorer: track AWS spend by team, project, or cost center.",
+    "difficulty": "medium",
+    "tags": [
+      "cost-management",
+      "cost-allocation-tags",
+      "cost-explorer"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0022",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "A company receives an unexpectedly large AWS invoice. Which service helps the finance team investigate which services and accounts drove the charges?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Trusted Advisor"
+      },
+      {
+        "id": "B",
+        "text": "AWS Cost Explorer"
+      },
+      {
+        "id": "C",
+        "text": "AWS Budgets"
+      },
+      {
+        "id": "D",
+        "text": "AWS Pricing Calculator"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "AWS Cost Explorer lets you drill into historical cost data, filter by service, linked account, Region, and tag, to identify specific charges that caused unexpected increases.",
+    "optionExplanations": {
+      "A": "Trusted Advisor gives proactive recommendations; it doesn't investigate historical invoice anomalies.",
+      "B": "Correct. Cost Explorer is the tool for investigating and analysing historical billing data.",
+      "C": "Budgets alerts on future breaches; it doesn't investigate past invoices.",
+      "D": "Pricing Calculator estimates future costs; it doesn't show actual billed charges."
+    },
+    "keyConcept": "AWS Cost Explorer: investigate historical billing — filter by service, account, region, and tag.",
+    "difficulty": "easy",
+    "tags": [
+      "cost-explorer",
+      "cost-management"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0023",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "A company wants to automatically detect unusual spending spikes without manually reviewing Cost Explorer daily. Which AWS service provides ML-powered anomaly detection for billing?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Budgets alerts"
+      },
+      {
+        "id": "B",
+        "text": "AWS Cost Anomaly Detection"
+      },
+      {
+        "id": "C",
+        "text": "Amazon GuardDuty"
+      },
+      {
+        "id": "D",
+        "text": "AWS Config"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "AWS Cost Anomaly Detection uses machine learning to continuously monitor AWS spend and detect unusual expenditure patterns, alerting you in near real time.",
+    "optionExplanations": {
+      "A": "Budgets alerts trigger when a threshold is crossed; they don't automatically learn spending patterns.",
+      "B": "Correct. Cost Anomaly Detection uses ML to find unexpected spending spikes automatically.",
+      "C": "GuardDuty detects security threats, not billing anomalies.",
+      "D": "Config evaluates resource configuration compliance; it doesn't monitor billing."
+    },
+    "keyConcept": "AWS Cost Anomaly Detection: ML-powered automatic detection of unusual spending patterns.",
+    "difficulty": "medium",
+    "tags": [
+      "cost-anomaly-detection",
+      "cost-management"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/cost-management/latest/userguide/manage-ad.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0024",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "multiple",
+    "question": "Which TWO tools are free and help a customer understand or manage AWS costs?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Pricing Calculator (no account required)"
+      },
+      {
+        "id": "B",
+        "text": "The AWS Free Tier usage dashboard in the Billing console"
+      },
+      {
+        "id": "C",
+        "text": "A dedicated AWS Technical Account Manager (TAM)"
+      },
+      {
+        "id": "D",
+        "text": "AWS Business Support plan"
+      },
+      {
+        "id": "E",
+        "text": "AWS Professional Services engagement"
+      }
+    ],
+    "correctOptionIds": [
+      "A",
+      "B"
+    ],
+    "explanation": "The AWS Pricing Calculator and Free Tier usage dashboard are both free. TAMs, Business Support, and Professional Services all require paid plans or engagements.",
+    "optionExplanations": {
+      "A": "Correct. Pricing Calculator is free and requires no AWS account.",
+      "B": "Correct. The Free Tier dashboard is available to all customers at no charge.",
+      "C": "TAMs are available only with Enterprise Support — a paid plan.",
+      "D": "Business Support starts at $100/month.",
+      "E": "Professional Services is a paid consulting engagement."
+    },
+    "keyConcept": "Free cost tools: AWS Pricing Calculator + Free Tier usage dashboard in billing console.",
+    "difficulty": "hard",
+    "tags": [
+      "pricing-calculator",
+      "free-tier",
+      "cost-management"
+    ],
+    "sourceUrl": "https://aws.amazon.com/free/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0025",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "multiple",
+    "question": "Which TWO AWS Support plans include 24/7 technical phone, chat, and web support from Cloud Support Engineers with a 1-hour response SLA for production-system outages?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Business Support"
+      },
+      {
+        "id": "B",
+        "text": "Basic Support"
+      },
+      {
+        "id": "C",
+        "text": "Enterprise Support"
+      },
+      {
+        "id": "D",
+        "text": "Developer Support"
+      },
+      {
+        "id": "E",
+        "text": "Free Tier Support"
+      }
+    ],
+    "correctOptionIds": [
+      "A",
+      "C"
+    ],
+    "explanation": "Both the Business Support plan and Enterprise Support plan provide 24/7 access to Cloud Support Engineers via phone, chat, and web, with a 1-hour response SLA for production system down situations.",
+    "optionExplanations": {
+      "A": "Correct. Business Support includes 24/7 phone/chat/web access and 1-hour production down SLA.",
+      "B": "Basic Support provides billing and account support only; no technical engineering support.",
+      "C": "Correct. Enterprise Support includes 24/7 phone/chat/web access, 15-minute mission-critical SLA, and a TAM.",
+      "D": "Developer Support offers business-hours email support only with a 12-hour response SLA.",
+      "E": "Free Tier is a pricing model, not a support tier."
+    },
+    "keyConcept": "CUR + Organizations: comprehensive hourly line-item billing across all accounts delivered to S3.",
+    "difficulty": "hard",
+    "tags": [
+      "CUR",
+      "billing",
+      "organizations",
+      "cost-management"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0026",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "A team lead wants an alert when the number of EC2 instances in an account exceeds 50, regardless of cost. Which AWS Budgets type should they configure?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Cost budget"
+      },
+      {
+        "id": "B",
+        "text": "Usage budget"
+      },
+      {
+        "id": "C",
+        "text": "RI utilization budget"
+      },
+      {
+        "id": "D",
+        "text": "Savings Plans coverage budget"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "A Usage budget in AWS Budgets tracks resource quantity (instance-hours, count, GB) rather than dollars, and alerts when a usage threshold is crossed.",
+    "optionExplanations": {
+      "A": "A Cost budget tracks spending in dollars — not resource count.",
+      "B": "Correct. A Usage budget tracks consumption of specific resources and alerts on quantity thresholds.",
+      "C": "RI utilization budgets track how much of purchased Reserved Instances is being used.",
+      "D": "Savings Plans coverage budgets track what percentage of usage is covered by Savings Plans."
+    },
+    "keyConcept": "Usage budget: tracks resource quantity (instances, GB, hours) not dollar spend.",
+    "difficulty": "hard",
+    "tags": [
+      "budgets",
+      "cost-management"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-create.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0027",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "A company wants automated best-practice checks covering cost, security, fault tolerance, performance, and service quotas for its AWS account. Which service provides these checks?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Trusted Advisor"
+      },
+      {
+        "id": "B",
+        "text": "AWS Organizations"
+      },
+      {
+        "id": "C",
+        "text": "AWS CloudTrail"
+      },
+      {
+        "id": "D",
+        "text": "Amazon Route 53"
+      }
+    ],
+    "correctOptionIds": [
+      "A"
+    ],
+    "explanation": "AWS Trusted Advisor inspects your AWS environment and provides recommendations across five categories: cost optimization, security, fault tolerance, performance, and service quotas.",
+    "optionExplanations": {
+      "A": "Correct. Trusted Advisor provides best-practice checks across these five categories.",
+      "B": "Organizations manages multiple accounts and consolidated billing.",
+      "C": "CloudTrail records API calls; it doesn't provide architectural recommendations.",
+      "D": "Route 53 is a DNS service."
+    },
+    "keyConcept": "Trusted Advisor: best-practice checks across cost, security, fault tolerance, performance, service quotas.",
+    "difficulty": "easy",
+    "tags": [
+      "trusted-advisor",
+      "support"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/awssupport/latest/user/trusted-advisor.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0028",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "A company wants 24/7 access to support engineers for production system-down issues with < 1-hour response time. Which AWS Support plan provides this?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Basic Support"
+      },
+      {
+        "id": "B",
+        "text": "AWS Developer Support"
+      },
+      {
+        "id": "C",
+        "text": "AWS Business Support"
+      },
+      {
+        "id": "D",
+        "text": "AWS Enterprise On-Ramp"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "AWS Business Support provides 24/7 phone, chat, and email access to Cloud Support Engineers with a < 1-hour response time for production system-down cases.",
+    "optionExplanations": {
+      "A": "Basic Support includes billing support and limited Trusted Advisor checks only.",
+      "B": "Developer Support provides business-hours email with < 12-hour response for system-impaired cases.",
+      "C": "Correct. Business Support provides 24/7 access and < 1-hour SLA for production system-down.",
+      "D": "Enterprise On-Ramp also satisfies this but at higher cost; Business is the minimum."
+    },
+    "keyConcept": "Business Support: 24/7 access, <1-hour response for production system-down cases.",
+    "difficulty": "medium",
+    "tags": [
+      "support-plans",
+      "support"
+    ],
+    "sourceUrl": "https://aws.amazon.com/premiumsupport/plans/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0029",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "Which AWS Support plan includes a designated Technical Account Manager (TAM) and a < 15-minute response time for business-critical system-down cases?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Developer Support"
+      },
+      {
+        "id": "B",
+        "text": "Business Support"
+      },
+      {
+        "id": "C",
+        "text": "Enterprise Support"
+      },
+      {
+        "id": "D",
+        "text": "Basic Support"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "AWS Enterprise Support includes a designated TAM, < 15-minute SLA for business-critical cases, proactive architectural reviews, and concierge billing support.",
+    "optionExplanations": {
+      "A": "Developer Support provides business-hours email only; no TAM.",
+      "B": "Business Support has < 1-hour SLA and no designated TAM.",
+      "C": "Correct. Enterprise Support includes a designated TAM and the fastest SLA of any plan.",
+      "D": "Basic Support does not include technical support case filing."
+    },
+    "keyConcept": "Enterprise Support: designated TAM, <15-minute SLA, proactive guidance.",
+    "difficulty": "medium",
+    "tags": [
+      "support-plans",
+      "support"
+    ],
+    "sourceUrl": "https://aws.amazon.com/premiumsupport/plans/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0030",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "Which AWS Support plan is the minimum that includes access to Cloud Support Associates via email during business hours?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Basic Support"
+      },
+      {
+        "id": "B",
+        "text": "Developer Support"
+      },
+      {
+        "id": "C",
+        "text": "Business Support"
+      },
+      {
+        "id": "D",
+        "text": "Enterprise Support"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "AWS Developer Support is the minimum plan that includes access to Cloud Support Associates via email during business hours for general how-to guidance.",
+    "optionExplanations": {
+      "A": "Basic Support does not include technical support case access — only billing and account support.",
+      "B": "Correct. Developer Support is the entry-level technical support plan with business-hours email.",
+      "C": "Business Support offers more than the minimum — 24/7 access.",
+      "D": "Enterprise Support is the highest tier."
+    },
+    "keyConcept": "Developer Support: minimum plan for email access to support during business hours.",
+    "difficulty": "medium",
+    "tags": [
+      "support-plans",
+      "support"
+    ],
+    "sourceUrl": "https://aws.amazon.com/premiumsupport/plans/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0031",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "With the Basic AWS Support plan, which Trusted Advisor checks are available at no additional cost?",
+    "options": [
+      {
+        "id": "A",
+        "text": "All Trusted Advisor checks across all five categories"
+      },
+      {
+        "id": "B",
+        "text": "Only performance and fault tolerance checks"
+      },
+      {
+        "id": "C",
+        "text": "A core subset of security and service quota checks"
+      },
+      {
+        "id": "D",
+        "text": "Only cost optimization checks"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "With Basic and Developer Support, Trusted Advisor provides a limited set of core checks focused on service quotas and a small number of security checks. Full access requires Business or Enterprise Support.",
+    "optionExplanations": {
+      "A": "All five categories require Business or Enterprise Support.",
+      "B": "Performance and fault tolerance checks are not part of the Basic plan set.",
+      "C": "Correct. Basic plan gets core security and service quota checks only.",
+      "D": "Cost optimization checks require Business or Enterprise Support."
+    },
+    "keyConcept": "Trusted Advisor — Basic plan: core security + service quota checks only; all 5 categories need Business/Enterprise.",
+    "difficulty": "hard",
+    "tags": [
+      "trusted-advisor",
+      "support-plans",
+      "support"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/awssupport/latest/user/trusted-advisor.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0032",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "Which free resource provides a searchable community Q&A platform where customers can get answers from AWS engineers and other customers?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS IQ"
+      },
+      {
+        "id": "B",
+        "text": "AWS re:Post"
+      },
+      {
+        "id": "C",
+        "text": "AWS Partner Network (APN)"
+      },
+      {
+        "id": "D",
+        "text": "AWS Artifact"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "AWS re:Post is a free community Q&A service where customers can search for answers, post questions, and receive responses from AWS engineers and the community (replaced AWS Forums).",
+    "optionExplanations": {
+      "A": "AWS IQ connects customers with certified freelancers for paid engagements.",
+      "B": "Correct. re:Post is the free community Q&A platform for technical AWS questions.",
+      "C": "APN is the partner program for organisations building on AWS.",
+      "D": "Artifact provides compliance reports and agreements."
+    },
+    "keyConcept": "AWS re:Post: free community Q&A platform for AWS technical questions.",
+    "difficulty": "medium",
+    "tags": [
+      "support",
+      "re-Post"
+    ],
+    "sourceUrl": "https://aws.amazon.com/repost/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0033",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "An enterprise is planning a complex cloud migration and wants dedicated, hands-on guidance from a team of AWS staff experts to assist in designing and implementing their cloud strategy. Which AWS resource provides this dedicated engagement?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS re:Post"
+      },
+      {
+        "id": "B",
+        "text": "AWS Knowledge Center"
+      },
+      {
+        "id": "C",
+        "text": "AWS Professional Services"
+      },
+      {
+        "id": "D",
+        "text": "AWS Basic Support"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "AWS Professional Services is a global team of experts that can help you realize your desired business outcomes when using the AWS Cloud. They deliver focused guidance through an organized collection of offerings aligned with cloud migration and adoption.",
+    "optionExplanations": {
+      "A": "AWS re:Post is a free, community-driven Q&A discussion platform.",
+      "B": "AWS Knowledge Center contains self-service articles and answers provided by AWS Support engineers.",
+      "C": "Correct. AWS Professional Services provides dedicated advisory teams of AWS experts to assist with enterprise-scale migrations and cloud strategies.",
+      "D": "AWS Basic Support includes standard documentation and customer service, but provides no specialized architectural advisory teams."
+    },
+    "keyConcept": "AWS Professional Services: a global team of AWS experts offering dedicated assistance to help enterprises execute cloud migrations.",
+    "difficulty": "medium",
+    "tags": [
+      "support",
+      "professional-services",
+      "technical-resources"
+    ],
+    "sourceUrl": "https://aws.amazon.com/professional-services/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0034",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "A company opens a support case because its production system is completely down with no workaround. Which support case severity level should they select?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Low"
+      },
+      {
+        "id": "B",
+        "text": "Normal"
+      },
+      {
+        "id": "C",
+        "text": "High"
+      },
+      {
+        "id": "D",
+        "text": "Critical / Business-critical system down"
+      }
+    ],
+    "correctOptionIds": [
+      "D"
+    ],
+    "explanation": "The Critical (Business-critical system down) severity level is for production systems that are completely unavailable with no workaround, triggering the fastest SLA response.",
+    "optionExplanations": {
+      "A": "Low severity is for general questions or feature requests.",
+      "B": "Normal is for non-urgent issues with minor business impact.",
+      "C": "High is for production system impaired but still partially functional.",
+      "D": "Correct. Critical is for complete production unavailability — triggers fastest SLA."
+    },
+    "keyConcept": "Support severity: Critical = production completely down, no workaround — triggers fastest SLA.",
+    "difficulty": "medium",
+    "tags": [
+      "support",
+      "support-plans"
+    ],
+    "sourceUrl": "https://aws.amazon.com/premiumsupport/plans/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0035",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "multiple",
+    "question": "Which TWO resources are available to ALL AWS customers regardless of their Support plan?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS documentation and whitepapers"
+      },
+      {
+        "id": "B",
+        "text": "24/7 phone and chat access to Cloud Support Engineers"
+      },
+      {
+        "id": "C",
+        "text": "AWS Personal Health Dashboard"
+      },
+      {
+        "id": "D",
+        "text": "Designated Technical Account Manager (TAM)"
+      },
+      {
+        "id": "E",
+        "text": "Access to all Trusted Advisor checks"
+      }
+    ],
+    "correctOptionIds": [
+      "A",
+      "C"
+    ],
+    "explanation": "AWS documentation, whitepapers, and the Personal Health Dashboard are free for all customers regardless of support plan.",
+    "optionExplanations": {
+      "A": "Correct. AWS documentation and Knowledge Center are publicly available to all.",
+      "B": "24/7 phone/chat support requires at least Business Support.",
+      "C": "Correct. The Health Dashboard is available to all customers in the console.",
+      "D": "TAMs are available only with Enterprise Support.",
+      "E": "Full Trusted Advisor checks require Business or Enterprise Support."
+    },
+    "keyConcept": "Available to all: AWS documentation, whitepapers, Knowledge Center, Personal Health Dashboard.",
+    "difficulty": "medium",
+    "tags": [
+      "support-plans",
+      "support"
+    ],
+    "sourceUrl": "https://aws.amazon.com/premiumsupport/plans/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0036",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "Which AWS Support plan sits between Business and Enterprise Support, providing a pool of TAMs and < 30-minute response for business-critical cases?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Developer Support"
+      },
+      {
+        "id": "B",
+        "text": "AWS Enterprise On-Ramp"
+      },
+      {
+        "id": "C",
+        "text": "AWS Premium Support"
+      },
+      {
+        "id": "D",
+        "text": "AWS Concierge Support"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "Enterprise On-Ramp sits between Business and Enterprise Support. It provides access to a pool of TAMs and < 30-minute SLA for critical cases at lower cost than full Enterprise Support.",
+    "optionExplanations": {
+      "A": "Developer Support provides only business-hours email with slower SLAs.",
+      "B": "Correct. Enterprise On-Ramp offers a pool of TAMs and < 30-minute SLA for critical cases.",
+      "C": "There is no AWS support tier called 'Premium Support.'",
+      "D": "Concierge support is a feature within Enterprise Support, not a separate plan."
+    },
+    "keyConcept": "Enterprise On-Ramp: pool of TAMs + <30-min critical SLA — between Business and Enterprise.",
+    "difficulty": "hard",
+    "tags": [
+      "support-plans",
+      "support"
+    ],
+    "sourceUrl": "https://aws.amazon.com/premiumsupport/plans/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0037",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "Which free resource provides a searchable collection of articles and answers to frequently asked AWS technical questions?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Trusted Advisor"
+      },
+      {
+        "id": "B",
+        "text": "AWS Knowledge Center"
+      },
+      {
+        "id": "C",
+        "text": "AWS IQ"
+      },
+      {
+        "id": "D",
+        "text": "AWS Partner Network"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "The AWS Knowledge Center is a collection of FAQs and their answers written by AWS support engineers, publicly available at no cost to all customers.",
+    "optionExplanations": {
+      "A": "Trusted Advisor provides automated checks; it is not an FAQ resource.",
+      "B": "Correct. The Knowledge Center provides free searchable FAQs and technical articles.",
+      "C": "AWS IQ is a marketplace for paid expert engagements.",
+      "D": "APN is the partner program; it is not an FAQ resource."
+    },
+    "keyConcept": "AWS Knowledge Center: free, searchable FAQs and articles written by AWS support engineers.",
+    "difficulty": "easy",
+    "tags": [
+      "support",
+      "knowledge-center"
+    ],
+    "sourceUrl": "https://aws.amazon.com/premiumsupport/knowledge-center/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0038",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "Which AWS program connects customers with AWS certified consulting and technology partners that can help design, build, and manage workloads?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS IQ"
+      },
+      {
+        "id": "B",
+        "text": "AWS re:Post"
+      },
+      {
+        "id": "C",
+        "text": "AWS Partner Network (APN)"
+      },
+      {
+        "id": "D",
+        "text": "AWS Marketplace"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "The AWS Partner Network (APN) is AWS's global partner program for consulting firms (system integrators) and technology partners (ISVs) that build solutions on AWS.",
+    "optionExplanations": {
+      "A": "AWS IQ connects customers with individual certified freelancers, not the formal partner program.",
+      "B": "re:Post is a community Q&A platform, not a partner program.",
+      "C": "Correct. APN is the formal partner program for consulting and technology firms.",
+      "D": "AWS Marketplace is a catalogue of third-party software, not a services partner program."
+    },
+    "keyConcept": "AWS Partner Network (APN): global program for consulting and technology firms building on AWS.",
+    "difficulty": "medium",
+    "tags": [
+      "support",
+      "APN",
+      "partners"
+    ],
+    "sourceUrl": "https://aws.amazon.com/partners/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0039",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "Which provides a digital catalogue of thousands of third-party software solutions deployable directly into a customer's AWS account?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Partner Network (APN)"
+      },
+      {
+        "id": "B",
+        "text": "AWS IQ"
+      },
+      {
+        "id": "C",
+        "text": "AWS Marketplace"
+      },
+      {
+        "id": "D",
+        "text": "AWS re:Post"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "AWS Marketplace is a digital catalogue with thousands of software listings from ISVs. Customers can find, buy, and deploy third-party software directly into their AWS accounts.",
+    "optionExplanations": {
+      "A": "APN is the partner program for firms building on AWS — not a software purchase catalogue.",
+      "B": "AWS IQ connects customers with certified freelancers, not third-party software.",
+      "C": "Correct. AWS Marketplace provides a catalogue of third-party software deployable into AWS accounts.",
+      "D": "re:Post is a community Q&A platform, not a software catalogue."
+    },
+    "keyConcept": "AWS Marketplace: digital catalogue of third-party software products deployable into AWS accounts.",
+    "difficulty": "medium",
+    "tags": [
+      "support",
+      "marketplace"
+    ],
+    "sourceUrl": "https://aws.amazon.com/marketplace",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0040",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "A company using Business Support wants hands-on AWS engineer support during a planned large-scale production event. Which support feature provides real-time assistance for planned events?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Trusted Advisor automated checks"
+      },
+      {
+        "id": "B",
+        "text": "Infrastructure Event Management (IEM)"
+      },
+      {
+        "id": "C",
+        "text": "AWS Health Dashboard"
+      },
+      {
+        "id": "D",
+        "text": "AWS re:Post community"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "Infrastructure Event Management (IEM) is available with Business and Enterprise Support. It provides architectural guidance and real-time support during planned significant events such as product launches.",
+    "optionExplanations": {
+      "A": "Trusted Advisor is automated checks — not a hands-on event-support service.",
+      "B": "Correct. IEM offers proactive planning and real-time support for significant events.",
+      "C": "Health Dashboard shows AWS service events; it doesn't provide hands-on support.",
+      "D": "re:Post is community-driven; it doesn't provide dedicated event support."
+    },
+    "keyConcept": "Infrastructure Event Management (IEM): hands-on AWS engineer support for planned production events.",
+    "difficulty": "hard",
+    "tags": [
+      "support-plans",
+      "support"
+    ],
+    "sourceUrl": "https://aws.amazon.com/premiumsupport/plans/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0041",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "multiple",
+    "question": "Which TWO features are exclusive to AWS Business Support and above (not available on Developer or Basic plans)?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Full access to all AWS Trusted Advisor checks"
+      },
+      {
+        "id": "B",
+        "text": "24/7 phone, chat, and email access to Cloud Support Engineers"
+      },
+      {
+        "id": "C",
+        "text": "Access to AWS documentation and whitepapers"
+      },
+      {
+        "id": "D",
+        "text": "Access to the AWS Health Dashboard"
+      },
+      {
+        "id": "E",
+        "text": "Ability to file technical support cases"
+      }
+    ],
+    "correctOptionIds": [
+      "A",
+      "B"
+    ],
+    "explanation": "Full Trusted Advisor checks and 24/7 phone/chat/email support both require Business Support or higher. Documentation and Health Dashboard are available to all. Technical cases can be opened on Developer and above.",
+    "optionExplanations": {
+      "A": "Correct. Full Trusted Advisor access requires Business or Enterprise Support.",
+      "B": "Correct. 24/7 phone, chat, and email requires at least Business Support.",
+      "C": "Documentation is free for all customers.",
+      "D": "Health Dashboard is free for all customers.",
+      "E": "Developer and above plans can open technical cases; Basic plan cannot open technical cases."
+    },
+    "keyConcept": "Business Support exclusive: full Trusted Advisor + 24/7 phone/chat/email access.",
+    "difficulty": "hard",
+    "tags": [
+      "support-plans",
+      "trusted-advisor",
+      "support"
+    ],
+    "sourceUrl": "https://aws.amazon.com/premiumsupport/plans/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0042",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "Which AWS Support plan provides access to a designated TAM plus < 15-minute response for business-critical cases AND proactive concierge billing support?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Business Support"
+      },
+      {
+        "id": "B",
+        "text": "Enterprise On-Ramp"
+      },
+      {
+        "id": "C",
+        "text": "Enterprise Support"
+      },
+      {
+        "id": "D",
+        "text": "Developer Support"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "Enterprise Support is the only plan with a dedicated (not pooled) TAM, < 15-minute critical SLA, concierge billing support, and the broadest proactive services.",
+    "optionExplanations": {
+      "A": "Business Support has < 1-hour SLA and no designated TAM.",
+      "B": "Enterprise On-Ramp provides a pool of TAMs and < 30-minute SLA — not < 15-minute.",
+      "C": "Correct. Enterprise Support: designated TAM, < 15-minute SLA, concierge billing support.",
+      "D": "Developer Support is entry-level with business-hours email only."
+    },
+    "keyConcept": "Enterprise Support: the only plan with dedicated TAM, <15-min SLA, and concierge billing support.",
+    "difficulty": "medium",
+    "tags": [
+      "support-plans",
+      "support"
+    ],
+    "sourceUrl": "https://aws.amazon.com/premiumsupport/plans/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0043",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "A company wants to check whether its AWS usage is approaching default service quotas before a production launch. Which AWS console feature lets them view current usage versus quotas?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Contact AWS Sales to request a limit increase"
+      },
+      {
+        "id": "B",
+        "text": "AWS Service Quotas console"
+      },
+      {
+        "id": "C",
+        "text": "Open an AWS Support case and wait for a TAM response"
+      },
+      {
+        "id": "D",
+        "text": "Purchase Enterprise Support to unlock quota monitoring"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "The AWS Service Quotas console shows current usage versus default quotas for each service, and customers can request quota increases directly from the console — all at no additional cost.",
+    "optionExplanations": {
+      "A": "Sales handles commercial matters; Service Quotas console is the operational tool.",
+      "B": "Correct. The Service Quotas console is always available and free.",
+      "C": "Support cases are for issues; a TAM is not needed to check quotas in the console.",
+      "D": "Enterprise Support is not required to view quotas."
+    },
+    "keyConcept": "AWS Service Quotas console: view current usage vs. quotas and request increases — free for all accounts.",
+    "difficulty": "medium",
+    "tags": [
+      "service-quotas",
+      "support"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0044",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "Which AWS Trusted Advisor check category alerts customers when their resource usage approaches AWS default limits to prevent disruptions?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Cost optimization"
+      },
+      {
+        "id": "B",
+        "text": "Security"
+      },
+      {
+        "id": "C",
+        "text": "Service quotas (formerly service limits)"
+      },
+      {
+        "id": "D",
+        "text": "Performance"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "Trusted Advisor's Service Quotas (Service Limits) checks alert you when usage approaches or exceeds the default quotas for AWS services, preventing potential disruptions.",
+    "optionExplanations": {
+      "A": "Cost optimization checks identify idle or underutilized resources to reduce spending.",
+      "B": "Security checks identify IAM, S3, and other security configuration issues.",
+      "C": "Correct. Service quota checks alert you when usage approaches AWS limits.",
+      "D": "Performance checks identify configuration improvements for better throughput."
+    },
+    "keyConcept": "Trusted Advisor service quota checks: alert when usage approaches AWS service limits.",
+    "difficulty": "medium",
+    "tags": [
+      "trusted-advisor",
+      "support",
+      "service-quotas"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/awssupport/latest/user/trusted-advisor-check-reference.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0045",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "Which statement correctly describes the difference between EC2 Instance Savings Plans and Compute Savings Plans?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Instance Savings Plans apply to any EC2 instance family; Compute Savings Plans are locked to a specific type"
+      },
+      {
+        "id": "B",
+        "text": "Instance Savings Plans offer higher discounts but are locked to a specific instance family and Region; Compute Savings Plans apply flexibly across families, Regions, Fargate, and Lambda"
+      },
+      {
+        "id": "C",
+        "text": "Both plan types provide identical discounts and coverage"
+      },
+      {
+        "id": "D",
+        "text": "Compute Savings Plans only apply to EC2; Instance Savings Plans apply to EC2, Fargate, and Lambda"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "EC2 Instance Savings Plans commit to a specific instance family in a Region, offering higher discounts. Compute Savings Plans offer slightly lower discounts but apply across instance families, Regions, Fargate, and Lambda.",
+    "optionExplanations": {
+      "A": "The description is reversed — Instance Savings Plans have the family restriction.",
+      "B": "Correct. Instance Savings Plans: higher discount, specific family/Region; Compute: more flexible.",
+      "C": "The discounts differ — Instance Savings Plans typically offer higher discounts.",
+      "D": "Compute Savings Plans apply to EC2, Fargate, AND Lambda — not Instance Savings Plans."
+    },
+    "keyConcept": "Instance Savings Plans: higher discount, specific family/Region; Compute Savings Plans: flexible (EC2+Fargate+Lambda).",
+    "difficulty": "hard",
+    "tags": [
+      "savings-plans",
+      "EC2",
+      "pricing"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/savingsplans/latest/userguide/what-is-savings-plans.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0046",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "A company uses AWS for many services. Which billing feature automatically applies reserved pricing to On-Demand usage across all accounts in an AWS Organization, without requiring you to assign reservations to specific accounts?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Budgets sharing"
+      },
+      {
+        "id": "B",
+        "text": "Reserved Instance and Savings Plans sharing in consolidated billing"
+      },
+      {
+        "id": "C",
+        "text": "AWS Cost Anomaly Detection"
+      },
+      {
+        "id": "D",
+        "text": "Cost allocation tags"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "With consolidated billing in AWS Organizations, unused Reserved Instances and Savings Plans discounts from one account are automatically applied to eligible usage in other accounts in the same organization.",
+    "optionExplanations": {
+      "A": "AWS Budgets can be shared for visibility; it does not share reservation discounts.",
+      "B": "Correct. Consolidated billing automatically shares RI and Savings Plans discounts across accounts.",
+      "C": "Cost Anomaly Detection identifies unusual spend; it doesn't share reservations.",
+      "D": "Cost allocation tags track spend by dimension; they don't share reservation discounts."
+    },
+    "keyConcept": "Consolidated billing: RI and Savings Plans discounts automatically shared across all accounts in an org.",
+    "difficulty": "hard",
+    "tags": [
+      "organizations",
+      "billing",
+      "reserved-instances",
+      "savings-plans"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/consolidated-billing.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0047",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "A company's new team is just getting started with AWS. Which low-cost support plan allows them to open technical support cases during business hours and receive guidance from Cloud Support Associates?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Basic Support at no charge"
+      },
+      {
+        "id": "B",
+        "text": "Developer Support at a fixed monthly fee"
+      },
+      {
+        "id": "C",
+        "text": "Business Support at a percentage of monthly usage"
+      },
+      {
+        "id": "D",
+        "text": "Enterprise Support with a dedicated TAM"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "Developer Support, starting at $29/month or 3% of monthly AWS charges (whichever is greater), is the minimum paid plan allowing technical support case creation with access to Cloud Support Associates during business hours.",
+    "optionExplanations": {
+      "A": "Basic Support does not allow opening technical support cases — only billing and account questions.",
+      "B": "Correct. Developer Support is the minimum paid plan for technical case support.",
+      "C": "Business Support starts at $100/month or 10% and provides more features than needed for basic guidance.",
+      "D": "Enterprise Support includes a designated TAM but is much more expensive."
+    },
+    "keyConcept": "Developer Support: $29/month minimum — allows technical support cases during business hours.",
+    "difficulty": "medium",
+    "tags": [
+      "support-plans",
+      "support"
+    ],
+    "sourceUrl": "https://aws.amazon.com/premiumsupport/plans/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0048",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "A company using Business Support wants proactive architectural guidance before launching a new application. Which support service provides this from AWS?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Trusted Advisor automated checks"
+      },
+      {
+        "id": "B",
+        "text": "AWS Well-Architected Tool self-review"
+      },
+      {
+        "id": "C",
+        "text": "Proactive guidance from the designated or pooled Technical Account Manager"
+      },
+      {
+        "id": "D",
+        "text": "Posting on AWS re:Post community"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "Enterprise On-Ramp and Enterprise Support plans include access to TAMs who provide proactive architectural guidance, including reviews before production launches. Business Support customers can request architectural guidance from Cloud Support Engineers as part of their plan.",
+    "optionExplanations": {
+      "A": "Trusted Advisor provides automated checks, not a conversational architectural review.",
+      "B": "The Well-Architected Tool is a self-review tool; it doesn't provide AWS engineer input.",
+      "C": "Correct. TAMs (on higher plans) and Cloud Support Engineers provide proactive architectural guidance.",
+      "D": "re:Post is community-driven; it doesn't provide dedicated AWS engineer architectural review."
+    },
+    "keyConcept": "TAMs (Enterprise/On-Ramp): proactive architectural guidance and production launch reviews from AWS.",
+    "difficulty": "medium",
+    "tags": [
+      "support-plans",
+      "support",
+      "well-architected"
+    ],
+    "sourceUrl": "https://aws.amazon.com/premiumsupport/plans/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-02"
+  },
+  {
+    "id": "d4-0049",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "A company needs to run dedicated server hardware to satisfy strict regulatory compliance and bring their existing per-core software licenses. Which Amazon EC2 purchasing option fulfills these requirements?",
+    "options": [
+      {
+        "id": "A",
+        "text": "On-Demand Instances"
+      },
+      {
+        "id": "B",
+        "text": "Spot Instances"
+      },
+      {
+        "id": "C",
+        "text": "Dedicated Instances"
+      },
+      {
+        "id": "D",
+        "text": "Dedicated Hosts"
+      }
+    ],
+    "correctOptionIds": [
+      "D"
+    ],
+    "explanation": "Amazon EC2 Dedicated Hosts give you a dedicated physical server fully dedicated for your use, providing socket and physical core visibility needed for Bring-Your-Own-License (BYOL) compliance.",
+    "optionExplanations": {
+      "A": "On-Demand Instances run on multi-tenant hardware shared with other AWS customers.",
+      "B": "Spot Instances run on spare compute capacity and do not provide dedicated physical hardware or license visibility.",
+      "C": "Dedicated Instances run on dedicated hardware for a single customer account, but do not provide socket and physical core visibility required for per-core licensing.",
+      "D": "Correct. Dedicated Hosts provide physical server isolation and visibility into sockets and cores for software licensing."
+    },
+    "keyConcept": "Dedicated Hosts provide dedicated physical servers and socket/core visibility for per-core BYOL software licenses.",
+    "difficulty": "medium",
+    "tags": [
+      "EC2",
+      "pricing-models",
+      "dedicated-hosts"
+    ],
+    "sourceUrl": "https://aws.amazon.com/ec2/dedicated-hosts/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0050",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "When evaluating data transfer charges in AWS, which of the following traffic flows is typically free of charge?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Outbound data transfer from Amazon EC2 to the public internet"
+      },
+      {
+        "id": "B",
+        "text": "Data transfer between two Amazon EC2 instances in different AWS Regions"
+      },
+      {
+        "id": "C",
+        "text": "Data transfer between two Availability Zones within the same AWS Region"
+      },
+      {
+        "id": "D",
+        "text": "Inbound data transfer from the internet into Amazon EC2 instances"
+      }
+    ],
+    "correctOptionIds": [
+      "D"
+    ],
+    "explanation": "Inbound data transfer from the internet into AWS is generally free across almost all services, whereas outbound data transfer to the internet and inter-Region data transfer incur charges.",
+    "optionExplanations": {
+      "A": "Outbound data transfer from EC2 to the internet incurs per-GB egress charges after the free tier allowance.",
+      "B": "Inter-Region data transfer incurs data transfer out charges.",
+      "C": "Cross-AZ data transfer within the same Region incurs standard inter-AZ data transfer charges.",
+      "D": "Correct. Inbound data transfer from the internet into AWS services is free of charge."
+    },
+    "keyConcept": "Inbound data transfer from the internet to AWS is free; outbound data transfer to the internet is billed per GB.",
+    "difficulty": "easy",
+    "tags": [
+      "pricing",
+      "data-transfer",
+      "cost-management"
+    ],
+    "sourceUrl": "https://aws.amazon.com/ec2/pricing/on-demand/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0051",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "A company wants to commit to a consistent dollar-per-hour spend over a 1-year or 3-year term. They want the discount to automatically apply across Amazon EC2, AWS Fargate, and AWS Lambda regardless of instance family, OS, or Region. Which pricing model should they choose?",
+    "options": [
+      {
+        "id": "A",
+        "text": "EC2 Instance Savings Plans"
+      },
+      {
+        "id": "B",
+        "text": "Standard Reserved Instances"
+      },
+      {
+        "id": "C",
+        "text": "SageMaker Savings Plans"
+      },
+      {
+        "id": "D",
+        "text": "Compute Savings Plans"
+      }
+    ],
+    "correctOptionIds": [
+      "D"
+    ],
+    "explanation": "Compute Savings Plans provide the greatest flexibility, automatically applying across Amazon EC2, AWS Fargate, and AWS Lambda usage regardless of instance family, size, OS, tenancy, or AWS Region.",
+    "optionExplanations": {
+      "A": "EC2 Instance Savings Plans provide deeper discounts but are restricted to a specific instance family within a chosen Region.",
+      "B": "Standard Reserved Instances apply to specific EC2 instance configurations and do not apply to Fargate or Lambda.",
+      "C": "SageMaker Savings Plans only apply to Amazon SageMaker machine learning compute usage.",
+      "D": "Correct. Compute Savings Plans offer maximum flexibility across EC2, Fargate, and Lambda anywhere in AWS."
+    },
+    "keyConcept": "Compute Savings Plans provide the greatest flexibility, covering EC2, Fargate, and Lambda across all Regions and instance families.",
+    "difficulty": "medium",
+    "tags": [
+      "savings-plans",
+      "pricing-models",
+      "cost-optimization"
+    ],
+    "sourceUrl": "https://aws.amazon.com/savingsplans/compute-pricing/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0052",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "multiple",
+    "question": "Which TWO factors determine the overall cost of storing objects in Amazon S3? (Select TWO.)",
+    "options": [
+      {
+        "id": "A",
+        "text": "The volume of data transferred inbound from the internet to upload objects"
+      },
+      {
+        "id": "B",
+        "text": "The total gigabytes of storage stored per month and the selected storage class"
+      },
+      {
+        "id": "C",
+        "text": "The number and type of requests made (such as GET, PUT, and LIST requests)"
+      },
+      {
+        "id": "D",
+        "text": "The number of IAM users who have permissions to view bucket policies"
+      },
+      {
+        "id": "E",
+        "text": "The creation of new Amazon S3 bucket names in each AWS Region"
+      }
+    ],
+    "correctOptionIds": [
+      "B",
+      "C"
+    ],
+    "explanation": "Amazon S3 pricing is determined by storage capacity (GB/month per storage class), request and data retrieval volume (e.g. GET/PUT requests), data transfer out, and management/replication features.",
+    "optionExplanations": {
+      "A": "Inbound data transfer into Amazon S3 from the internet is free.",
+      "B": "Correct. Storage pricing is calculated based on GB-months stored and the chosen storage tier.",
+      "C": "Correct. API requests made to Amazon S3 (PUT, COPY, POST, LIST, GET) are billed based on request count and type.",
+      "D": "IAM user creation and bucket policy permissions do not incur fees.",
+      "E": "Creating buckets does not incur any fee; costs are based on actual storage and usage."
+    },
+    "keyConcept": "S3 billing dimensions include storage capacity (GB/month), API requests, data transfer out, and data retrievals.",
+    "difficulty": "medium",
+    "tags": [
+      "S3",
+      "pricing",
+      "storage"
+    ],
+    "sourceUrl": "https://aws.amazon.com/s3/pricing/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0053",
+    "domain": 4,
+    "taskStatement": "4.1",
+    "type": "single",
+    "question": "How does consolidated billing in AWS Organizations help reduce overall cloud costs for a multi-account enterprise?",
+    "options": [
+      {
+        "id": "A",
+        "text": "It automatically shuts down non-production Amazon EC2 instances on weekends"
+      },
+      {
+        "id": "B",
+        "text": "It combines usage across all member accounts to qualify for volume pricing tiers"
+      },
+      {
+        "id": "C",
+        "text": "It waives all outbound data transfer charges between member accounts and the internet"
+      },
+      {
+        "id": "D",
+        "text": "It provides a 50% discount on all On-Demand compute instances"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "Consolidated billing aggregates usage across all member accounts in the organization, allowing the enterprise to reach volume discount tiers faster for services like Amazon S3 and data transfer.",
+    "optionExplanations": {
+      "A": "Consolidated billing is a financial feature; it does not automatically stop or manage compute resources.",
+      "B": "Correct. Aggregating usage across accounts enables organizations to reach higher volume discount thresholds.",
+      "C": "Data transfer fees still apply, though consolidated billing allows usage aggregation for tiered transfer pricing.",
+      "D": "Consolidated billing does not provide automatic flat percentage discounts on On-Demand instances."
+    },
+    "keyConcept": "Consolidated billing combines usage across all accounts to qualify for tiered volume discounts.",
+    "difficulty": "easy",
+    "tags": [
+      "organizations",
+      "consolidated-billing",
+      "pricing"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/consolidated-billing.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0054",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "A solutions architect is planning a new cloud architecture and wants to model proposed AWS services and estimate expected monthly costs before creating any AWS resources. Which tool is designed for this task?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Cost Explorer"
+      },
+      {
+        "id": "B",
+        "text": "AWS Cost and Usage Report (CUR)"
+      },
+      {
+        "id": "C",
+        "text": "AWS Budgets"
+      },
+      {
+        "id": "D",
+        "text": "AWS Pricing Calculator"
+      }
+    ],
+    "correctOptionIds": [
+      "D"
+    ],
+    "explanation": "AWS Pricing Calculator is a web-based planning tool that allows you to explore AWS services and create cost estimates based on anticipated architecture and usage parameters before deploying.",
+    "optionExplanations": {
+      "A": "AWS Cost Explorer analyzes historical and forecasted spending from existing active AWS accounts.",
+      "B": "AWS Cost and Usage Report delivers detailed historical billing data to an S3 bucket.",
+      "C": "AWS Budgets sets budget limits and alerts based on actual or forecasted costs in active accounts.",
+      "D": "Correct. AWS Pricing Calculator creates pre-deployment cost estimates for proposed architectures."
+    },
+    "keyConcept": "AWS Pricing Calculator estimates costs for proposed architectures before deploying resources.",
+    "difficulty": "easy",
+    "tags": [
+      "pricing-calculator",
+      "cost-management",
+      "tools"
+    ],
+    "sourceUrl": "https://aws.amazon.com/pricing-calculator/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0055",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "A company wants to categorize and track their AWS costs by department and project name on their monthly billing statements. What AWS feature must be enabled and applied to achieve this?",
+    "options": [
+      {
+        "id": "A",
+        "text": "IAM Permission Boundaries"
+      },
+      {
+        "id": "B",
+        "text": "AWS Service Quotas"
+      },
+      {
+        "id": "C",
+        "text": "AWS Secrets Manager"
+      },
+      {
+        "id": "D",
+        "text": "Cost allocation tags"
+      }
+    ],
+    "correctOptionIds": [
+      "D"
+    ],
+    "explanation": "Cost allocation tags are key-value pairs assigned to AWS resources. Once activated in the Billing and Cost Management console, they categorize spending on cost reports and Cost Explorer.",
+    "optionExplanations": {
+      "A": "IAM Permission Boundaries control maximum permissions an identity can have, not cost attribution.",
+      "B": "Service Quotas manage service limits, not billing categorization.",
+      "C": "AWS Secrets Manager rotates and protects database credentials and API keys.",
+      "D": "Correct. Cost allocation tags allow companies to organize and track spending by project, cost center, or department."
+    },
+    "keyConcept": "Cost allocation tags organize and attribute AWS resource costs by department, environment, or project.",
+    "difficulty": "easy",
+    "tags": [
+      "cost-allocation-tags",
+      "billing",
+      "cost-management"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0056",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "A finance team wants to receive an automated email notification whenever their monthly Amazon EC2 spending is forecasted to exceed $5,000. Which AWS service should they configure?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Amazon CloudWatch Logs"
+      },
+      {
+        "id": "B",
+        "text": "AWS Pricing Calculator"
+      },
+      {
+        "id": "C",
+        "text": "AWS Trusted Advisor"
+      },
+      {
+        "id": "D",
+        "text": "AWS Budgets"
+      }
+    ],
+    "correctOptionIds": [
+      "D"
+    ],
+    "explanation": "AWS Budgets gives you the ability to set custom cost and usage budgets and receive notifications when your costs or usage exceed (or are forecasted to exceed) your budgeted amount.",
+    "optionExplanations": {
+      "A": "CloudWatch Logs aggregates application and system log streams, not billing alerts based on forecasted monthly totals.",
+      "B": "Pricing Calculator generates estimates for proposed architectures, not active billing alerts.",
+      "C": "Trusted Advisor checks best practices, but custom threshold alerts for forecasted spending are handled by AWS Budgets.",
+      "D": "Correct. AWS Budgets triggers alerts when actual or forecasted spending exceeds defined monetary thresholds."
+    },
+    "keyConcept": "AWS Budgets sends alerts when actual or forecasted costs exceed predetermined threshold limits.",
+    "difficulty": "medium",
+    "tags": [
+      "aws-budgets",
+      "alerts",
+      "cost-management"
+    ],
+    "sourceUrl": "https://aws.amazon.com/aws-cost-management/aws-budgets/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0057",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "Which AWS tool provides visual graphs to review historical spending trends over the past 12 months and predicts estimated costs for the next 12 months?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Artifact"
+      },
+      {
+        "id": "B",
+        "text": "AWS Systems Manager"
+      },
+      {
+        "id": "C",
+        "text": "AWS Cost Explorer"
+      },
+      {
+        "id": "D",
+        "text": "AWS Management Console Home Widgets"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "AWS Cost Explorer provides an easy-to-use interface that lets you visualize, understand, and manage your AWS costs and usage over time, including forecasting future costs up to 12 months in advance.",
+    "optionExplanations": {
+      "A": "AWS Artifact provides security and compliance reports and certifications.",
+      "B": "AWS Systems Manager is an operational management service for node monitoring and patching.",
+      "C": "Correct. AWS Cost Explorer visualizes spending history and forecasts future usage and costs.",
+      "D": "Console home widgets show high-level summaries but lack the comprehensive forecasting and multidimensional filtering of Cost Explorer."
+    },
+    "keyConcept": "AWS Cost Explorer visualizes historical cost trends and forecasts future spending up to 12 months ahead.",
+    "difficulty": "easy",
+    "tags": [
+      "cost-explorer",
+      "forecasting",
+      "reporting"
+    ],
+    "sourceUrl": "https://aws.amazon.com/aws-cost-management/aws-cost-explorer/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0058",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "Which AWS billing deliverable provides the most granular, comprehensive breakdown of AWS usage and costs, including metadata about services, pricing, and reservations delivered directly to Amazon S3?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Monthly Billing Summary PDF"
+      },
+      {
+        "id": "B",
+        "text": "AWS Cost and Usage Report (CUR)"
+      },
+      {
+        "id": "C",
+        "text": "AWS Payment History Receipt"
+      },
+      {
+        "id": "D",
+        "text": "AWS Budgets Dashboard CSV"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "The AWS Cost and Usage Report (AWS CUR) is the most detailed dataset available for AWS cost and usage, delivering hourly or daily line-item records to an Amazon S3 bucket of your choice.",
+    "optionExplanations": {
+      "A": "Monthly Billing Summary PDF provides only aggregate account invoices, not granular line-item records.",
+      "B": "Correct. The AWS Cost and Usage Report (CUR) provides the deepest level of billing and usage data available.",
+      "C": "Payment receipts only verify payment transactions, not granular per-resource usage.",
+      "D": "AWS Budgets dashboard tracks limits against budgets, not full low-level raw billing records."
+    },
+    "keyConcept": "AWS Cost and Usage Report (CUR) delivers the most comprehensive raw billing dataset directly to Amazon S3.",
+    "difficulty": "medium",
+    "tags": [
+      "CUR",
+      "billing",
+      "cost-management"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0059",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "multiple",
+    "question": "Which of the following budget types can be created using AWS Budgets? (Select TWO.)",
+    "options": [
+      {
+        "id": "A",
+        "text": "Cost budgets to track actual or forecasted spending"
+      },
+      {
+        "id": "B",
+        "text": "Usage budgets to track hours or units consumed by specific services"
+      },
+      {
+        "id": "C",
+        "text": "Physical server maintenance budgets for on-premises hardware"
+      },
+      {
+        "id": "D",
+        "text": "Employee salary and overhead administrative expense budgets"
+      },
+      {
+        "id": "E",
+        "text": "Operating system license renewal budgets for non-AWS vendors"
+      }
+    ],
+    "correctOptionIds": [
+      "A",
+      "B"
+    ],
+    "explanation": "AWS Budgets supports Cost budgets (tracking spending amounts), Usage budgets (tracking consumed resource units), RI utilization/coverage budgets, and Savings Plans utilization/coverage budgets.",
+    "optionExplanations": {
+      "A": "Correct. Cost budgets monitor and alert on financial expenditures.",
+      "B": "Correct. Usage budgets monitor consumption metrics like S3 storage GBs or EC2 running hours.",
+      "C": "AWS Budgets cannot track physical on-premises maintenance costs outside AWS.",
+      "D": "AWS Budgets does not manage human resources or internal payroll expenses.",
+      "E": "Third-party non-AWS software licensing outside AWS billing is not tracked by AWS Budgets."
+    },
+    "keyConcept": "AWS Budgets supports Cost budgets, Usage budgets, RI utilization/coverage, and Savings Plans budgets.",
+    "difficulty": "medium",
+    "tags": [
+      "aws-budgets",
+      "usage-budgets",
+      "cost-management"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-create.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0060",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "Which feature within AWS Budgets allows an organization to automatically trigger actions—such as applying an IAM policy or stopping an EC2 instance—when a budget threshold is exceeded?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Auto Scaling dynamic policies"
+      },
+      {
+        "id": "B",
+        "text": "AWS Budgets Actions"
+      },
+      {
+        "id": "C",
+        "text": "AWS Shield Advanced mitigations"
+      },
+      {
+        "id": "D",
+        "text": "AWS Secrets Manager rotation rules"
+      }
+    ],
+    "correctOptionIds": [
+      "B"
+    ],
+    "explanation": "AWS Budgets Actions allows you to define programmatic responses (such as stopping EC2 or RDS instances or applying an SCP/IAM policy) that execute automatically when a budget threshold is breached.",
+    "optionExplanations": {
+      "A": "Auto Scaling policies adjust capacity based on performance metrics (CPU, traffic), not budget thresholds.",
+      "B": "Correct. AWS Budgets Actions automates remediation steps when costs exceed defined thresholds.",
+      "C": "AWS Shield Advanced mitigates DDoS attacks, not financial budget breaches.",
+      "D": "Secrets Manager rotates credentials, not budget actions."
+    },
+    "keyConcept": "AWS Budgets Actions can automatically enforce IAM policies or stop instances when budget thresholds are breached.",
+    "difficulty": "hard",
+    "tags": [
+      "aws-budgets",
+      "budgets-actions",
+      "automation"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-controls.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0061",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "What tier of the AWS Free Tier offers services that do not expire after the initial 12 months and remain available indefinitely up to specific usage limits?",
+    "options": [
+      {
+        "id": "A",
+        "text": "12 Months Free tier"
+      },
+      {
+        "id": "B",
+        "text": "Short-term Trials"
+      },
+      {
+        "id": "C",
+        "text": "Enterprise Tier"
+      },
+      {
+        "id": "D",
+        "text": "Always Free tier"
+      }
+    ],
+    "correctOptionIds": [
+      "D"
+    ],
+    "explanation": "The AWS Free Tier includes three offer types: 12 Months Free, Always Free (which never expires and includes free tiers like 1M AWS Lambda requests/month), and Short-term Trials.",
+    "optionExplanations": {
+      "A": "12 Months Free expires exactly 12 months after your initial AWS account registration date.",
+      "B": "Short-term Trials are available for limited timeframes (e.g. 30 days) from service activation.",
+      "C": "There is no 'Enterprise Tier' in the AWS Free Tier program.",
+      "D": "Correct. The Always Free tier never expires and provides recurring monthly allowances for eligible services."
+    },
+    "keyConcept": "AWS Free Tier offers three categories: Always Free (never expires), 12 Months Free, and Short-term Trials.",
+    "difficulty": "easy",
+    "tags": [
+      "free-tier",
+      "billing",
+      "pricing"
+    ],
+    "sourceUrl": "https://aws.amazon.com/free/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0062",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "A company wants to group multiple cost allocation tags and account IDs into custom business dimensions like 'Department' or 'Cost Center' across their organization. Which feature should they use?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Service Catalog"
+      },
+      {
+        "id": "B",
+        "text": "AWS Directory Service"
+      },
+      {
+        "id": "C",
+        "text": "AWS Cost Categories"
+      },
+      {
+        "id": "D",
+        "text": "AWS Trusted Advisor"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "AWS Cost Categories allows you to organize billing and usage information into meaningful business categories based on rules mapped to accounts, tags, services, or charge types.",
+    "optionExplanations": {
+      "A": "AWS Service Catalog lets organizations create and manage catalogs of approved IT services.",
+      "B": "AWS Directory Service connects AWS resources with managed Microsoft Active Directory.",
+      "C": "Correct. AWS Cost Categories groups billing information into custom business structures.",
+      "D": "AWS Trusted Advisor provides best-practice recommendations across security, cost, and performance."
+    },
+    "keyConcept": "AWS Cost Categories creates custom business groupings by mapping accounts, tags, and charge types.",
+    "difficulty": "medium",
+    "tags": [
+      "cost-categories",
+      "billing",
+      "cost-management"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/cost-management/latest/userguide/manage-cost-categories.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0063",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "In AWS Organizations consolidated billing, which account is responsible for paying all charges incurred by every member account in the organization?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Each individual member account owner"
+      },
+      {
+        "id": "B",
+        "text": "The AWS Marketplace merchant account"
+      },
+      {
+        "id": "C",
+        "text": "The management (payer) account"
+      },
+      {
+        "id": "D",
+        "text": "The account with the highest Amazon EC2 utilization"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "With consolidated billing in AWS Organizations, the management account (formerly known as the payer account) is solely responsible for paying the single consolidated bill for all member accounts.",
+    "optionExplanations": {
+      "A": "Member accounts do not pay individually; their charges roll up to the central management account.",
+      "B": "Marketplace merchant accounts receive software license payments; they do not pay customer bills.",
+      "C": "Correct. The management account receives a single consolidated bill and is billed for all member account usage.",
+      "D": "Billing responsibility is determined strictly by the management account role, not usage volume."
+    },
+    "keyConcept": "Consolidated billing aggregates all member account charges into a single monthly bill paid by the management account.",
+    "difficulty": "easy",
+    "tags": [
+      "organizations",
+      "consolidated-billing",
+      "billing"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/consolidated-billing.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0064",
+    "domain": 4,
+    "taskStatement": "4.2",
+    "type": "single",
+    "question": "Where in the AWS Management Console can an account owner view past tax invoices, update company billing addresses, and download monthly PDF invoices?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS CloudTrail Event History"
+      },
+      {
+        "id": "B",
+        "text": "AWS Security Hub"
+      },
+      {
+        "id": "C",
+        "text": "AWS Systems Manager Parameter Store"
+      },
+      {
+        "id": "D",
+        "text": "AWS Billing and Cost Management console"
+      }
+    ],
+    "correctOptionIds": [
+      "D"
+    ],
+    "explanation": "The AWS Billing and Cost Management console is the central hub where you pay your AWS bill, monitor your spending, view payment history, and download PDF invoices and tax receipts.",
+    "optionExplanations": {
+      "A": "CloudTrail records API activity logs, not billing statements or invoices.",
+      "B": "Security Hub aggregates security posture alerts, not invoices or taxes.",
+      "C": "Parameter Store stores configuration values and secrets, not invoices.",
+      "D": "Correct. The Billing and Cost Management console handles payment methods, tax settings, and invoice downloads."
+    },
+    "keyConcept": "The AWS Billing and Cost Management console is where users manage payment methods, tax info, and download invoices.",
+    "difficulty": "easy",
+    "tags": [
+      "billing-console",
+      "invoices",
+      "billing"
+    ],
+    "sourceUrl": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/billing-what-is.html",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0065",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "A company wants alerts and remediation guidance specifically when AWS scheduled maintenance or service disruptions impact their own active AWS resources. Which service provides this personalized visibility?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Status (public service health page)"
+      },
+      {
+        "id": "B",
+        "text": "Amazon GuardDuty"
+      },
+      {
+        "id": "C",
+        "text": "AWS Health Dashboard"
+      },
+      {
+        "id": "D",
+        "text": "AWS Artifact"
+      }
+    ],
+    "correctOptionIds": [
+      "C"
+    ],
+    "explanation": "The AWS Health Dashboard (specifically 'Your account health') provides personalized information and alerts when AWS is experiencing events that may impact your specific active resources.",
+    "optionExplanations": {
+      "A": "The public AWS Status page shows general regional availability for all services, without showing personalized resource impacts.",
+      "B": "GuardDuty is a threat detection service, not a platform maintenance and health status notifier.",
+      "C": "Correct. AWS Health Dashboard provides tailored alerts about events and maintenance impacting your specific AWS account.",
+      "D": "AWS Artifact provides compliance documentation and agreements, not operational health alerts."
+    },
+    "keyConcept": "AWS Health Dashboard provides personalized alerts and guidance when AWS events impact your specific resources.",
+    "difficulty": "medium",
+    "tags": [
+      "health-dashboard",
+      "support",
+      "operations"
+    ],
+    "sourceUrl": "https://aws.amazon.com/premiumsupport/technology/aws-health-dashboard/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  },
+  {
+    "id": "d4-0066",
+    "domain": 4,
+    "taskStatement": "4.3",
+    "type": "single",
+    "question": "A startup wants to add a third-party intrusion detection system to its AWS environment. The security team needs the tool up and running within an hour and wants all charges to appear on the same AWS bill. Where should the team look for this software?",
+    "options": [
+      {
+        "id": "A",
+        "text": "AWS Service Catalog"
+      },
+      {
+        "id": "B",
+        "text": "AWS re:Post"
+      },
+      {
+        "id": "C",
+        "text": "AWS Support Center"
+      },
+      {
+        "id": "D",
+        "text": "AWS Marketplace"
+      }
+    ],
+    "correctOptionIds": [
+      "D"
+    ],
+    "explanation": "AWS Marketplace is a curated digital catalog of software listings from independent software vendors (ISVs) that lets customers easily find, test, buy, and deploy software on AWS, with consolidated billing.",
+    "optionExplanations": {
+      "A": "AWS Service Catalog manages internally approved portfolios of AWS resources for an organization's own users.",
+      "B": "AWS re:Post is a community-driven Q&A knowledge platform for technical queries.",
+      "C": "AWS Support Center manages support cases with AWS technical support engineers.",
+      "D": "Correct. AWS Marketplace lets customers discover, purchase, and deploy third-party software with unified billing."
+    },
+    "keyConcept": "AWS Marketplace is a curated digital catalog for discovering, buying, and deploying third-party software with unified AWS billing.",
+    "difficulty": "easy",
+    "tags": [
+      "aws-marketplace",
+      "partners",
+      "billing"
+    ],
+    "sourceUrl": "https://aws.amazon.com/marketplace/",
+    "verified": false,
+    "needsReview": false,
+    "createdBatch": "batch-04"
+  }
+]

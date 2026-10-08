@@ -20,7 +20,7 @@ const AuthCtx = createContext<AuthContextValue | null>(null)
 
 const API = '/api'
 
-/** Safely parse JSON — returns null if the response isn't valid JSON (e.g. HTML 404 pages) */
+/** Safely parse JSON, returning an empty object if the response is not valid JSON. */
 async function safeJson(r: Response): Promise<Record<string, unknown>> {
   try {
     return await r.json()

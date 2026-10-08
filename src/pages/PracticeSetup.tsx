@@ -22,7 +22,6 @@ export default function PracticeSetup() {
   const [wrongOnly, setWrongOnly] = useState(false)
   const [bookmarked, setBookmarked] = useState(false)
 
-  // Only show the resume banner when user has actually answered at least one question
   const activePractice = (data.activePractice?.checked.length ?? 0) > 0 ? data.activePractice : null
 
   const pool = useMemo(() => {
@@ -41,9 +40,6 @@ export default function PracticeSetup() {
   const start = () => {
     const take = count === 0 ? pool.length : Math.min(count, pool.length)
     const ids = shuffle(pool).slice(0, take).map((q) => q.id)
-    // Set activePractice in context BEFORE navigating so PracticeSession
-    // can read data.activePractice on its very first render (state updates
-    // from event handlers are flushed before the next route renders).
     setActivePractice({
       id: newId(),
       questionIds: ids,
@@ -74,7 +70,6 @@ export default function PracticeSetup() {
         <p className="text-sm text-[var(--color-forest-ink)]/70 mt-1">{t('practice.subtitle')}</p>
       </div>
 
-      {/* Resume banner */}
       {activePractice && (
         <div className="card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 border-l-[var(--color-forest-ink)] !py-3">
           <div>

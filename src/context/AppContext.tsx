@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { ActiveExam, ActivePractice, AppData, SessionMode, Session, Settings } from '../types/progress'
-import { defaultData, loadData, saveData } from '../lib/storage'
+import { defaultData, loadData, saveData, STORAGE_KEY } from '../lib/storage'
+import { applyPalette } from '../lib/palettes'
 import { useAuth } from './AuthContext'
 
 interface AppContextValue {
@@ -35,25 +36,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [dbSyncing, setDbSyncing] = useState(false)
   const [lastSyncedAt, setLastSyncedAt] = useState<Date | null>(null)
 
-  // Save guest data to localStorage
   useEffect(() => {
     if (!user) {
       saveData(data)
     }
   }, [data, user])
 
-  // Always ensure clean light theme
   useEffect(() => {
-    document.documentElement.classList.remove('dark')
-    document.documentElement.removeAttribute('data-theme')
-  }, [])
+    applyPalette(data.settings.palette ?? 'oxford-navy')
+  }, [data.settings.palette])
 
-  // html lang attribute
   useEffect(() => {
     document.documentElement.lang = 'en'
   }, [])
 
-  // Sync complete state with PostgreSQL database
   const syncWithDatabase = useCallback(async () => {
     if (!user) return
     setDbSyncing(true)
@@ -145,7 +141,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, [user])
 
-  // When user signs in or signs out
   useEffect(() => {
     if (user) {
       syncWithDatabase()
@@ -360,9 +355,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         console.error('Failed to reset DB data:', err)
       }
     }
-    // Always wipe localStorage — for guests this is their only storage,
-    // for DB users we don't want stale local data to re-sync on next login
-    const { STORAGE_KEY } = await import('../lib/storage')
+    // Clear localStorage so guest data is wiped and DB users do not re-sync stale data.
     localStorage.removeItem(STORAGE_KEY)
     const clean = defaultData()
     setData(clean)

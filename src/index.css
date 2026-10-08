@@ -18,47 +18,49 @@
 }
 
 :root {
-  /* Colors */
-  --color-forest-ink: #1a3300;
-  --color-highlighter-yellow: #ffe95c;
-  --color-cream-paper: #fcfaf5;
-  --color-pencil-gray: #b6b6b6;
-  --color-whisper-gray: #f1f1f1;
-  --color-sticky-note-teal: #a8e5e5;
-  --color-sticky-note-mint: #d5f5c2;
-  --color-sticky-note-blush: #f6d0ff;
+  /* Colors - Default: Oxford Navy & Gilded Amber */
+  --color-forest-ink: #0a192f;
+  --color-highlighter-yellow: #fbbf24;
+  --color-cream-paper: #f7f9fc;
+  --color-pencil-gray: #c6d3e3;
+  --color-whisper-gray: #eef3f8;
+  --color-sticky-note-teal: #bae6fd;
+  --color-sticky-note-mint: #fde68a;
+  --color-sticky-note-blush: #fed7aa;
   --color-terracotta: #cb5521;
 
   /* Functional Mapping */
-  --bg: #fcfaf5;
+  --bg: #f7f9fc;
   --surface: #ffffff;
-  --surface-cream: #fcfaf5;
-  --surface-2: #f5f2e9;
-  --surface-highlight: #ffe95c;
-  --border: #b6b6b6;
-  --border-strong: #1a3300;
-  --border-subtle: #e5dfd2;
-  --text: #1a3300;
-  --text-secondary: #2f4518;
-  --muted: #5e6b54;
-  --placeholder: #8b9682;
-  --ring: #1a3300;
-  --accent: #ffe95c;
-  --primary: #1a3300;
-  --primary-hover: #264700;
-  --primary-light: #ffe95c;
-  --primary-border: #1a3300;
+  --surface-cream: #f7f9fc;
+  --surface-2: #ecf1f7;
+  --surface-highlight: #fde68a;
+  --border: #c6d3e3;
+  --border-strong: #0a192f;
+  --border-subtle: #dbe4f0;
+  --text: #0a192f;
+  --text-secondary: #172a45;
+  --muted: #536882;
+  --placeholder: #7b8ea5;
+  --ring: #0a192f;
+  --accent: #d97706;
+  --accent-text: #ffffff;
+  --glow: rgba(217, 119, 6, 0.15);
+  --primary: #0a192f;
+  --primary-hover: #162e4c;
+  --primary-light: #fef3c7;
+  --primary-border: #0a192f;
 
   /* Feedback States */
-  --good-bg: #d5f5c2;
-  --good-border: #1a3300;
-  --good-text: #1a3300;
+  --good-bg: #d1fae5;
+  --good-border: #059669;
+  --good-text: #064e3b;
   --bad-bg: #fee2e2;
   --bad-border: #dc2626;
-  --bad-text: #991b1b;
-  --warn-bg: #ffe95c;
-  --warn-border: #1a3300;
-  --warn-text: #1a3300;
+  --bad-text: #7f1d1d;
+  --warn-bg: #fef3c7;
+  --warn-border: #d97706;
+  --warn-text: #78350f;
 
   /* Shapes */
   --radius-buttons: 6px;
@@ -98,7 +100,7 @@ body {
     border: 1.5px solid var(--border);
     border-radius: 12px;
     padding: 1.15rem;
-    box-shadow: 0 1px 2px 0 rgba(26, 51, 0, 0.04);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
   }
   @media (min-width: 640px) {
     .card {
@@ -110,16 +112,17 @@ body {
   }
   .card-hover:hover {
     transform: translateY(-2px);
-    border-color: var(--color-forest-ink);
-    box-shadow: 0 4px 12px -2px rgba(26, 51, 0, 0.08);
+    border-color: var(--border-strong);
+    box-shadow: 0 4px 12px -2px var(--glow);
   }
 
   /* Domain / Sticky Note Cards */
   .domain-card {
+    background: var(--surface);
     border-radius: 12px;
-    border: 1.5px solid var(--color-forest-ink);
+    border: 1.5px solid var(--border);
     padding: 1.1rem;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
   }
   @media (min-width: 640px) {
     .domain-card {
@@ -128,7 +131,8 @@ body {
   }
   .domain-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px -2px rgba(26, 51, 0, 0.12);
+    border-color: var(--border-strong);
+    box-shadow: 0 4px 14px -3px var(--glow);
   }
 
   /* Buttons */
@@ -235,19 +239,20 @@ body {
     gap: 0.4rem;
     padding: 0.25rem 0.65rem;
     border-radius: 6px;
-    background: var(--color-highlighter-yellow);
-    color: var(--color-forest-ink);
+    background: var(--accent);
+    color: var(--accent-text);
     font-family: var(--font-sans);
     font-weight: 700;
     font-size: 0.75rem;
     letter-spacing: 0.03em;
-    border: 1px solid rgba(26, 51, 0, 0.2);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 2px 6px -1px var(--glow);
   }
 
   /* Highlight marker pen effect */
   .highlight, mark {
-    background-color: var(--color-highlighter-yellow);
-    color: var(--color-forest-ink);
+    background-color: var(--accent);
+    color: var(--accent-text);
     padding: 0.1em 0.35em;
     border-radius: 3px;
     box-decoration-break: clone;
@@ -463,15 +468,16 @@ body {
   }
   .nav-link:hover {
     opacity: 1;
-    background: rgba(26, 51, 0, 0.06);
+    background: var(--surface-2);
     color: var(--color-forest-ink);
   }
   .nav-link.active {
     opacity: 1;
-    background: var(--color-sticky-note-mint);
-    border-color: rgba(26, 51, 0, 0.2);
-    color: var(--color-forest-ink);
-    font-weight: 600;
+    background: var(--accent);
+    border-color: var(--border-strong);
+    color: var(--accent-text);
+    font-weight: 700;
+    box-shadow: 0 1px 4px 0 var(--glow);
   }
 
   /* Brand Utilities */

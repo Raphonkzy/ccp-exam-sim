@@ -12,6 +12,7 @@ export const en = {
   'nav.mistakes': 'Mistakes',
   'nav.browse': 'Browse',
   'nav.settings': 'Settings',
+  'nav.palette': 'Palettes',
   'nav.menu': 'Menu',
   'nav.devReview': 'Dev review',
 

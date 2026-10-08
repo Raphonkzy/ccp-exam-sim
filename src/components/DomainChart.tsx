@@ -7,12 +7,11 @@ export interface BarDatum {
   detail?: string
 }
 
-// Say Briefly Sticky Note Accent Colors
 const COLORS: Record<number, string> = {
-  1: '#0d9488', // Sticky Note Teal
-  2: '#16a34a', // Sticky Note Mint
-  3: '#9333ea', // Sticky Note Blush
-  4: '#cb5521', // Terracotta
+  1: '#0d9488',
+  2: '#16a34a',
+  3: '#9333ea',
+  4: '#cb5521',
 }
 
 export function DomainChart({ data }: { data: BarDatum[] }) {
@@ -27,7 +26,7 @@ export function DomainChart({ data }: { data: BarDatum[] }) {
             <div className="mb-1.5 flex items-baseline justify-between gap-3 text-sm">
               <span className="font-semibold text-[var(--color-forest-ink)]">{label}</span>
               <span className="text-[var(--color-forest-ink)]/70 text-xs font-mono font-semibold tabular-nums">
-                {d.pct === null ? '—' : `${d.pct}%`}
+                {d.pct === null ? 'N/A' : `${d.pct}%`}
                 {d.detail ? ` · ${d.detail}` : ''}
               </span>
             </div>

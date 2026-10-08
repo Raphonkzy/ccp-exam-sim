@@ -7,6 +7,7 @@ export interface Settings {
   lang: Lang
   showEnglish: boolean
   theme: ThemeSetting
+  palette?: string
 }
 
 export interface AnswerRecord {

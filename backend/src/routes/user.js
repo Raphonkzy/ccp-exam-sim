@@ -5,7 +5,7 @@ import { requireAuth, requireAdmin } from '../middleware/auth.js';
 
 const router = Router();
 
-// ── Exam Attempts ─────────────────────────────────────────────────────────────
+// Exam attempts
 
 // GET /api/user/attempts - get current user's exam history
 router.get('/attempts', requireAuth, async (req, res) => {
@@ -69,7 +69,7 @@ router.delete('/attempts/:id', requireAuth, async (req, res) => {
   }
 });
 
-// ── Bookmarks ─────────────────────────────────────────────────────────────────
+// Bookmarks
 
 // GET /api/user/bookmarks
 router.get('/bookmarks', requireAuth, async (req, res) => {
@@ -88,7 +88,7 @@ router.post('/bookmarks/:questionId', requireAuth, async (req, res) => {
       [req.user.id, req.params.questionId]
     );
     res.status(201).json({ ok: true });
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -102,7 +102,7 @@ router.delete('/bookmarks/:questionId', requireAuth, async (req, res) => {
   res.json({ ok: true });
 });
 
-// ── Mistakes ──────────────────────────────────────────────────────────────────
+// Mistakes
 
 // GET /api/user/mistakes
 router.get('/mistakes', requireAuth, async (req, res) => {
@@ -137,7 +137,7 @@ router.delete('/mistakes', requireAuth, async (req, res) => {
   res.json({ ok: true });
 });
 
-// ── Full User State Sync ─────────────────────────────────────────────────────
+// Full user state sync
 
 // GET /api/user/full-state - return all user data from PostgreSQL in one shot
 router.get('/full-state', requireAuth, async (req, res) => {
@@ -301,7 +301,7 @@ router.delete('/reset', requireAuth, async (req, res) => {
   }
 });
 
-// ── Admin ─────────────────────────────────────────────────────────────────────
+// Admin
 
 // GET /api/user/admin/users - list all users (admin only)
 router.get('/admin/users', requireAdmin, async (req, res) => {

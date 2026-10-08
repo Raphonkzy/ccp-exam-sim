@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { useAuth } from '../context/AuthContext'
 import { AuthModal } from '../components/AuthModal'
@@ -9,19 +9,23 @@ import { ReviewItem } from '../components/ReviewItem'
 import { getQuestion } from '../lib/questionService'
 import { isCorrect, PASS_SCORE } from '../lib/scoring'
 import { formatDuration } from '../lib/stats'
+import { newId } from '../lib/examBuilder'
 import type { Question } from '../types/question'
+import type { Session } from '../types/progress'
 
 type Tab = 'wrong' | 'flagged' | 'all'
 
 export default function Results() {
   const { t } = useT()
-  const { data } = useApp()
+  const { data, setActivePractice } = useApp()
   const { user } = useAuth()
   const [authModal, setAuthModal] = useState<{ open: boolean; mode: 'login' | 'register' }>({ open: false, mode: 'register' })
   const { id } = useParams()
+  const location = useLocation()
   const navigate = useNavigate()
   const [tab, setTab] = useState<Tab>('wrong')
-  const session = data.sessions.find((s) => s.id === id)
+  const stateSession = (location.state as { session?: Session } | null)?.session
+  const session = data.sessions.find((s) => s.id === id) ?? stateSession
 
   const questions = useMemo(() => {
     const ids =
@@ -92,12 +96,26 @@ export default function Results() {
                 <div className="h-full rounded-full" style={{ width: `${scorePct}%`, background: 'var(--color-forest-ink)' }} />
                 <div className="absolute top-0 h-full w-0.5 bg-[var(--color-forest-ink)]" style={{ left: `${passLinePct}%` }} />
               </div>
-              <p className="text-xs text-[var(--color-forest-ink)]/70 mt-1 font-mono">100 — {PASS_SCORE} (Pass) — 1000</p>
+              <p className="text-xs text-[var(--color-forest-ink)]/70 mt-1 font-mono">Scale: 100 to 1000 (Pass: {PASS_SCORE})</p>
               <p className="mt-3 rounded-lg border border-[var(--color-pencil-gray)]/50 p-3 text-xs text-[var(--color-forest-ink)]/80 leading-relaxed" role="note">{t('results.disclaimer')}</p>
             </>
           )}
           {wrong.length > 0 && (
-            <button type="button" className="btn-primary mt-4 inline-flex items-center gap-1.5" onClick={() => navigate('/practice/run', { state: { ids: wrong.map((q) => q.id) } })}>
+            <button
+              type="button"
+              className="btn-primary mt-4 inline-flex items-center gap-1.5"
+              onClick={() => {
+                setActivePractice({
+                  id: newId(),
+                  questionIds: wrong.map((q) => q.id),
+                  selections: {},
+                  checked: [],
+                  startedAt: Date.now(),
+                  index: 0,
+                })
+                navigate('/practice/run')
+              }}
+            >
               <span>{t('results.retryWrong')} ({wrong.length})</span>
               <span className="font-mono">→</span>
             </button>

@@ -49,7 +49,15 @@ export default function DevReview() {
   }, [domain, status, query, notes])
 
   const toggle = (id: string) =>
-    setExpanded((s) => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n })
+    setExpanded((s) => {
+      const n = new Set(s)
+      if (n.has(id)) {
+        n.delete(id)
+      } else {
+        n.add(id)
+      }
+      return n
+    })
 
   const exportNotes = () => {
     const blob = new Blob([JSON.stringify(notes, null, 2)], { type: 'application/json' })
@@ -77,7 +85,6 @@ export default function DevReview() {
         <button type="button" className="btn-pill !py-1.5 !px-4 !text-xs" onClick={exportNotes}>{t('dev.exportNotes')}</button>
       </div>
 
-      {/* Filters */}
       <div className="card grid gap-3 sm:grid-cols-3">
         <div>
           <label className="label mb-1 block" htmlFor="dev-search">{t('dev.search')}</label>
@@ -123,13 +130,11 @@ export default function DevReview() {
 
               {isExp && (
                 <div className="mt-4 grid gap-3 border-t pt-4 border-[#e2e8f0]">
-                  {/* Answer key */}
                   <div>
                     <p className="label mb-1">{t('dev.answerKey')}</p>
                     <p className="font-mono text-sm font-bold text-[#2563eb]">{q.correctOptionIds.join(', ')}</p>
                   </div>
 
-                  {/* Source URL */}
                   {q.sourceUrl && (
                     <div>
                       <p className="label mb-1">{t('dev.sourceUrl')}</p>
@@ -139,7 +144,6 @@ export default function DevReview() {
                     </div>
                   )}
 
-                  {/* English text */}
                   <div>
                     <p className="label mb-2">{t('dev.english')}</p>
                     <p className="rounded-lg p-3 text-sm text-[#0f172a] bg-[#f8fafc] border border-[#e2e8f0]">{q.question}</p>
@@ -148,7 +152,6 @@ export default function DevReview() {
                     ))}
                   </div>
 
-                  {/* Controls */}
                   <div className="flex flex-wrap gap-2">
                     <label className="flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 border-[#e2e8f0]">
                       <input type="checkbox" className="h-4 w-4 accent-[#059669]" checked={!!n.verified} onChange={(e) => patchNote(q.id, { verified: e.target.checked })} />

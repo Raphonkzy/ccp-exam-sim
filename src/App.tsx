@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
 import { AuthProvider } from './context/AuthContext'
 import { Layout } from './components/Layout'
@@ -23,7 +23,6 @@ export default function App() {
         <AppProvider>
           <Routes>
             <Route element={<Layout />}>
-              {/* ── Public routes (guests welcome) ─────────── */}
               <Route index element={<Dashboard />} />
               <Route path="practice" element={<PracticeSetup />} />
               <Route path="practice/run" element={<PracticeSession />} />
@@ -31,13 +30,12 @@ export default function App() {
               <Route path="exam/run" element={<ExamRun />} />
               <Route path="results/:id" element={<Results />} />
 
-              {/* ── Auth-required routes ─────────────────── */}
               <Route path="history" element={<RequireAuth><History /></RequireAuth>} />
               <Route path="mistakes" element={<RequireAuth><MistakeBank /></RequireAuth>} />
               <Route path="browse" element={<RequireAuth><Browse /></RequireAuth>} />
               <Route path="settings" element={<Settings />} />
+              <Route path="palette" element={<Navigate to="/settings" replace />} />
 
-              {/* ── Admin-only route ─────────────────────── */}
               <Route path="dev/review" element={<RequireAdmin><DevReview /></RequireAdmin>} />
 
               <Route path="*" element={<NotFound />} />

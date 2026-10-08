@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { useT } from '../i18n'
@@ -12,7 +13,7 @@ export default function ExamIntro() {
   const navigate = useNavigate()
   const size = examSize(allQuestions)
   const active = data.activeExam
-  const remaining = active ? Math.max(0, Math.ceil((active.deadline - Date.now()) / 1000)) : 0
+  const [remaining] = useState(() => (active ? Math.max(0, Math.ceil((active.deadline - Date.now()) / 1000)) : 0))
 
   const start = () => {
     const qs = buildExam(allQuestions)

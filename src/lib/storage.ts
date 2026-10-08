@@ -5,7 +5,7 @@ export const STORAGE_KEY = 'clf02:v1'
 export function defaultData(): AppData {
   return {
     version: 1,
-    settings: { lang: 'en', showEnglish: false, theme: 'system' },
+    settings: { lang: 'en', showEnglish: false, theme: 'system', palette: 'oxford-navy' },
     answers: {},
     bookmarks: [],
     confusing: [],
@@ -27,6 +27,7 @@ export function normalizeData(raw: unknown): AppData {
       lang: 'en',
       showEnglish: false,
       theme: s.theme === 'light' || s.theme === 'dark' ? s.theme : 'system',
+      palette: typeof s.palette === 'string' ? s.palette : 'oxford-navy',
     },
     answers: r.answers && typeof r.answers === 'object' ? r.answers : {},
     bookmarks: Array.isArray(r.bookmarks) ? r.bookmarks : [],

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useT } from '../i18n'
 import type { DictKey } from '../i18n/en'
@@ -15,12 +15,11 @@ export default function Browse() {
   const [tag, setTag] = useState<string | 'all'>('all')
   const [openIds, setOpenIds] = useState<Set<string>>(new Set())
 
-  // Keep local query in sync if URL query parameter changes
-  useEffect(() => {
-    if (urlQ !== query) {
-      setQuery(urlQ)
-    }
-  }, [urlQ])
+  const [prevUrlQ, setPrevUrlQ] = useState(urlQ)
+  if (urlQ !== prevUrlQ) {
+    setPrevUrlQ(urlQ)
+    setQuery(urlQ)
+  }
 
   const handleQueryChange = (val: string) => {
     setQuery(val)
@@ -49,7 +48,11 @@ export default function Browse() {
   const toggle = (id: string) =>
     setOpenIds((s) => {
       const n = new Set(s)
-      n.has(id) ? n.delete(id) : n.add(id)
+      if (n.has(id)) {
+        n.delete(id)
+      } else {
+        n.add(id)
+      }
       return n
     })
 
@@ -60,7 +63,6 @@ export default function Browse() {
         <p className="text-sm text-[var(--color-forest-ink)]/70 mt-1">{t('browse.subtitle')}</p>
       </div>
 
-      {/* Say Briefly Study Filters Card */}
       <div className="card grid gap-4 sm:grid-cols-3">
         <div>
           <label className="label mb-1.5 block text-xs uppercase tracking-wider text-[var(--color-forest-ink)]/70" htmlFor="q-search">

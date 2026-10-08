@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { allQuestions } from '../lib/questionService'
 
@@ -26,14 +26,16 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
   const [tokenCopied, setTokenCopied] = useState(false)
   const [showRegisterHint, setShowRegisterHint] = useState(false)
 
-  useEffect(() => {
+  const [prevOpen, setPrevOpen] = useState(open)
+  if (open !== prevOpen) {
+    setPrevOpen(open)
     if (open) {
       setMode(initialMode)
       setError('')
       setInfo('')
       setShowRegisterHint(false)
     }
-  }, [open, initialMode])
+  }
 
   if (!open) return null
 
@@ -147,16 +149,13 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
       aria-modal="true"
       aria-labelledby="auth-modal-title"
     >
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-[#1a3300]/30 backdrop-blur-sm"
         onClick={handleClose}
         aria-hidden="true"
       />
 
-      {/* Panel */}
       <div className="relative w-full max-w-sm max-h-[92vh] overflow-y-auto rounded-2xl border border-[#b6b6b6] bg-[#fcfaf5] p-5 sm:p-6 shadow-xl no-scrollbar">
-        {/* Close */}
         <button
           type="button"
           onClick={handleClose}
@@ -168,7 +167,6 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
           </svg>
         </button>
 
-        {/* Logo */}
         <div className="mb-5 flex items-center gap-2">
           <span className="grid h-8 w-8 place-items-center rounded-[6px] bg-[#ffe95c] border border-[#1a3300]/25 font-mono font-black text-xs text-[#1a3300]">
             aws
@@ -181,7 +179,6 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
         </h2>
         <p className="mb-5 text-xs text-[#1a3300]/60">{subtitles[mode]}</p>
 
-        {/* ── LOGIN ─────────────────────────────────────────── */}
         {mode === 'login' && (
           <form onSubmit={handleLoginSubmit} className="space-y-3" noValidate>
             <Field id="auth-email" label="Email" type="email" autoComplete="email"
@@ -215,7 +212,6 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
           </form>
         )}
 
-        {/* ── REGISTER ──────────────────────────────────────── */}
         {mode === 'register' && (
           <form onSubmit={handleRegisterSubmit} className="space-y-3" noValidate>
             <div className="rounded-xl border border-[#b6b6b6]/50 bg-white/70 p-3 text-xs space-y-1.5 text-[#1a3300]/80">
@@ -253,7 +249,6 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
           </form>
         )}
 
-        {/* ── FORGOT PASSWORD ───────────────────────────────── */}
         {mode === 'forgot' && (
           <form onSubmit={handleForgotSubmit} className="space-y-3" noValidate>
             <Field id="forgot-email" label="Email" type="email" autoComplete="email"
@@ -265,7 +260,7 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
             {/* Homelab: show the token directly (no email server needed) */}
             {generatedToken && (
               <div className="space-y-2 rounded-lg border border-[#ffe95c] bg-[#ffe95c]/20 p-3">
-                <p className="text-xs font-semibold text-[#1a3300]">Your reset token — copy it:</p>
+                <p className="text-xs font-semibold text-[#1a3300]">Your reset token (copy it):</p>
                 <div className="flex items-center gap-2">
                   <code className="flex-1 break-all rounded bg-white/80 px-2 py-1.5 text-[10px] font-mono text-[#1a3300] border border-[#b6b6b6]">
                     {generatedToken}
@@ -294,7 +289,6 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
           </form>
         )}
 
-        {/* ── RESET PASSWORD ────────────────────────────────── */}
         {mode === 'reset' && (
           <form onSubmit={handleResetSubmit} className="space-y-3" noValidate>
             <Field id="reset-token" label="Reset token" type="text" autoComplete="off"
@@ -319,7 +313,7 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
   )
 }
 
-// ── Tiny helper components ────────────────────────────────────────────────────
+
 
 function Field({ id, label, type, autoComplete, value, onChange, placeholder }: {
   id: string; label: string; type: string; autoComplete: string

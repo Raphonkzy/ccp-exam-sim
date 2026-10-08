@@ -16,97 +16,554 @@
       "multiple-choice": "1 correct, 3 distractors",
       "multiple-response": "2 or more correct out of 5 or more options"
     },
-    "outOfScopeJobTasks": ["Coding", "Designing cloud architecture", "Troubleshooting", "Implementation", "Load and performance testing"],
+    "outOfScopeJobTasks": [
+      "Coding",
+      "Designing cloud architecture",
+      "Troubleshooting",
+      "Implementation",
+      "Load and performance testing"
+    ],
     "source": "docs/cloud-practitioner-02.pdf"
   },
   "domains": [
     {
-      "id": 1, "name": "Cloud Concepts", "weight": 24,
+      "id": 1,
+      "name": "Cloud Concepts",
+      "weight": 24,
       "taskStatements": [
-        { "id": "1.1", "title": "Define the benefits of the AWS Cloud.", "topics": ["Value proposition of the AWS Cloud", "Benefits of global infrastructure (speed of deployment, global reach)", "High availability, elasticity, agility"] },
-        { "id": "1.2", "title": "Identify design principles of the AWS Cloud.", "topics": ["AWS Well-Architected Framework", "Pillars: operational excellence, security, reliability, performance efficiency, cost optimization, sustainability", "Differences between pillars"] },
-        { "id": "1.3", "title": "Understand the benefits of and strategies for migration to the AWS Cloud.", "topics": ["Cloud adoption strategies", "Resources supporting the migration journey", "AWS Cloud Adoption Framework (AWS CAF)", "Migration strategies (for example, database replication)"] },
-        { "id": "1.4", "title": "Understand concepts of cloud economics.", "topics": ["Cost savings of moving to the cloud", "Fixed vs variable costs", "On-premises costs", "Licensing: BYOL vs included", "Rightsizing", "Benefits of automation", "Economies of scale"] }
+        {
+          "id": "1.1",
+          "title": "Define the benefits of the AWS Cloud.",
+          "topics": [
+            "Value proposition of the AWS Cloud",
+            "Benefits of global infrastructure (speed of deployment, global reach)",
+            "High availability, elasticity, agility"
+          ]
+        },
+        {
+          "id": "1.2",
+          "title": "Identify design principles of the AWS Cloud.",
+          "topics": [
+            "AWS Well-Architected Framework",
+            "Pillars: operational excellence, security, reliability, performance efficiency, cost optimization, sustainability",
+            "Differences between pillars"
+          ]
+        },
+        {
+          "id": "1.3",
+          "title": "Understand the benefits of and strategies for migration to the AWS Cloud.",
+          "topics": [
+            "Cloud adoption strategies",
+            "Resources supporting the migration journey",
+            "AWS Cloud Adoption Framework (AWS CAF)",
+            "Migration strategies (for example, database replication)"
+          ]
+        },
+        {
+          "id": "1.4",
+          "title": "Understand concepts of cloud economics.",
+          "topics": [
+            "Cost savings of moving to the cloud",
+            "Fixed vs variable costs",
+            "On-premises costs",
+            "Licensing: BYOL vs included",
+            "Rightsizing",
+            "Benefits of automation",
+            "Economies of scale"
+          ]
+        }
       ]
     },
     {
-      "id": 2, "name": "Security and Compliance", "weight": 30,
+      "id": 2,
+      "name": "Security and Compliance",
+      "weight": 30,
       "taskStatements": [
-        { "id": "2.1", "title": "Understand the AWS shared responsibility model.", "topics": ["Components of the model", "Customer responsibilities", "AWS responsibilities", "Shared controls", "Shifts by service (Amazon RDS, AWS Lambda, Amazon EC2)"] },
-        { "id": "2.2", "title": "Understand AWS Cloud security, governance, and compliance concepts.", "topics": ["Compliance and governance concepts", "Benefits of cloud security (encryption)", "Logs for security", "AWS Artifact", "Compliance by geography/industry", "Amazon Inspector, AWS Security Hub, Amazon GuardDuty, AWS Shield", "Encryption in transit/at rest", "Amazon CloudWatch, AWS CloudTrail, AWS Config, access reports", "Compliance requirements vary among services"] },
-        { "id": "2.3", "title": "Identify AWS access management capabilities.", "topics": ["IAM", "Root user protection", "Least privilege", "AWS IAM Identity Center", "Access keys, password policies, credential storage (AWS Secrets Manager, AWS Systems Manager)", "MFA, cross-account IAM roles", "Groups, users, custom and managed policies", "Root-only tasks", "Federated identity"] },
-        { "id": "2.4", "title": "Identify components and resources for security.", "topics": ["AWS WAF, AWS Firewall Manager, AWS Shield, Amazon GuardDuty", "Third-party security products in AWS Marketplace", "AWS Knowledge Center, AWS Security Center, AWS Security Blog", "AWS Trusted Advisor for security issues"] }
+        {
+          "id": "2.1",
+          "title": "Understand the AWS shared responsibility model.",
+          "topics": [
+            "Components of the model",
+            "Customer responsibilities",
+            "AWS responsibilities",
+            "Shared controls",
+            "Shifts by service (Amazon RDS, AWS Lambda, Amazon EC2)"
+          ]
+        },
+        {
+          "id": "2.2",
+          "title": "Understand AWS Cloud security, governance, and compliance concepts.",
+          "topics": [
+            "Compliance and governance concepts",
+            "Benefits of cloud security (encryption)",
+            "Logs for security",
+            "AWS Artifact",
+            "Compliance by geography/industry",
+            "Amazon Inspector, AWS Security Hub, Amazon GuardDuty, AWS Shield",
+            "Encryption in transit/at rest",
+            "Amazon CloudWatch, AWS CloudTrail, AWS Config, access reports",
+            "Compliance requirements vary among services"
+          ]
+        },
+        {
+          "id": "2.3",
+          "title": "Identify AWS access management capabilities.",
+          "topics": [
+            "IAM",
+            "Root user protection",
+            "Least privilege",
+            "AWS IAM Identity Center",
+            "Access keys, password policies, credential storage (AWS Secrets Manager, AWS Systems Manager)",
+            "MFA, cross-account IAM roles",
+            "Groups, users, custom and managed policies",
+            "Root-only tasks",
+            "Federated identity"
+          ]
+        },
+        {
+          "id": "2.4",
+          "title": "Identify components and resources for security.",
+          "topics": [
+            "AWS WAF, AWS Firewall Manager, AWS Shield, Amazon GuardDuty",
+            "Third-party security products in AWS Marketplace",
+            "AWS Knowledge Center, AWS Security Center, AWS Security Blog",
+            "AWS Trusted Advisor for security issues"
+          ]
+        }
       ]
     },
     {
-      "id": 3, "name": "Cloud Technology and Services", "weight": 34,
+      "id": 3,
+      "name": "Cloud Technology and Services",
+      "weight": 34,
       "taskStatements": [
-        { "id": "3.1", "title": "Define methods of deploying and operating in the AWS Cloud.", "topics": ["Console vs programmatic access (APIs, SDKs, CLI) vs infrastructure as code", "One-time operations vs repeatable processes", "Deployment models: cloud, hybrid, on-premises"] },
-        { "id": "3.2", "title": "Define the AWS global infrastructure.", "topics": ["Regions, Availability Zones, edge locations", "High availability with multiple AZs", "AZs do not share single points of failure", "Multiple Regions: DR, business continuity, latency, data sovereignty"] },
-        { "id": "3.3", "title": "Identify AWS compute services.", "topics": ["Amazon EC2 instance types", "Containers: Amazon ECS, Amazon EKS", "Serverless: AWS Fargate, AWS Lambda", "Auto scaling and elasticity", "Load balancers"] },
-        { "id": "3.4", "title": "Identify AWS database services.", "topics": ["EC2-hosted vs managed databases", "Relational: Amazon RDS, Amazon Aurora", "NoSQL: Amazon DynamoDB", "In-memory: Amazon ElastiCache", "Migration: AWS DMS, AWS SCT"] },
-        { "id": "3.5", "title": "Identify AWS network services.", "topics": ["VPC components: subnets, gateways", "Security in a VPC: network ACLs, security groups, Amazon Inspector", "Amazon Route 53", "Connectivity: AWS VPN, AWS Direct Connect"] },
-        { "id": "3.6", "title": "Identify AWS storage services.", "topics": ["Object storage", "Amazon S3 storage classes", "Block storage: Amazon EBS, instance store", "File services: Amazon EFS, Amazon FSx", "AWS Storage Gateway", "Lifecycle policies", "AWS Backup"] },
-        { "id": "3.7", "title": "Identify AWS artificial intelligence and machine learning (AI/ML) services and analytics services.", "topics": ["AI/ML services and their tasks (Amazon SageMaker AI, Amazon Lex)", "Analytics: Amazon Athena, Amazon Kinesis, AWS Glue, Amazon Quick Sight"] },
-        { "id": "3.8", "title": "Identify services from other in-scope AWS service categories.", "topics": ["Amazon EventBridge, Amazon SNS, Amazon SQS", "Amazon Connect, Amazon SES", "AWS Support", "AWS CodeBuild, AWS CodePipeline, AWS X-Ray", "Amazon AppStream 2.0, Amazon WorkSpaces, Amazon WorkSpaces Secure Browser", "AWS Amplify", "AWS IoT Core"] }
+        {
+          "id": "3.1",
+          "title": "Define methods of deploying and operating in the AWS Cloud.",
+          "topics": [
+            "Console vs programmatic access (APIs, SDKs, CLI) vs infrastructure as code",
+            "One-time operations vs repeatable processes",
+            "Deployment models: cloud, hybrid, on-premises"
+          ]
+        },
+        {
+          "id": "3.2",
+          "title": "Define the AWS global infrastructure.",
+          "topics": [
+            "Regions, Availability Zones, edge locations",
+            "High availability with multiple AZs",
+            "AZs do not share single points of failure",
+            "Multiple Regions: DR, business continuity, latency, data sovereignty"
+          ]
+        },
+        {
+          "id": "3.3",
+          "title": "Identify AWS compute services.",
+          "topics": [
+            "Amazon EC2 instance types",
+            "Containers: Amazon ECS, Amazon EKS",
+            "Serverless: AWS Fargate, AWS Lambda",
+            "Auto scaling and elasticity",
+            "Load balancers"
+          ]
+        },
+        {
+          "id": "3.4",
+          "title": "Identify AWS database services.",
+          "topics": [
+            "EC2-hosted vs managed databases",
+            "Relational: Amazon RDS, Amazon Aurora",
+            "NoSQL: Amazon DynamoDB",
+            "In-memory: Amazon ElastiCache",
+            "Migration: AWS DMS, AWS SCT"
+          ]
+        },
+        {
+          "id": "3.5",
+          "title": "Identify AWS network services.",
+          "topics": [
+            "VPC components: subnets, gateways",
+            "Security in a VPC: network ACLs, security groups, Amazon Inspector",
+            "Amazon Route 53",
+            "Connectivity: AWS VPN, AWS Direct Connect"
+          ]
+        },
+        {
+          "id": "3.6",
+          "title": "Identify AWS storage services.",
+          "topics": [
+            "Object storage",
+            "Amazon S3 storage classes",
+            "Block storage: Amazon EBS, instance store",
+            "File services: Amazon EFS, Amazon FSx",
+            "AWS Storage Gateway",
+            "Lifecycle policies",
+            "AWS Backup"
+          ]
+        },
+        {
+          "id": "3.7",
+          "title": "Identify AWS artificial intelligence and machine learning (AI/ML) services and analytics services.",
+          "topics": [
+            "AI/ML services and their tasks (Amazon SageMaker AI, Amazon Lex)",
+            "Analytics: Amazon Athena, Amazon Kinesis, AWS Glue, Amazon Quick Sight"
+          ]
+        },
+        {
+          "id": "3.8",
+          "title": "Identify services from other in-scope AWS service categories.",
+          "topics": [
+            "Amazon EventBridge, Amazon SNS, Amazon SQS",
+            "Amazon Connect, Amazon SES",
+            "AWS Support",
+            "AWS CodeBuild, AWS CodePipeline, AWS X-Ray",
+            "Amazon AppStream 2.0, Amazon WorkSpaces, Amazon WorkSpaces Secure Browser",
+            "AWS Amplify",
+            "AWS IoT Core"
+          ]
+        }
       ]
     },
     {
-      "id": 4, "name": "Billing, Pricing, and Support", "weight": 12,
+      "id": 4,
+      "name": "Billing, Pricing, and Support",
+      "weight": 12,
       "taskStatements": [
-        { "id": "4.1", "title": "Compare AWS pricing models.", "topics": ["Compute purchasing options: On-Demand, Reserved Instances, Spot, Savings Plans, Dedicated Hosts, Dedicated Instances, Capacity Reservations", "Storage options and tiers", "Reserved Instance flexibility and behavior in AWS Organizations", "Data transfer costs (inbound, outbound, inter-Region, intra-Region)"] },
-        { "id": "4.2", "title": "Understand resources for billing, budget, and cost management.", "topics": ["Billing support and information", "Pricing information", "AWS Organizations consolidated billing", "Cost allocation tags", "AWS Budgets, AWS Cost Explorer", "AWS Pricing Calculator", "AWS Cost and Usage Report"] },
-        { "id": "4.3", "title": "Identify AWS technical resources and AWS Support options.", "topics": ["Official AWS websites: whitepapers, blogs, documentation", "AWS Prescriptive Guidance, AWS Knowledge Center, AWS re:Post", "AWS Support plans: Basic, Business Support+, Enterprise Support, Unified Operations", "AWS Trusted Advisor, AWS Health Dashboard, AWS Health API", "AWS Trust and Safety team", "AWS Partner Network, AWS Marketplace, ISVs, system integrators", "Partner benefits", "AWS Professional Services, AWS solutions architects", "AWS Support Center"] }
+        {
+          "id": "4.1",
+          "title": "Compare AWS pricing models.",
+          "topics": [
+            "Compute purchasing options: On-Demand, Reserved Instances, Spot, Savings Plans, Dedicated Hosts, Dedicated Instances, Capacity Reservations",
+            "Storage options and tiers",
+            "Reserved Instance flexibility and behavior in AWS Organizations",
+            "Data transfer costs (inbound, outbound, inter-Region, intra-Region)"
+          ]
+        },
+        {
+          "id": "4.2",
+          "title": "Understand resources for billing, budget, and cost management.",
+          "topics": [
+            "Billing support and information",
+            "Pricing information",
+            "AWS Organizations consolidated billing",
+            "Cost allocation tags",
+            "AWS Budgets, AWS Cost Explorer",
+            "AWS Pricing Calculator",
+            "AWS Cost and Usage Report"
+          ]
+        },
+        {
+          "id": "4.3",
+          "title": "Identify AWS technical resources and AWS Support options.",
+          "topics": [
+            "Official AWS websites: whitepapers, blogs, documentation",
+            "AWS Prescriptive Guidance, AWS Knowledge Center, AWS re:Post",
+            "AWS Support plans: Basic, Business Support+, Enterprise Support, Unified Operations",
+            "AWS Trusted Advisor, AWS Health Dashboard, AWS Health API",
+            "AWS Trust and Safety team",
+            "AWS Partner Network, AWS Marketplace, ISVs, system integrators",
+            "Partner benefits",
+            "AWS Professional Services, AWS solutions architects",
+            "AWS Support Center"
+          ]
+        }
       ]
     }
   ],
   "inScopeServices": {
-    "Analytics": ["Amazon Athena", "Amazon EMR", "AWS Glue", "Amazon Kinesis", "Amazon OpenSearch Service", "Amazon Quick Sight", "Amazon Redshift"],
-    "Application Integration": ["Amazon EventBridge", "Amazon Simple Notification Service (Amazon SNS)", "Amazon Simple Queue Service (Amazon SQS)", "AWS Step Functions"],
-    "Business Applications": ["Amazon Connect", "Amazon Simple Email Service (Amazon SES)"],
-    "Cloud Financial Management": ["AWS Budgets", "AWS Cost and Usage Reports", "AWS Cost Explorer", "AWS Marketplace"],
-    "Compute": ["AWS Batch", "Amazon EC2", "AWS Elastic Beanstalk", "Amazon Lightsail", "AWS Outposts"],
-    "Containers": ["Amazon Elastic Container Registry (Amazon ECR)", "Amazon Elastic Container Service (Amazon ECS)", "Amazon Elastic Kubernetes Service (Amazon EKS)"],
-    "Customer Enablement": ["AWS Support"],
-    "Database": ["Amazon Aurora", "Amazon DocumentDB", "Amazon DynamoDB", "Amazon ElastiCache", "Amazon Neptune", "Amazon RDS"],
-    "Developer Tools": ["AWS CLI", "AWS CodeBuild", "AWS CodePipeline", "AWS X-Ray"],
-    "End User Computing": ["Amazon AppStream 2.0", "Amazon WorkSpaces", "Amazon WorkSpaces Secure Browser"],
-    "Frontend Web and Mobile": ["AWS Amplify"],
-    "Internet of Things (IoT)": ["AWS IoT Core"],
-    "Machine Learning": ["Amazon Comprehend", "Amazon Lex", "Amazon Polly", "Amazon Q", "Amazon Rekognition", "Amazon SageMaker AI", "Amazon Textract", "Amazon Transcribe", "Amazon Translate"],
-    "Management and Governance": ["AWS Auto Scaling", "AWS CloudFormation", "AWS CloudTrail", "Amazon CloudWatch", "AWS Compute Optimizer", "AWS Config", "AWS Control Tower", "AWS Health Dashboard", "AWS License Manager", "AWS Management Console", "AWS Organizations", "AWS Service Catalog", "Service Quotas", "AWS Systems Manager", "AWS Trusted Advisor", "AWS Well-Architected Tool"],
-    "Migration and Transfer": ["AWS Application Discovery Service", "AWS Application Migration Service", "AWS Database Migration Service (AWS DMS)", "Migration Evaluator", "AWS Migration Hub", "AWS Schema Conversion Tool (AWS SCT)"],
-    "Networking and Content Delivery": ["Amazon API Gateway", "Amazon CloudFront", "AWS Direct Connect", "AWS Global Accelerator", "AWS PrivateLink", "Amazon Route 53", "AWS Transit Gateway", "Amazon VPC", "AWS VPN", "AWS Site-to-Site VPN", "AWS Client VPN"],
-    "Security, Identity, and Compliance": ["AWS Artifact", "AWS Certificate Manager (ACM)", "AWS CloudHSM", "Amazon Cognito", "Amazon Detective", "AWS Directory Service", "AWS Firewall Manager", "Amazon GuardDuty", "AWS Identity and Access Management (IAM)", "AWS IAM Identity Center", "Amazon Inspector", "AWS Key Management Service (AWS KMS)", "Amazon Macie", "AWS Resource Access Manager (AWS RAM)", "AWS Secrets Manager", "AWS Security Hub", "AWS Shield", "AWS WAF"],
-    "Serverless": ["AWS Fargate", "AWS Lambda"],
-    "Storage": ["AWS Backup", "Amazon Elastic Block Store (Amazon EBS)", "Amazon Elastic File System (Amazon EFS)", "AWS Elastic Disaster Recovery", "Amazon FSx", "Amazon S3", "Amazon S3 Glacier", "AWS Storage Gateway"]
+    "Analytics": [
+      "Amazon Athena",
+      "Amazon EMR",
+      "AWS Glue",
+      "Amazon Kinesis",
+      "Amazon OpenSearch Service",
+      "Amazon Quick Sight",
+      "Amazon Redshift"
+    ],
+    "Application Integration": [
+      "Amazon EventBridge",
+      "Amazon Simple Notification Service (Amazon SNS)",
+      "Amazon Simple Queue Service (Amazon SQS)",
+      "AWS Step Functions"
+    ],
+    "Business Applications": [
+      "Amazon Connect",
+      "Amazon Simple Email Service (Amazon SES)"
+    ],
+    "Cloud Financial Management": [
+      "AWS Budgets",
+      "AWS Cost and Usage Reports",
+      "AWS Cost Explorer",
+      "AWS Marketplace"
+    ],
+    "Compute": [
+      "AWS Batch",
+      "Amazon EC2",
+      "AWS Elastic Beanstalk",
+      "Amazon Lightsail",
+      "AWS Outposts"
+    ],
+    "Containers": [
+      "Amazon Elastic Container Registry (Amazon ECR)",
+      "Amazon Elastic Container Service (Amazon ECS)",
+      "Amazon Elastic Kubernetes Service (Amazon EKS)"
+    ],
+    "Customer Enablement": [
+      "AWS Support"
+    ],
+    "Database": [
+      "Amazon Aurora",
+      "Amazon DocumentDB",
+      "Amazon DynamoDB",
+      "Amazon ElastiCache",
+      "Amazon Neptune",
+      "Amazon RDS"
+    ],
+    "Developer Tools": [
+      "AWS CLI",
+      "AWS CodeBuild",
+      "AWS CodePipeline",
+      "AWS X-Ray"
+    ],
+    "End User Computing": [
+      "Amazon AppStream 2.0",
+      "Amazon WorkSpaces",
+      "Amazon WorkSpaces Secure Browser"
+    ],
+    "Frontend Web and Mobile": [
+      "AWS Amplify"
+    ],
+    "Internet of Things (IoT)": [
+      "AWS IoT Core"
+    ],
+    "Machine Learning": [
+      "Amazon Comprehend",
+      "Amazon Lex",
+      "Amazon Polly",
+      "Amazon Q",
+      "Amazon Rekognition",
+      "Amazon SageMaker AI",
+      "Amazon Textract",
+      "Amazon Transcribe",
+      "Amazon Translate"
+    ],
+    "Management and Governance": [
+      "AWS Auto Scaling",
+      "AWS CloudFormation",
+      "AWS CloudTrail",
+      "Amazon CloudWatch",
+      "AWS Compute Optimizer",
+      "AWS Config",
+      "AWS Control Tower",
+      "AWS Health Dashboard",
+      "AWS License Manager",
+      "AWS Management Console",
+      "AWS Organizations",
+      "AWS Service Catalog",
+      "Service Quotas",
+      "AWS Systems Manager",
+      "AWS Trusted Advisor",
+      "AWS Well-Architected Tool"
+    ],
+    "Migration and Transfer": [
+      "AWS Application Discovery Service",
+      "AWS Application Migration Service",
+      "AWS Database Migration Service (AWS DMS)",
+      "Migration Evaluator",
+      "AWS Migration Hub",
+      "AWS Schema Conversion Tool (AWS SCT)"
+    ],
+    "Networking and Content Delivery": [
+      "Amazon API Gateway",
+      "Amazon CloudFront",
+      "AWS Direct Connect",
+      "AWS Global Accelerator",
+      "AWS PrivateLink",
+      "Amazon Route 53",
+      "AWS Transit Gateway",
+      "Amazon VPC",
+      "AWS VPN",
+      "AWS Site-to-Site VPN",
+      "AWS Client VPN"
+    ],
+    "Security, Identity, and Compliance": [
+      "AWS Artifact",
+      "AWS Certificate Manager (ACM)",
+      "AWS CloudHSM",
+      "Amazon Cognito",
+      "Amazon Detective",
+      "AWS Directory Service",
+      "AWS Firewall Manager",
+      "Amazon GuardDuty",
+      "AWS Identity and Access Management (IAM)",
+      "AWS IAM Identity Center",
+      "Amazon Inspector",
+      "AWS Key Management Service (AWS KMS)",
+      "Amazon Macie",
+      "AWS Resource Access Manager (AWS RAM)",
+      "AWS Secrets Manager",
+      "AWS Security Hub",
+      "AWS Shield",
+      "AWS WAF"
+    ],
+    "Serverless": [
+      "AWS Fargate",
+      "AWS Lambda"
+    ],
+    "Storage": [
+      "AWS Backup",
+      "Amazon Elastic Block Store (Amazon EBS)",
+      "Amazon Elastic File System (Amazon EFS)",
+      "AWS Elastic Disaster Recovery",
+      "Amazon FSx",
+      "Amazon S3",
+      "Amazon S3 Glacier",
+      "AWS Storage Gateway"
+    ]
   },
   "outOfScopeServices": {
-    "Analytics": ["Amazon AppFlow", "AWS Clean Rooms", "AWS Data Exchange", "Amazon DataZone", "Amazon Managed Streaming for Apache Kafka (Amazon MSK)"],
-    "Application Integration": ["AWS AppFabric", "Amazon Simple Workflow Service"],
-    "Business Applications": ["Amazon WorkDocs"],
-    "Compute": ["AWS Copilot", "AWS Wavelength"],
-    "Cost Management": ["AWS Application Cost Profiler", "Amazon DevPay"],
-    "Customer Enablement": ["AWS Activate", "AWS IQ", "AWS Managed Services (AMS)"],
-    "Cloud Financial Management": ["AWS Billing Conductor"],
-    "Database": ["Amazon Keyspaces (for Apache Cassandra)", "Amazon MemoryDB for Redis OSS", "AWS AppConfig"],
-    "Developer Tools": ["AWS Application Composer", "AWS CodeArtifact", "AWS CodeDeploy", "Amazon CodeGuru", "AWS CloudShell", "AWS Device Farm"],
-    "Game Tech": ["Amazon GameLift", "Amazon Lumberyard"],
-    "Internet of Things (IoT)": ["AWS IoT Device Defender", "AWS IoT Greengrass", "Amazon Monitron"],
-    "Machine Learning": ["Amazon Fraud Detector", "Amazon Lookout for Metrics", "AWS Panorama", "Amazon Personalize"],
-    "Management and Governance": ["AWS Chatbot", "Amazon Data Lifecycle Manager", "Amazon Elastic Transcoder", "AWS Launch Wizard"],
-    "Media Services": ["AWS Elemental Appliances and Software", "AWS Elemental MediaConnect", "AWS Elemental MediaConvert", "AWS Elemental MediaLive", "AWS Elemental MediaPackage", "AWS Elemental MediaStore", "AWS Elemental MediaTailor", "Amazon Interactive Video Service (Amazon IVS)"],
-    "Migration and Transfer": ["AWS Migration Hub Refactor Spaces", "AWS Transfer Family"],
-    "Networking and Content Delivery": ["AWS Cloud Map", "AWS Network Access Analyzer", "AWS Ground Station", "Amazon VPC Lattice"],
-    "Security, Identity, and Compliance": ["Amazon Cloud Directory", "AWS Network Firewall"],
-    "Robotics": ["AWS RoboMaker"],
-    "Storage": ["Amazon FSx for Lustre"]
+    "Analytics": [
+      "Amazon AppFlow",
+      "AWS Clean Rooms",
+      "AWS Data Exchange",
+      "Amazon DataZone",
+      "Amazon Managed Streaming for Apache Kafka (Amazon MSK)"
+    ],
+    "Application Integration": [
+      "AWS AppFabric",
+      "Amazon Simple Workflow Service"
+    ],
+    "Business Applications": [
+      "Amazon WorkDocs"
+    ],
+    "Compute": [
+      "AWS Copilot",
+      "AWS Wavelength"
+    ],
+    "Cost Management": [
+      "AWS Application Cost Profiler",
+      "Amazon DevPay"
+    ],
+    "Customer Enablement": [
+      "AWS Activate",
+      "AWS IQ",
+      "AWS Managed Services (AMS)"
+    ],
+    "Cloud Financial Management": [
+      "AWS Billing Conductor"
+    ],
+    "Database": [
+      "Amazon Keyspaces (for Apache Cassandra)",
+      "Amazon MemoryDB for Redis OSS",
+      "AWS AppConfig"
+    ],
+    "Developer Tools": [
+      "AWS Application Composer",
+      "AWS CodeArtifact",
+      "AWS CodeDeploy",
+      "Amazon CodeGuru",
+      "AWS CloudShell",
+      "AWS Device Farm"
+    ],
+    "Game Tech": [
+      "Amazon GameLift",
+      "Amazon Lumberyard"
+    ],
+    "Internet of Things (IoT)": [
+      "AWS IoT Device Defender",
+      "AWS IoT Greengrass",
+      "Amazon Monitron"
+    ],
+    "Machine Learning": [
+      "Amazon Fraud Detector",
+      "Amazon Lookout for Metrics",
+      "AWS Panorama",
+      "Amazon Personalize"
+    ],
+    "Management and Governance": [
+      "AWS Chatbot",
+      "Amazon Data Lifecycle Manager",
+      "Amazon Elastic Transcoder",
+      "AWS Launch Wizard"
+    ],
+    "Media Services": [
+      "AWS Elemental Appliances and Software",
+      "AWS Elemental MediaConnect",
+      "AWS Elemental MediaConvert",
+      "AWS Elemental MediaLive",
+      "AWS Elemental MediaPackage",
+      "AWS Elemental MediaStore",
+      "AWS Elemental MediaTailor",
+      "Amazon Interactive Video Service (Amazon IVS)"
+    ],
+    "Migration and Transfer": [
+      "AWS Migration Hub Refactor Spaces",
+      "AWS Transfer Family"
+    ],
+    "Networking and Content Delivery": [
+      "AWS Cloud Map",
+      "AWS Network Access Analyzer",
+      "AWS Ground Station",
+      "Amazon VPC Lattice"
+    ],
+    "Security, Identity, and Compliance": [
+      "Amazon Cloud Directory",
+      "AWS Network Firewall"
+    ],
+    "Robotics": [
+      "AWS RoboMaker"
+    ],
+    "Storage": [
+      "Amazon FSx for Lustre"
+    ]
   },
-  "technologiesAndConcepts": ["APIs", "Benefits of migrating to the AWS Cloud", "AWS Cloud Adoption Framework (AWS CAF)", "AWS Compliance", "Compute", "Cost management", "Databases", "Amazon EC2 instance types", "AWS global infrastructure", "Infrastructure as code (IaC)", "AWS Knowledge Center", "Machine learning", "Management and governance", "Migration and data transfer", "Network services", "AWS Partner Network (APN)", "AWS Prescriptive Guidance", "AWS Pricing Calculator", "AWS Professional Services", "AWS re:Post", "AWS SDKs", "Security", "AWS Security Blog", "AWS shared responsibility model", "AWS solutions architects", "Storage", "AWS Support Center", "AWS Support plans", "AWS Well-Architected Framework"],
+  "technologiesAndConcepts": [
+    "APIs",
+    "Benefits of migrating to the AWS Cloud",
+    "AWS Cloud Adoption Framework (AWS CAF)",
+    "AWS Compliance",
+    "Compute",
+    "Cost management",
+    "Databases",
+    "Amazon EC2 instance types",
+    "AWS global infrastructure",
+    "Infrastructure as code (IaC)",
+    "AWS Knowledge Center",
+    "Machine learning",
+    "Management and governance",
+    "Migration and data transfer",
+    "Network services",
+    "AWS Partner Network (APN)",
+    "AWS Prescriptive Guidance",
+    "AWS Pricing Calculator",
+    "AWS Professional Services",
+    "AWS re:Post",
+    "AWS SDKs",
+    "Security",
+    "AWS Security Blog",
+    "AWS shared responsibility model",
+    "AWS solutions architects",
+    "Storage",
+    "AWS Support Center",
+    "AWS Support plans",
+    "AWS Well-Architected Framework"
+  ],
   "targets": {
-    "totalQuestions": 550,
-    "perDomain": { "1": 132, "2": 165, "3": 187, "4": 66 },
-    "typeSplit": { "single": 0.85, "multiple": 0.15 },
-    "difficultySplit": { "easy": 0.3, "medium": 0.5, "hard": 0.2 }
+    "totalQuestions": 1142,
+    "perDomain": {
+      "1": 166,
+      "2": 334,
+      "3": 404,
+      "4": 238
+    },
+    "typeSplit": {
+      "single": 0.77,
+      "multiple": 0.15
+    },
+    "difficultySplit": {
+      "easy": 0.3,
+      "medium": 0.5,
+      "hard": 0.2
+    }
   }
 }

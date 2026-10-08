@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { useT } from '../i18n'
@@ -17,14 +17,16 @@ export default function ExamRun() {
   const [confirm, setConfirm] = useState(false)
   const [confirmDiscard, setConfirmDiscard] = useState(false)
   const [timeUp, setTimeUp] = useState(false)
+  const [isEnding, setIsEnding] = useState(false)
 
   const questions = useMemo(
     () => (exam?.questionIds ?? []).map(getQuestion).filter((q): q is Question => !!q),
     [exam?.questionIds],
   )
 
-  const submit = () => {
-    if (!exam) return
+  const submit = useCallback(() => {
+    if (!exam || isEnding) return
+    setIsEnding(true)
     const toRecord = questions.map((q) => {
       const sel = exam.selections[q.id] ?? []
       return {
@@ -38,23 +40,28 @@ export default function ExamRun() {
     const session = summarize(exam.id, 'exam', exam.startedAt, questions, exam.selections, exam.flagged)
     addSession(session)
     setActiveExam(null)
-    navigate(`/results/${session.id}`, { replace: true })
-  }
+    navigate(`/results/${session.id}`, { replace: true, state: { session } })
+  }, [exam, isEnding, questions, recordAnswersBatch, addSession, setActiveExam, navigate])
 
   const discard = () => {
     discardExam()
     navigate('/exam', { replace: true })
   }
 
-  // The countdown effect captures its callback once, so route through a ref to always call the latest submit.
   const submitRef = useRef(submit)
-  submitRef.current = submit
+  useEffect(() => {
+    submitRef.current = submit
+  }, [submit])
+
   const left = useCountdown(exam?.deadline ?? null, () => {
     setTimeUp(true)
     window.setTimeout(() => submitRef.current(), 1500)
   })
 
-  if (!exam || questions.length === 0) return <Navigate to="/exam" replace />
+  if (!exam || questions.length === 0) {
+    if (isEnding) return null
+    return <Navigate to="/exam" replace />
+  }
 
   const q = questions[exam.index]
   const sel = exam.selections[q.id] ?? []

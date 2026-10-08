@@ -18,7 +18,6 @@ const err = (m: string) => errors.push(m)
 const bp = blueprint()
 const tsByDomain = new Map(bp.domains.map((d) => [d.id, new Set(d.taskStatements.map((t) => t.id))]))
 
-// ---------- Questions ----------
 const questions: Question[] = []
 const seenIds = new Set<string>()
 const qDir = `${ROOT}/src/data/questions`
@@ -116,11 +115,9 @@ if (!partial) {
   }
 }
 
-// ---------- i18n dictionaries ----------
 const enKeys = new Set(Object.keys(en))
 for (const [k, v] of Object.entries(en)) if (!String(v).trim()) err(`i18n: en value for "${k}" is empty`)
 
-// ---------- Report ----------
 for (const w of warnings) console.warn(`WARN  ${w}`)
 if (errors.length) {
   for (const e of errors) console.error(`ERROR ${e}`)
