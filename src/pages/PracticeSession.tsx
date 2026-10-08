@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { useT } from '../i18n'
 import { ConfirmDialog } from '../components/ConfirmDialog'
 import { QuestionCard } from '../components/QuestionCard'
 import { ReviewPanel } from '../components/ReviewPanel'
 import { getQuestion } from '../lib/questionService'
-import { newId } from '../lib/examBuilder'
 import { isCorrect, summarize } from '../lib/scoring'
 import type { Question } from '../types/question'
 
@@ -14,27 +13,6 @@ export default function PracticeSession() {
   const { t } = useT()
   const { data, recordAnswer, addSession, setActivePractice } = useApp()
   const navigate = useNavigate()
-  const location = useLocation()
-
-  // IDs passed from PracticeSetup when starting a new session
-  const incomingIds = (location.state as { ids?: string[] } | null)?.ids
-
-  // On first render: if new IDs are provided, initialise a fresh activePractice
-  // (this runs once — subsequent renders read from data.activePractice)
-  const [initialised] = useState(() => {
-    if (incomingIds && incomingIds.length > 0) {
-      setActivePractice({
-        id: newId(),
-        questionIds: incomingIds,
-        selections: {},
-        checked: [],
-        startedAt: Date.now(),
-        index: 0,
-      })
-      return true
-    }
-    return false
-  })
 
   const practice = data.activePractice
   const [confirmEnd, setConfirmEnd] = useState(false)
@@ -45,7 +23,7 @@ export default function PracticeSession() {
     [practice?.questionIds],
   )
 
-  // No active session and no incoming IDs → go back to setup
+  // No active session → go back to setup
   if (!practice || questions.length === 0) return <Navigate to="/practice" replace />
 
   const q = questions[practice.index]
@@ -84,8 +62,8 @@ export default function PracticeSession() {
 
   return (
     <div className="mx-auto grid max-w-3xl gap-4">
-      {/* Resume banner — shown when user comes back to an existing session */}
-      {!initialised && (
+      {/* Resume banner — shown when user returns to a session they left mid-way */}
+      {practice.checked.length > 0 && (
         <div className="card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 border-l-[var(--color-forest-ink)] !py-3">
           <div>
             <p className="font-semibold text-sm text-[var(--color-forest-ink)]">Resuming practice session</p>

@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext'
 import { useT } from '../i18n'
 import type { DictKey } from '../i18n/en'
 import { allQuestions } from '../lib/questionService'
-import { shuffle } from '../lib/examBuilder'
+import { newId, shuffle } from '../lib/examBuilder'
 import { DOMAINS } from '../lib/scoring'
 import { latestWrongIds } from '../lib/stats'
 
@@ -41,9 +41,18 @@ export default function PracticeSetup() {
   const start = () => {
     const take = count === 0 ? pool.length : Math.min(count, pool.length)
     const ids = shuffle(pool).slice(0, take).map((q) => q.id)
-    // Clear any existing session so the new one starts fresh
-    setActivePractice(null)
-    navigate('/practice/run', { state: { ids } })
+    // Set activePractice in context BEFORE navigating so PracticeSession
+    // can read data.activePractice on its very first render (state updates
+    // from event handlers are flushed before the next route renders).
+    setActivePractice({
+      id: newId(),
+      questionIds: ids,
+      selections: {},
+      checked: [],
+      startedAt: Date.now(),
+      index: 0,
+    })
+    navigate('/practice/run')
   }
 
   const check = (id: string, label: string, v: boolean, set: (b: boolean) => void) => (
