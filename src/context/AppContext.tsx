@@ -285,6 +285,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
           body: JSON.stringify({
+            id: s.id,
             score: s.correctCount,
             total: s.total,
             answers: s.selections,
@@ -292,7 +293,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
             started_at: s.startedAt,
             finished_at: s.finishedAt,
           }),
-        }).catch(() => {})
+        })
+          .then((r) => (r.ok ? r.json() : null))
+          .then((resData) => {
+            if (resData?.id && resData.id !== s.id) {
+              setData((curr) => ({
+                ...curr,
+                sessions: curr.sessions.map((sess) => (sess.id === s.id ? { ...sess, id: resData.id } : sess)),
+              }))
+            }
+          })
+          .catch((err) => console.warn('Failed to persist attempt to database:', err))
       }
     },
     [user],
@@ -314,11 +325,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
         }
       })
       if (user) {
-        // Backend now handles scrubbing answers from user_progress too
+        // Backend handles scrubbing answers & mistakes from user_progress too
         fetch(`/api/user/attempts/${encodeURIComponent(id)}`, {
           method: 'DELETE',
           credentials: 'include',
-        }).catch(() => {})
+        }).catch((err) => console.warn('Failed to delete attempt from database:', err))
       }
     },
     [user],

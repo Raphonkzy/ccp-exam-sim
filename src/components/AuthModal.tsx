@@ -261,7 +261,7 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
             </div>
 
             <Field id="reg-username" label="Username" type="text" autoComplete="username"
-              value={username} onChange={setUsername} placeholder="cloudguru" />
+              value={username} onChange={setUsername} placeholder="username" />
             <Field id="reg-email" label="Email" type="email" autoComplete="email"
               value={email} onChange={setEmail} placeholder="you@example.com" />
             <Field id="reg-password" label="Password" type="password" autoComplete="new-password"

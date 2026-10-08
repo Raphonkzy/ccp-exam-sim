@@ -71,6 +71,10 @@ export default function Browse() {
           <input
             id="q-search"
             type="search"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
             className="field"
             placeholder={t('browse.searchPlaceholder')}
             value={query}

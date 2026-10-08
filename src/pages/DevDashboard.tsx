@@ -80,6 +80,20 @@ interface InspectedUserDetail {
   }
 }
 
+export interface InspectedAttempt {
+  id: string
+  user_id: string
+  username?: string
+  email?: string
+  score: number
+  total: number
+  passed?: boolean
+  answers?: Record<string, string[]> | string
+  domain_scores?: Record<string, { correct: number; total: number }> | string
+  started_at?: string
+  finished_at?: string
+}
+
 const DOMAIN_NAMES: Record<number, string> = {
   1: 'Cloud Concepts',
   2: 'Security & Compliance',
@@ -110,6 +124,11 @@ export default function DevDashboard() {
   const [inspectLoading, setInspectLoading] = useState(false)
   const [inspectTab, setInspectTab] = useState<'attempts' | 'mistakes' | 'bookmarks'>('attempts')
 
+  // Exam / Practice Session Review Modal
+  const [reviewedAttempt, setReviewedAttempt] = useState<InspectedAttempt | null>(null)
+  const [reviewLoading, setReviewLoading] = useState(false)
+  const [reviewFilter, setReviewFilter] = useState<'all' | 'wrong' | 'correct'>('all')
+
   // Confirmation Dialog
   const [confirmModal, setConfirmModal] = useState<{
     open: boolean
@@ -123,6 +142,39 @@ export default function DevDashboard() {
   const showBanner = (text: string, type: 'good' | 'bad' = 'good') => {
     setBannerMsg({ type, text })
     setTimeout(() => setBannerMsg(null), 4000)
+  }
+
+  const openAttemptReview = async (attempt: InspectedAttempt) => {
+    setReviewFilter('all')
+    let parsed: any = null
+    if (typeof attempt.answers === 'string') {
+      try { parsed = JSON.parse(attempt.answers) } catch {}
+    } else if (attempt.answers && typeof attempt.answers === 'object') {
+      parsed = attempt.answers
+    }
+
+    if (parsed && Object.keys(parsed).length > 0) {
+      setReviewedAttempt({ ...attempt, answers: parsed })
+      return
+    }
+
+    setReviewLoading(true)
+    setReviewedAttempt(attempt)
+    try {
+      const res = await fetch(`/api/user/admin/attempts/${attempt.id}`, { credentials: 'include' })
+      if (res.ok) {
+        const fullData = await res.json()
+        let fullAnswers = fullData.answers
+        if (typeof fullAnswers === 'string') {
+          try { fullAnswers = JSON.parse(fullAnswers) } catch {}
+        }
+        setReviewedAttempt({ ...attempt, ...fullData, answers: fullAnswers })
+      }
+    } catch {
+      // Retain attempt info
+    } finally {
+      setReviewLoading(false)
+    }
   }
 
   const loadData = async (isRefresh = false) => {
@@ -308,6 +360,54 @@ export default function DevDashboard() {
         return 0
       })
   }, [users, userQuery, roleFilter, sortBy])
+
+  // Parsed Attempt Questions & Mistake Review
+  const parsedAnswers: Record<string, string[]> = useMemo(() => {
+    if (!reviewedAttempt?.answers) return {}
+    if (typeof reviewedAttempt.answers === 'string') {
+      try { return JSON.parse(reviewedAttempt.answers) } catch { return {} }
+    }
+    return (reviewedAttempt.answers as Record<string, string[]>) || {}
+  }, [reviewedAttempt])
+
+  const parsedDomainScores = useMemo(() => {
+    if (!reviewedAttempt?.domain_scores) return {}
+    if (typeof reviewedAttempt.domain_scores === 'string') {
+      try { return JSON.parse(reviewedAttempt.domain_scores) } catch { return {} }
+    }
+    return (reviewedAttempt.domain_scores as Record<string, { correct: number; total: number }>) || {}
+  }, [reviewedAttempt])
+
+  const attemptQuestionList = useMemo(() => {
+    const qids = Object.keys(parsedAnswers)
+    return qids.map((qid, idx) => {
+      const qObj = allQuestions.find((q) => q.id === qid)
+      const selected = parsedAnswers[qid] ?? []
+      const correctOptions = qObj?.correctOptionIds ?? []
+      const isCorrect =
+        Boolean(qObj) &&
+        selected.length === correctOptions.length &&
+        selected.every((id) => correctOptions.includes(id))
+
+      return {
+        index: idx + 1,
+        qid,
+        question: qObj,
+        selected,
+        correctOptions,
+        isCorrect,
+      }
+    })
+  }, [parsedAnswers])
+
+  const wrongCount = useMemo(() => attemptQuestionList.filter((x) => !x.isCorrect).length, [attemptQuestionList])
+  const correctCount = useMemo(() => attemptQuestionList.filter((x) => x.isCorrect).length, [attemptQuestionList])
+
+  const filteredQuestionList = useMemo(() => {
+    if (reviewFilter === 'wrong') return attemptQuestionList.filter((x) => !x.isCorrect)
+    if (reviewFilter === 'correct') return attemptQuestionList.filter((x) => x.isCorrect)
+    return attemptQuestionList
+  }, [attemptQuestionList, reviewFilter])
 
   return (
     <div className="grid gap-6">
@@ -585,13 +685,24 @@ export default function DevDashboard() {
                               {att.finished_at ? new Date(att.finished_at).toLocaleDateString() : '—'}
                             </td>
                             <td className="py-2.5 pl-3 text-right">
-                              <button
-                                type="button"
-                                onClick={() => handleInspectUser(att.user_id)}
-                                className="btn !py-1 !px-2.5 !text-[11px] font-semibold"
-                              >
-                                Inspect
-                              </button>
+                              <div className="flex items-center justify-end gap-1.5">
+                                <button
+                                  type="button"
+                                  onClick={() => openAttemptReview(att)}
+                                  className="btn !py-1 !px-2.5 !text-[11px] font-semibold text-emerald-900 border-emerald-300 hover:bg-emerald-50"
+                                  title="Review exam questions and student mistakes"
+                                >
+                                  Review
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleInspectUser(att.user_id)}
+                                  className="btn !py-1 !px-2 !text-[11px] font-semibold"
+                                  title="Inspect student profile"
+                                >
+                                  User
+                                </button>
+                              </div>
                             </td>
                           </tr>
                         )
@@ -676,6 +787,10 @@ export default function DevDashboard() {
                 <input
                   id="user-search"
                   type="search"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck={false}
                   value={userQuery}
                   onChange={(e) => setUserQuery(e.target.value)}
                   placeholder="Filter by username or email…"
@@ -1053,12 +1168,20 @@ export default function DevDashboard() {
                                 </p>
                               </div>
 
-                              <Link
-                                to={`/results/${att.id}`}
-                                className="btn !py-1 !px-2.5 !text-[11px] font-semibold no-underline self-start sm:self-auto"
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  openAttemptReview({
+                                    ...att,
+                                    user_id: inspectData.user.id,
+                                    username: inspectData.user.username,
+                                    email: inspectData.user.email,
+                                  })
+                                }
+                                className="btn !py-1 !px-3 !text-[11px] font-semibold text-emerald-900 border-emerald-300 hover:bg-emerald-50 self-start sm:self-auto"
                               >
-                                View Results →
-                              </Link>
+                                Review Questions & Mistakes →
+                              </button>
                             </div>
                           )
                         })}
@@ -1139,6 +1262,255 @@ export default function DevDashboard() {
                         })}
                       </div>
                     )}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* DETAILED EXAM & PRACTICE SESSION REVIEW MODAL */}
+      {reviewedAttempt && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-5"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="absolute inset-0 bg-[#0a192f]/60 backdrop-blur-sm transition-opacity"
+            onClick={() => setReviewedAttempt(null)}
+            aria-hidden="true"
+          />
+
+          <div className="relative w-full max-w-4xl max-h-[92vh] overflow-y-auto rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-6 shadow-2xl no-scrollbar flex flex-col gap-4">
+            <button
+              type="button"
+              onClick={() => setReviewedAttempt(null)}
+              className="absolute right-4 top-4 grid h-8 w-8 place-items-center rounded-full text-[var(--muted)] hover:bg-[var(--surface-2)] hover:text-[var(--color-forest-ink)] transition-colors"
+              aria-label="Close"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {reviewLoading ? (
+              <div className="py-16 text-center">
+                <div className="inline-block h-8 w-8 animate-spin rounded-full border-3 border-[var(--border)] border-t-[var(--color-forest-ink)]" />
+                <p className="mt-2 text-xs text-[var(--muted)]">Loading full session answers & questions…</p>
+              </div>
+            ) : (
+              <>
+                {/* Header */}
+                <div className="border-b border-[var(--border)] pb-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="rounded bg-sky-100 border border-sky-300 px-2 py-0.5 text-[10px] font-mono font-bold text-sky-900">
+                          ATTEMPT REVIEW
+                        </span>
+                        <span className="text-xs text-[var(--muted)] font-mono">
+                          ID: {reviewedAttempt.id}
+                        </span>
+                      </div>
+                      <h2 className="text-lg font-bold text-[var(--color-forest-ink)]">
+                        {reviewedAttempt.username ? `@${reviewedAttempt.username}` : reviewedAttempt.email || 'Student'} — Exam & Practice Review
+                      </h2>
+                      <p className="text-xs text-[var(--muted)] font-mono">
+                        Finished {reviewedAttempt.finished_at ? new Date(reviewedAttempt.finished_at).toLocaleString() : '—'}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <div className="font-mono text-xl font-black text-[var(--color-forest-ink)]">
+                          {reviewedAttempt.score} / {reviewedAttempt.total}
+                        </div>
+                        <div className="text-[11px] font-mono text-[var(--muted)]">
+                          {reviewedAttempt.total > 0 ? Math.round((reviewedAttempt.score / reviewedAttempt.total) * 100) : 0}% Score
+                        </div>
+                      </div>
+                      <span
+                        className={`rounded-lg px-2.5 py-1 text-xs font-mono font-bold ${
+                          (reviewedAttempt.passed ?? (reviewedAttempt.total > 0 && reviewedAttempt.score / reviewedAttempt.total >= 0.7))
+                            ? 'bg-emerald-100 border border-emerald-300 text-emerald-900'
+                            : 'bg-rose-100 border border-rose-300 text-rose-900'
+                        }`}
+                      >
+                        {(reviewedAttempt.passed ?? (reviewedAttempt.total > 0 && reviewedAttempt.score / reviewedAttempt.total >= 0.7))
+                          ? 'PASSED'
+                          : 'FAILED'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Domain Performance Summary */}
+                  {parsedDomainScores && Object.keys(parsedDomainScores).length > 0 && (
+                    <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2 pt-3 border-t border-[var(--border)]/60">
+                      {Object.entries(parsedDomainScores).map(([dNumStr, stat]: [string, any]) => {
+                        const dNum = Number(dNumStr)
+                        const acc = stat.total > 0 ? Math.round((stat.correct / stat.total) * 100) : 0
+                        return (
+                          <div key={dNum} className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)]/40 p-2 text-center">
+                            <span className="text-[10px] font-mono font-bold text-[var(--muted)] block truncate">
+                              D{dNum}: {DOMAIN_NAMES[dNum] || `Domain ${dNum}`}
+                            </span>
+                            <p className="text-xs font-mono font-black text-[var(--color-forest-ink)] mt-0.5">
+                              {stat.correct}/{stat.total} ({acc}%)
+                            </p>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {/* Filter bar */}
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] pb-3">
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setReviewFilter('all')}
+                      className={`btn !py-1 !px-3 !text-xs font-semibold ${
+                        reviewFilter === 'all' ? '!bg-[var(--color-forest-ink)] !text-[var(--color-cream-paper)]' : ''
+                      }`}
+                    >
+                      All Questions ({attemptQuestionList.length})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setReviewFilter('wrong')}
+                      className={`btn !py-1 !px-3 !text-xs font-semibold text-rose-900 border-rose-300 ${
+                        reviewFilter === 'wrong' ? '!bg-rose-600 !text-white !border-rose-600' : 'hover:bg-rose-50'
+                      }`}
+                    >
+                      Mistakes Only ({wrongCount})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setReviewFilter('correct')}
+                      className={`btn !py-1 !px-3 !text-xs font-semibold text-emerald-900 border-emerald-300 ${
+                        reviewFilter === 'correct' ? '!bg-emerald-600 !text-white !border-emerald-600' : 'hover:bg-emerald-50'
+                      }`}
+                    >
+                      Correct ({correctCount})
+                    </button>
+                  </div>
+
+                  <span className="text-xs text-[var(--muted)] font-mono">
+                    Showing {filteredQuestionList.length} of {attemptQuestionList.length} items
+                  </span>
+                </div>
+
+                {/* Questions Review List */}
+                {filteredQuestionList.length === 0 ? (
+                  <div className="py-12 text-center text-xs text-[var(--muted)]">
+                    {attemptQuestionList.length === 0
+                      ? 'No recorded question selections available for this attempt.'
+                      : reviewFilter === 'wrong'
+                      ? 'No incorrect answers in this attempt! 100% correct.'
+                      : 'No questions match the current filter.'}
+                  </div>
+                ) : (
+                  <div className="space-y-4 max-h-[58vh] overflow-y-auto no-scrollbar pr-1">
+                    {filteredQuestionList.map((item) => {
+                      const qObj = item.question
+
+                      return (
+                        <div
+                          key={item.qid}
+                          className={`rounded-xl border p-4 text-xs transition-colors ${
+                            item.isCorrect
+                              ? 'border-emerald-200 bg-emerald-50/20'
+                              : 'border-rose-200 bg-rose-50/25'
+                          }`}
+                        >
+                          <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono font-bold text-xs text-[var(--color-forest-ink)]">
+                                Question #{item.index} · {item.qid}
+                              </span>
+                              {qObj && (
+                                <span className="chip !text-[10px]">
+                                  Domain {qObj.domain}
+                                </span>
+                              )}
+                            </div>
+
+                            <span
+                              className={`rounded px-2 py-0.5 font-mono text-[10px] font-bold ${
+                                item.isCorrect
+                                  ? 'bg-emerald-100 border border-emerald-300 text-emerald-900'
+                                  : 'bg-rose-100 border border-rose-300 text-rose-900'
+                              }`}
+                            >
+                              {item.isCorrect ? '✓ CORRECT' : '✗ WRONG'}
+                            </span>
+                          </div>
+
+                          <p className="text-sm font-semibold text-[var(--color-forest-ink)] leading-snug mb-3">
+                            {qObj ? qObj.question : `Question ${item.qid}`}
+                          </p>
+
+                          {/* Options */}
+                          {qObj?.options ? (
+                            <div className="space-y-1.5">
+                              {qObj.options.map((opt) => {
+                                const isSelected = item.selected.includes(opt.id)
+                                const isAnswer = item.correctOptions.includes(opt.id)
+
+                                let optStyle = 'border-[var(--border)] bg-[var(--surface)] text-[var(--muted)]'
+                                let optBadge = null
+
+                                if (isSelected && !isAnswer) {
+                                  optStyle = 'border-rose-400 bg-rose-100/60 text-rose-950 font-medium'
+                                  optBadge = (
+                                    <span className="rounded bg-rose-200 border border-rose-300 text-rose-900 px-1.5 py-0.2 text-[9px] font-mono font-bold shrink-0">
+                                      STUDENT CHOSE (INCORRECT)
+                                    </span>
+                                  )
+                                } else if (isAnswer) {
+                                  optStyle = 'border-emerald-400 bg-emerald-100/60 text-emerald-950 font-medium'
+                                  optBadge = (
+                                    <span className="rounded bg-emerald-200 border border-emerald-300 text-emerald-900 px-1.5 py-0.2 text-[9px] font-mono font-bold shrink-0">
+                                      {isSelected ? '✓ CORRECT (STUDENT SELECTED)' : '✓ CORRECT ANSWER (MISSED)'}
+                                    </span>
+                                  )
+                                }
+
+                                return (
+                                  <div
+                                    key={opt.id}
+                                    className={`flex items-start justify-between gap-2 rounded-lg border p-2.5 transition-colors ${optStyle}`}
+                                  >
+                                    <div className="flex items-start gap-2">
+                                      <span className="font-mono font-bold text-xs shrink-0">{opt.id}.</span>
+                                      <span className="text-xs leading-relaxed">{opt.text}</span>
+                                    </div>
+                                    {optBadge}
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          ) : (
+                            <div className="p-2 text-xs font-mono text-[var(--muted)]">
+                              Student selected: {item.selected.join(', ') || 'None'}
+                            </div>
+                          )}
+
+                          {/* Explanation */}
+                          {qObj?.explanation && (
+                            <div className="mt-3 rounded-lg border border-[var(--border)] bg-[var(--surface-2)]/70 p-3 text-xs leading-relaxed text-[var(--color-forest-ink)]">
+                              <strong className="block text-[10px] font-mono uppercase tracking-wider text-[var(--muted)] mb-1">
+                                Official AWS Explanation:
+                              </strong>
+                              {qObj.explanation}
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
                   </div>
                 )}
               </>

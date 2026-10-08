@@ -88,7 +88,17 @@ export default function DevReview() {
       <div className="card grid gap-3 sm:grid-cols-3">
         <div>
           <label className="label mb-1 block" htmlFor="dev-search">{t('dev.search')}</label>
-          <input id="dev-search" type="search" className="field" value={query} onChange={(e) => setQuery(e.target.value)} />
+          <input
+            id="dev-search"
+            type="search"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
+            className="field"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
         </div>
         <div>
           <label className="label mb-1 block" htmlFor="dev-domain">{t('dev.domain')}</label>

@@ -19,47 +19,98 @@ router.get('/attempts', requireAuth, async (req, res) => {
 
 // POST /api/user/attempts - save a completed exam attempt
 router.post('/attempts', requireAuth, async (req, res) => {
-  const { score, total, answers, domain_scores, started_at, finished_at } = req.body;
+  const { id, score, total, answers, domain_scores, started_at, finished_at } = req.body;
   const startIso = started_at ? new Date(started_at).toISOString() : null;
   const finishIso = finished_at ? new Date(finished_at).toISOString() : new Date().toISOString();
-  const result = await query(
-    `INSERT INTO exam_attempts (user_id, score, total, answers, domain_scores, started_at, finished_at)
-     VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
-    [req.user.id, score, total, JSON.stringify(answers ?? {}), JSON.stringify(domain_scores ?? {}), startIso, finishIso]
-  );
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+  let result;
+  if (id && uuidRegex.test(id)) {
+    result = await query(
+      `INSERT INTO exam_attempts (id, user_id, score, total, answers, domain_scores, started_at, finished_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       ON CONFLICT (id) DO UPDATE SET
+         score = EXCLUDED.score,
+         total = EXCLUDED.total,
+         answers = EXCLUDED.answers,
+         domain_scores = EXCLUDED.domain_scores,
+         started_at = EXCLUDED.started_at,
+         finished_at = EXCLUDED.finished_at
+       RETURNING id`,
+      [id, req.user.id, score, total, JSON.stringify(answers ?? {}), JSON.stringify(domain_scores ?? {}), startIso, finishIso]
+    );
+  } else {
+    result = await query(
+      `INSERT INTO exam_attempts (user_id, score, total, answers, domain_scores, started_at, finished_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
+      [req.user.id, score, total, JSON.stringify(answers ?? {}), JSON.stringify(domain_scores ?? {}), startIso, finishIso]
+    );
+  }
   res.status(201).json({ id: result.rows[0].id });
 });
 
 // DELETE /api/user/attempts/:id - delete a session and scrub its answers from progress
 router.delete('/attempts/:id', requireAuth, async (req, res) => {
   try {
-    // 1. Fetch the attempt first so we know which question IDs to scrub
-    const attemptRes = await query(
-      'SELECT answers FROM exam_attempts WHERE id = $1 AND user_id = $2',
-      [req.params.id, req.user.id]
-    );
+    const targetId = req.params.id;
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+    let attemptRes;
+    if (uuidRegex.test(targetId)) {
+      attemptRes = await query(
+        'SELECT id, answers FROM exam_attempts WHERE id = $1 AND user_id = $2',
+        [targetId, req.user.id]
+      );
+    } else {
+      const numericTs = Number(targetId);
+      if (!isNaN(numericTs) && numericTs > 1000000000) {
+        const iso = new Date(numericTs).toISOString();
+        attemptRes = await query(
+          `SELECT id, answers FROM exam_attempts
+           WHERE user_id = $1 AND (
+             ABS(EXTRACT(EPOCH FROM (finished_at - $2::timestamptz))) < 10
+             OR ABS(EXTRACT(EPOCH FROM (started_at - $2::timestamptz))) < 10
+           )
+           LIMIT 1`,
+          [req.user.id, iso]
+        );
+      } else {
+        attemptRes = { rows: [] };
+      }
+    }
 
     if (attemptRes.rows.length === 0) {
       return res.status(404).json({ error: 'Attempt not found' });
     }
 
-    // 2. Delete the attempt
-    await query('DELETE FROM exam_attempts WHERE id = $1 AND user_id = $2', [req.params.id, req.user.id]);
+    const actualId = attemptRes.rows[0].id;
+    // Delete the attempt
+    await query('DELETE FROM exam_attempts WHERE id = $1 AND user_id = $2', [actualId, req.user.id]);
 
-    // 3. Scrub each answered question from user_progress.answers
+    // Scrub each answered question from user_progress.answers
     let answers = attemptRes.rows[0].answers;
     if (typeof answers === 'string') {
       try { answers = JSON.parse(answers); } catch { answers = {}; }
     }
     const qids = Object.keys(answers || {});
     if (qids.length > 0) {
-      // Build a jsonb - operator chain to remove all keys in one query
-      // e.g. answers - 'q1' - 'q2' - ...
       const removes = qids.map((_, i) => `- $${i + 2}::text`).join(' ');
       await query(
         `UPDATE user_progress SET answers = answers ${removes}, updated_at = now() WHERE user_id = $1`,
         [req.user.id, ...qids]
       );
+
+      // Decrement or clean up mistakes for those questions
+      for (const qid of qids) {
+        await query(
+          `UPDATE mistakes SET times_wrong = times_wrong - 1 WHERE user_id = $1 AND question_id = $2 AND times_wrong > 1`,
+          [req.user.id, qid]
+        );
+        await query(
+          `DELETE FROM mistakes WHERE user_id = $1 AND question_id = $2 AND times_wrong <= 1`,
+          [req.user.id, qid]
+        );
+      }
     }
 
     res.json({ ok: true });
@@ -341,7 +392,7 @@ router.get('/admin/overview', requireAdmin, async (req, res) => {
       `, []),
       query(`
         SELECT a.id, a.user_id, u.username, u.email, a.score, a.total, a.passed,
-               a.domain_scores, a.started_at, a.finished_at
+               a.answers, a.domain_scores, a.started_at, a.finished_at
         FROM exam_attempts a
         JOIN users u ON u.id = a.user_id
         ORDER BY a.finished_at DESC
@@ -567,6 +618,28 @@ router.delete('/admin/users/:id', requireAdmin, async (req, res) => {
   } catch (err) {
     console.error('Failed to delete user:', err);
     res.status(500).json({ error: 'Failed to delete user.' });
+  }
+});
+
+// GET /api/user/admin/attempts/:id - full attempt details for session review
+router.get('/admin/attempts/:id', requireAdmin, async (req, res) => {
+  try {
+    const result = await query(`
+      SELECT a.id, a.user_id, u.username, u.email, a.score, a.total, a.passed,
+             a.answers, a.domain_scores, a.started_at, a.finished_at
+      FROM exam_attempts a
+      JOIN users u ON u.id = a.user_id
+      WHERE a.id = $1
+    `, [req.params.id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Attempt not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Failed to get attempt review:', err);
+    res.status(500).json({ error: 'Failed to load attempt details' });
   }
 });
 

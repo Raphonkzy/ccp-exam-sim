@@ -55,6 +55,10 @@ function NavSearchBar() {
         <input
           id="nav-global-search"
           type="search"
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
           placeholder="Search..."
           value={term}
           onChange={(e) => setTerm(e.target.value)}
