@@ -254,6 +254,24 @@ router.post('/sync', requireAuth, async (req, res) => {
       ]
     );
 
+    // Sync mistakes if any wrong answers exist
+    if (answers && typeof answers === 'object') {
+      for (const [qid, records] of Object.entries(answers)) {
+        if (Array.isArray(records)) {
+          const wrongCount = records.filter(r => r && r.correct === false).length;
+          if (wrongCount > 0) {
+            await query(
+              `INSERT INTO mistakes (user_id, question_id, times_wrong, last_seen)
+               VALUES ($1, $2, $3, now())
+               ON CONFLICT (user_id, question_id)
+               DO UPDATE SET times_wrong = mistakes.times_wrong + $3, last_seen = now()`,
+              [req.user.id, qid, wrongCount]
+            );
+          }
+        }
+      }
+    }
+
     // Sync attempts
     if (Array.isArray(attempts) && attempts.length > 0) {
       for (const a of attempts) {

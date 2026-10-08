@@ -86,6 +86,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await fetch(`${API}/auth/logout`, { method: 'POST', credentials: 'include' })
     } catch { /* ignore */ }
+    try {
+      localStorage.removeItem('clf02:v1')
+    } catch {}
     setUser(null)
   }, [])
 

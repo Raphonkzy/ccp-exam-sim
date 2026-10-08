@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { useApp } from '../context/AppContext'
 import { allQuestions } from '../lib/questionService'
 
 export type AuthMode = 'login' | 'register' | 'forgot' | 'reset'
@@ -13,6 +14,7 @@ interface AuthModalProps {
 
 export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalProps) {
   const { login, register, requestReset, resetPassword } = useAuth()
+  const { clearGuestCache, migrateGuestData } = useApp()
   const [mode, setMode] = useState<AuthMode>(initialMode)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -69,6 +71,8 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
     setError('')
     setShowRegisterHint(false)
     setLoading(true)
+    // Clear any guest cache before signing in so guest data is never brought into an existing account
+    clearGuestCache()
     const result = await login(email, password)
     setLoading(false)
     if (result.error) {
@@ -86,9 +90,16 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
     if (password.length < 8) { setError('Password must be at least 8 characters.'); return }
     setLoading(true)
     const result = await register(email, password)
+    if (result.error) {
+      setLoading(false)
+      setError(result.error)
+      return
+    }
+    // Successfully created account & logged in!
+    // Migrate guest data to the newly created account:
+    await migrateGuestData()
     setLoading(false)
-    if (result.error) setError(result.error)
-    else handleClose()
+    handleClose()
   }
 
   const handleForgotSubmit = async (e: React.FormEvent) => {

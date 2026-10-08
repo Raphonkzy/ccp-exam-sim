@@ -3,6 +3,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useT } from '../i18n'
 import type { DictKey } from '../i18n/en'
 import { useAuth } from '../context/AuthContext'
+import { useApp } from '../context/AppContext'
 import { AuthModal } from './AuthModal'
 
 // Public nav (always visible)
@@ -66,7 +67,8 @@ function NavSearchBar() {
 
 export function Layout() {
   const { t } = useT()
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
+  const { handleLogout } = useApp()
   const [authModal, setAuthModal] = useState<{ open: boolean; mode: 'login' | 'register' }>({ open: false, mode: 'login' })
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const userMenuRef = useRef<HTMLDivElement>(null)
@@ -229,17 +231,6 @@ export function Layout() {
                         )}
 
                         <NavLink
-                          to="/palette"
-                          onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-[var(--color-forest-ink)] hover:bg-[var(--surface-2)] transition-colors no-underline"
-                        >
-                          <svg className="h-3.5 w-3.5 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                          </svg>
-                          <span>Color Palettes</span>
-                        </NavLink>
-
-                        <NavLink
                           to="/settings"
                           onClick={() => setUserMenuOpen(false)}
                           className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium text-[var(--color-forest-ink)] hover:bg-[var(--surface-2)] transition-colors no-underline"
@@ -268,9 +259,9 @@ export function Layout() {
 
                       <button
                         type="button"
-                        onClick={() => {
+                        onClick={async () => {
                           setUserMenuOpen(false)
-                          logout()
+                          await handleLogout()
                         }}
                         className="w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-semibold text-rose-800 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
                       >

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import type { ActiveExam, ActivePractice, AppData, SessionMode, Session, Settings } from '../types/progress'
 import { defaultData, loadData, saveData, STORAGE_KEY } from '../lib/storage'
 import { applyPalette } from '../lib/palettes'
@@ -9,6 +9,9 @@ interface AppContextValue {
   dbSyncing: boolean
   lastSyncedAt: Date | null
   syncWithDatabase: () => Promise<void>
+  migrateGuestData: () => Promise<void>
+  clearGuestCache: () => void
+  handleLogout: () => Promise<void>
   setSettings: (patch: Partial<Settings>) => void
   recordAnswer: (qid: string, selected: string[], correct: boolean, mode: SessionMode) => void
   recordAnswersBatch: (records: { qid: string; selected: string[]; correct: boolean; mode: SessionMode }[]) => void
@@ -31,12 +34,26 @@ function toggle(list: string[], id: string): string[] {
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const { user } = useAuth()
+  const { user, logout: authLogout } = useAuth()
+  const prevUserRef = useRef(user)
   const [data, setData] = useState<AppData>(loadData)
   const [dbSyncing, setDbSyncing] = useState(false)
   const [lastSyncedAt, setLastSyncedAt] = useState<Date | null>(null)
 
   useEffect(() => {
+    const wasLoggedIn = Boolean(prevUserRef.current)
+    const isLoggedIn = Boolean(user)
+    prevUserRef.current = user
+
+    if (wasLoggedIn && !isLoggedIn) {
+      // User just logged out: clear localStorage cache and reset state to clean defaults
+      try {
+        localStorage.removeItem(STORAGE_KEY)
+      } catch {}
+      setData(defaultData())
+      return
+    }
+
     if (!user) {
       saveData(data)
     }
@@ -99,40 +116,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
         }
       })
 
-      const serverEmpty =
-        mappedSessions.length === 0 &&
-        (!serverState.bookmarks || serverState.bookmarks.length === 0) &&
-        Object.keys(serverState.progress?.answers || {}).length === 0
-
-      setData((prev) => {
-        // If server is clean brand new but user had local guest progress, upload to DB
-        if (serverEmpty && (prev.sessions.length > 0 || prev.bookmarks.length > 0 || Object.keys(prev.answers).length > 0)) {
-          fetch('/api/user/sync', {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              attempts: prev.sessions,
-              bookmarks: prev.bookmarks,
-              answers: prev.answers,
-              confusing: prev.confusing,
-              settings: prev.settings,
-            }),
-          }).catch(() => {})
-          return prev
-        }
-
-        return {
-          version: 1,
-          settings: { ...defaultData().settings, ...(serverState.progress?.settings || {}) },
-          answers: serverState.progress?.answers || {},
-          bookmarks: Array.isArray(serverState.bookmarks) ? serverState.bookmarks : [],
-          confusing: Array.isArray(serverState.progress?.confusing) ? serverState.progress.confusing : [],
-          sessions: mappedSessions,
-          activeExam: prev.activeExam ?? null,
-          activePractice: prev.activePractice ?? null,
-        }
-      })
+      setData(() => ({
+        version: 1,
+        settings: { ...defaultData().settings, ...(serverState.progress?.settings || {}) },
+        answers: serverState.progress?.answers || {},
+        bookmarks: Array.isArray(serverState.bookmarks) ? serverState.bookmarks : [],
+        confusing: Array.isArray(serverState.progress?.confusing) ? serverState.progress.confusing : [],
+        sessions: mappedSessions,
+        activeExam: null,
+        activePractice: null,
+      }))
       setLastSyncedAt(new Date())
     } catch (e) {
       console.warn('Failed to sync with database:', e)
@@ -144,10 +137,56 @@ export function AppProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (user) {
       syncWithDatabase()
-    } else {
-      setData(loadData())
     }
   }, [user, syncWithDatabase])
+
+  const clearGuestCache = useCallback(() => {
+    try {
+      localStorage.removeItem(STORAGE_KEY)
+    } catch {}
+  }, [])
+
+  const handleLogout = useCallback(async () => {
+    try {
+      localStorage.removeItem(STORAGE_KEY)
+    } catch {}
+    setData(defaultData())
+    await authLogout()
+  }, [authLogout])
+
+  const migrateGuestData = useCallback(async () => {
+    const current = loadData()
+    const hasData =
+      current.sessions.length > 0 ||
+      current.bookmarks.length > 0 ||
+      Object.keys(current.answers).length > 0 ||
+      current.confusing.length > 0
+
+    if (hasData) {
+      try {
+        await fetch('/api/user/sync', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            attempts: current.sessions,
+            bookmarks: current.bookmarks,
+            answers: current.answers,
+            confusing: current.confusing,
+            settings: current.settings,
+          }),
+        })
+      } catch (err) {
+        console.warn('Failed to migrate guest data on registration:', err)
+      }
+    }
+
+    try {
+      localStorage.removeItem(STORAGE_KEY)
+    } catch {}
+
+    await syncWithDatabase()
+  }, [syncWithDatabase])
 
   const setSettings = useCallback(
     (patch: Partial<Settings>) => {
@@ -381,12 +420,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
       discardPractice,
       replaceData,
       resetData,
+      migrateGuestData,
+      clearGuestCache,
+      handleLogout,
     }),
     [
       data,
       dbSyncing,
       lastSyncedAt,
       syncWithDatabase,
+      migrateGuestData,
+      clearGuestCache,
+      handleLogout,
       setSettings,
       recordAnswer,
       recordAnswersBatch,
