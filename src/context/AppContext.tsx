@@ -9,7 +9,7 @@ interface AppContextValue {
   dbSyncing: boolean
   lastSyncedAt: Date | null
   syncWithDatabase: () => Promise<void>
-  migrateGuestData: () => Promise<void>
+  migrateGuestData: (guestSnapshot?: AppData) => Promise<void>
   clearGuestCache: () => void
   handleLogout: () => Promise<void>
   setSettings: (patch: Partial<Settings>) => void
@@ -154,8 +154,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     await authLogout()
   }, [authLogout])
 
-  const migrateGuestData = useCallback(async () => {
-    const current = loadData()
+  const migrateGuestData = useCallback(async (guestSnapshot?: AppData) => {
+    const current = guestSnapshot ?? loadData()
     const hasData =
       current.sessions.length > 0 ||
       current.bookmarks.length > 0 ||

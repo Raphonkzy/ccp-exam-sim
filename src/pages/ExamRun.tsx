@@ -131,11 +131,10 @@ export default function ExamRun() {
           {isLast ? (
             <button
               type="button"
-              className="btn-primary !px-4 sm:!px-5 !text-xs sm:!text-sm font-semibold inline-flex items-center gap-1.5 shadow-sm"
+              className="btn-primary !px-4 sm:!px-5 !text-xs sm:!text-sm font-semibold inline-flex items-center shadow-sm"
               onClick={() => setConfirm(true)}
             >
               <span>{t('exam.submit')}</span>
-              <span aria-hidden="true">✓</span>
             </button>
           ) : (
             <button
@@ -217,25 +216,28 @@ export default function ExamRun() {
           </div>
 
           {unansweredCount > 0 ? (
-            <div className="rounded-lg border border-[var(--color-terracotta)]/40 bg-[var(--color-terracotta)]/10 px-3 py-2.5 text-xs text-[var(--color-forest-ink)] flex items-start gap-2">
-              <span className="text-sm leading-none mt-0.5" aria-hidden="true">⚠️</span>
-              <div>
-                <strong>You still have {unansweredCount} unanswered {unansweredCount === 1 ? 'question' : 'questions'}!</strong>
-                <p className="mt-0.5 text-[var(--color-forest-ink)]/80">Unanswered questions count as incorrect (0 points). You can check and answer them first.</p>
-              </div>
+            <div className="rounded-lg border border-[var(--color-terracotta)]/40 bg-[var(--color-terracotta)]/10 px-3.5 py-2.5 text-xs text-[var(--color-forest-ink)]">
+              <strong className="block font-semibold text-[var(--color-terracotta)]">
+                {unansweredCount} {unansweredCount === 1 ? 'question remains' : 'questions remain'} unanswered
+              </strong>
+              <p className="mt-1 text-[var(--color-forest-ink)]/80 leading-relaxed">
+                Unanswered questions are scored as zero. Review your unanswered questions before submitting if time permits.
+              </p>
             </div>
           ) : exam.flagged.length > 0 ? (
-            <div className="rounded-lg border border-[var(--color-pencil-gray)] bg-[var(--surface-2)] px-3 py-2.5 text-xs text-[var(--color-forest-ink)] flex items-start gap-2">
-              <span className="text-sm leading-none mt-0.5" aria-hidden="true">📌</span>
-              <div>
-                <strong>You have {exam.flagged.length} flagged {exam.flagged.length === 1 ? 'question' : 'questions'} for review.</strong>
-                <p className="mt-0.5 text-[var(--color-forest-ink)]/80">Click &ldquo;Check answers first&rdquo; to review any questions you marked.</p>
-              </div>
+            <div className="rounded-lg border border-[var(--color-pencil-gray)] bg-[var(--surface-2)] px-3.5 py-2.5 text-xs text-[var(--color-forest-ink)]">
+              <strong className="block font-semibold">
+                {exam.flagged.length} flagged {exam.flagged.length === 1 ? 'question' : 'questions'}
+              </strong>
+              <p className="mt-1 text-[var(--color-forest-ink)]/80 leading-relaxed">
+                You marked questions for review. Select &ldquo;Check answers first&rdquo; to re-inspect them.
+              </p>
             </div>
           ) : (
-            <div className="rounded-lg border border-[var(--accent)]/30 bg-[var(--surface-2)] px-3 py-2.5 text-xs text-[var(--color-forest-ink)] flex items-center gap-2">
-              <span className="text-sm leading-none" aria-hidden="true">✓</span>
-              <span>All <strong>{questions.length}</strong> questions have been answered. Ready to see your score?</span>
+            <div className="rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3.5 py-2.5 text-xs text-[var(--color-forest-ink)]">
+              <p className="font-medium text-[var(--color-forest-ink)]/90">
+                All {questions.length} questions are answered. Select &ldquo;Submit exam&rdquo; to calculate your final score.
+              </p>
             </div>
           )}
         </div>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useApp } from '../context/AppContext'
+import { loadData } from '../lib/storage'
 import { allQuestions } from '../lib/questionService'
 
 export type AuthMode = 'login' | 'register' | 'forgot' | 'reset'
@@ -89,6 +90,10 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
     if (password !== confirmPassword) { setError('Passwords do not match.'); return }
     if (password.length < 8) { setError('Password must be at least 8 characters.'); return }
     setLoading(true)
+
+    // Snapshot guest progress from cache before account creation
+    const guestSnapshot = loadData()
+
     const result = await register(email, password)
     if (result.error) {
       setLoading(false)
@@ -96,8 +101,8 @@ export function AuthModal({ open, onClose, initialMode = 'login' }: AuthModalPro
       return
     }
     // Successfully created account & logged in!
-    // Migrate guest data to the newly created account:
-    await migrateGuestData()
+    // Migrate guest data into the newly created account and remove from web cache:
+    await migrateGuestData(guestSnapshot)
     setLoading(false)
     handleClose()
   }

@@ -274,25 +274,30 @@ router.post('/sync', requireAuth, async (req, res) => {
 
     // Sync attempts
     if (Array.isArray(attempts) && attempts.length > 0) {
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       for (const a of attempts) {
-        if (!a.id) continue;
+        if (!a) continue;
         const startIso = a.startedAt ? new Date(a.startedAt).toISOString() : null;
         const finishIso = a.finishedAt ? new Date(a.finishedAt).toISOString() : new Date().toISOString();
-        await query(
-          `INSERT INTO exam_attempts (id, user_id, score, total, answers, domain_scores, started_at, finished_at)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-           ON CONFLICT (id) DO NOTHING`,
-          [
-            a.id,
-            req.user.id,
-            a.correctCount ?? a.score ?? 0,
-            a.total ?? 0,
-            JSON.stringify(a.selections ?? a.answers ?? {}),
-            JSON.stringify(a.domainStats ?? a.domain_scores ?? {}),
-            startIso,
-            finishIso
-          ]
-        );
+        const score = Number(a.correctCount ?? a.score ?? 0);
+        const total = Number(a.total ?? 0);
+        const answersJson = JSON.stringify(a.selections ?? a.answers ?? {});
+        const domainJson = JSON.stringify(a.domainStats ?? a.domain_scores ?? {});
+
+        if (a.id && uuidRegex.test(a.id)) {
+          await query(
+            `INSERT INTO exam_attempts (id, user_id, score, total, answers, domain_scores, started_at, finished_at)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+             ON CONFLICT (id) DO NOTHING`,
+            [a.id, req.user.id, score, total, answersJson, domainJson, startIso, finishIso]
+          );
+        } else {
+          await query(
+            `INSERT INTO exam_attempts (user_id, score, total, answers, domain_scores, started_at, finished_at)
+             VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            [req.user.id, score, total, answersJson, domainJson, startIso, finishIso]
+          );
+        }
       }
     }
 
