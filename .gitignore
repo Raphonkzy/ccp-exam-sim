@@ -9,14 +9,45 @@ dist/
 dist-ssr/
 build/
 
+# Restricted / Internal Documentation & Plans
+implementation_plan.md
+*implementation_plan*.md
+*implementation-plan*.md
+plan.md
+*audit-report*.md
+*audit_report*.md
+*audit*.md
+*report*.md
+!README.md
+
+# QA & Generation Datasets
+data-qa/
+
+# Official / Restricted Exam Guides & PDFs
+docs/
+*.pdf
+
+# Internal Audit & Scratch Scripts
+scripts/audit-*
+
 # Environment Variables & Secrets
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 *.pem
 *.key
+*.crt
+*.cer
+*.pfx
+*.p12
+credentials
+.aws/
+
+# Database & Local Stores
+*.sqlite
+*.sqlite3
+*.db
+*.dump
 
 # Logs
 logs/
@@ -27,9 +58,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Editor & OS files
+# Editor, OS & AI Assistant files
 .DS_Store
 Thumbs.db
+desktop.ini
 .idea/
 .vscode/*
 !.vscode/extensions.json
@@ -38,6 +70,10 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+.gemini/
+.agents/
+.cursor/
+.windsurf/
 
 # Testing & Coverage
 coverage/
