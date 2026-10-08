@@ -56,6 +56,26 @@ router.post('/ping', async (req, res) => {
     const ua = req.headers['user-agent'] || '';
     const ipHash = hashIp(req);
     const userId = req.user?.id || null;
+    const userRole = req.user?.role || null;
+
+    // 1. Admin users never count as visitors
+    if (userRole === 'admin') {
+      // Purge any accidental records previously stored under this admin
+      if (userId) {
+        await query('DELETE FROM site_visitors WHERE user_id = $1', [userId]);
+        await query('DELETE FROM page_views WHERE user_id = $1', [userId]);
+      }
+      if (visitorId) {
+        await query('DELETE FROM site_visitors WHERE visitor_id = $1', [visitorId]);
+        await query('DELETE FROM page_views WHERE visitor_id = $1', [visitorId]);
+      }
+      return res.json({ ok: true, ignored: true });
+    }
+
+    // 2. Ignore internal dev routes
+    if (typeof path === 'string' && path.startsWith('/dev')) {
+      return res.json({ ok: true, ignored: true });
+    }
 
     // Validate or generate persistent visitor ID
     if (!visitorId || typeof visitorId !== 'string' || !/^[a-zA-Z0-9_-]{8,64}$/.test(visitorId)) {
@@ -124,6 +144,17 @@ router.post('/ping', async (req, res) => {
 // GET /api/visitors/stats - comprehensive visitor metrics for developer dashboard
 router.get('/stats', requireAdmin, async (req, res) => {
   try {
+    // Purge any admin or dev-dashboard rows that might have existed
+    await query(`
+      DELETE FROM site_visitors
+      WHERE user_id IN (SELECT id FROM users WHERE role = 'admin')
+         OR last_path LIKE '/dev%';
+
+      DELETE FROM page_views
+      WHERE user_id IN (SELECT id FROM users WHERE role = 'admin')
+         OR path LIKE '/dev%';
+    `);
+
     const [
       summaryRes,
       topPagesRes,
@@ -133,26 +164,68 @@ router.get('/stats', requireAdmin, async (req, res) => {
       dailyTrendRes,
       recentVisitorsRes
     ] = await Promise.all([
-      // 1. High-level metric summary
+      // 1. High-level metric summary (strictly excludes admin and dev paths)
       query(`
         SELECT
-          (SELECT COUNT(DISTINCT visitor_id) FROM site_visitors WHERE last_seen > now() - INTERVAL '5 minutes')::int AS active_now,
-          (SELECT COUNT(*) FROM site_visitors)::int AS total_visitors,
-          (SELECT COUNT(DISTINCT visitor_id) FROM site_visitors WHERE last_seen >= CURRENT_DATE)::int AS visitors_today,
-          (SELECT COUNT(DISTINCT visitor_id) FROM site_visitors WHERE last_seen >= now() - INTERVAL '7 days')::int AS visitors_7d,
-          (SELECT COUNT(*) FROM page_views)::int AS total_page_views,
-          (SELECT COUNT(*) FROM page_views WHERE created_at >= CURRENT_DATE)::int AS views_today,
-          (SELECT COUNT(*) FROM site_visitors WHERE visit_count > 1)::int AS returning_visitors
+          (SELECT COUNT(DISTINCT v.visitor_id)
+           FROM site_visitors v
+           LEFT JOIN users u ON u.id = v.user_id
+           WHERE (u.role IS NULL OR u.role != 'admin')
+             AND v.last_seen > now() - INTERVAL '5 minutes'
+             AND NOT (v.last_path LIKE '/dev%'))::int AS active_now,
+
+          (SELECT COUNT(DISTINCT v.visitor_id)
+           FROM site_visitors v
+           LEFT JOIN users u ON u.id = v.user_id
+           WHERE (u.role IS NULL OR u.role != 'admin')
+             AND NOT (v.last_path LIKE '/dev%'))::int AS total_visitors,
+
+          (SELECT COUNT(DISTINCT v.visitor_id)
+           FROM site_visitors v
+           LEFT JOIN users u ON u.id = v.user_id
+           WHERE (u.role IS NULL OR u.role != 'admin')
+             AND v.last_seen >= CURRENT_DATE
+             AND NOT (v.last_path LIKE '/dev%'))::int AS visitors_today,
+
+          (SELECT COUNT(DISTINCT v.visitor_id)
+           FROM site_visitors v
+           LEFT JOIN users u ON u.id = v.user_id
+           WHERE (u.role IS NULL OR u.role != 'admin')
+             AND v.last_seen >= now() - INTERVAL '7 days'
+             AND NOT (v.last_path LIKE '/dev%'))::int AS visitors_7d,
+
+          (SELECT COUNT(*)
+           FROM page_views pv
+           LEFT JOIN users u ON u.id = pv.user_id
+           WHERE (u.role IS NULL OR u.role != 'admin')
+             AND NOT (pv.path LIKE '/dev%'))::int AS total_page_views,
+
+          (SELECT COUNT(*)
+           FROM page_views pv
+           LEFT JOIN users u ON u.id = pv.user_id
+           WHERE (u.role IS NULL OR u.role != 'admin')
+             AND pv.created_at >= CURRENT_DATE
+             AND NOT (pv.path LIKE '/dev%'))::int AS views_today,
+
+          (SELECT COUNT(DISTINCT v.visitor_id)
+           FROM site_visitors v
+           LEFT JOIN users u ON u.id = v.user_id
+           WHERE (u.role IS NULL OR u.role != 'admin')
+             AND v.visit_count > 1
+             AND NOT (v.last_path LIKE '/dev%'))::int AS returning_visitors
       `),
 
       // 2. Top visited pages
       query(`
         SELECT
-          path,
+          pv.path,
           COUNT(*)::int AS total_views,
-          COUNT(DISTINCT visitor_id)::int AS unique_visitors
-        FROM page_views
-        GROUP BY path
+          COUNT(DISTINCT pv.visitor_id)::int AS unique_visitors
+        FROM page_views pv
+        LEFT JOIN users u ON u.id = pv.user_id
+        WHERE (u.role IS NULL OR u.role != 'admin')
+          AND NOT (pv.path LIKE '/dev%')
+        GROUP BY pv.path
         ORDER BY total_views DESC
         LIMIT 10
       `),
@@ -160,20 +233,26 @@ router.get('/stats', requireAdmin, async (req, res) => {
       // 3. Device breakdown
       query(`
         SELECT
-          COALESCE(device, 'desktop') AS device,
+          COALESCE(v.device, 'desktop') AS device,
           COUNT(*)::int AS count
-        FROM site_visitors
-        GROUP BY device
+        FROM site_visitors v
+        LEFT JOIN users u ON u.id = v.user_id
+        WHERE (u.role IS NULL OR u.role != 'admin')
+          AND NOT (v.last_path LIKE '/dev%')
+        GROUP BY v.device
         ORDER BY count DESC
       `),
 
       // 4. Browser breakdown
       query(`
         SELECT
-          COALESCE(browser, 'Other') AS browser,
+          COALESCE(v.browser, 'Other') AS browser,
           COUNT(*)::int AS count
-        FROM site_visitors
-        GROUP BY browser
+        FROM site_visitors v
+        LEFT JOIN users u ON u.id = v.user_id
+        WHERE (u.role IS NULL OR u.role != 'admin')
+          AND NOT (v.last_path LIKE '/dev%')
+        GROUP BY v.browser
         ORDER BY count DESC
         LIMIT 8
       `),
@@ -181,10 +260,13 @@ router.get('/stats', requireAdmin, async (req, res) => {
       // 5. OS breakdown
       query(`
         SELECT
-          COALESCE(os, 'Other') AS os,
+          COALESCE(v.os, 'Other') AS os,
           COUNT(*)::int AS count
-        FROM site_visitors
-        GROUP BY os
+        FROM site_visitors v
+        LEFT JOIN users u ON u.id = v.user_id
+        WHERE (u.role IS NULL OR u.role != 'admin')
+          AND NOT (v.last_path LIKE '/dev%')
+        GROUP BY v.os
         ORDER BY count DESC
         LIMIT 8
       `),
@@ -200,18 +282,24 @@ router.get('/stats', requireAdmin, async (req, res) => {
         ),
         daily_v AS (
           SELECT
-            DATE_TRUNC('day', last_seen)::date AS day,
-            COUNT(DISTINCT visitor_id)::int AS visitors
-          FROM site_visitors
-          WHERE last_seen >= CURRENT_DATE - INTERVAL '13 days'
+            DATE_TRUNC('day', v.last_seen)::date AS day,
+            COUNT(DISTINCT v.visitor_id)::int AS visitors
+          FROM site_visitors v
+          LEFT JOIN users u ON u.id = v.user_id
+          WHERE (u.role IS NULL OR u.role != 'admin')
+            AND NOT (v.last_path LIKE '/dev%')
+            AND v.last_seen >= CURRENT_DATE - INTERVAL '13 days'
           GROUP BY 1
         ),
         daily_pv AS (
           SELECT
-            DATE_TRUNC('day', created_at)::date AS day,
+            DATE_TRUNC('day', pv.created_at)::date AS day,
             COUNT(*)::int AS views
-          FROM page_views
-          WHERE created_at >= CURRENT_DATE - INTERVAL '13 days'
+          FROM page_views pv
+          LEFT JOIN users u ON u.id = pv.user_id
+          WHERE (u.role IS NULL OR u.role != 'admin')
+            AND NOT (pv.path LIKE '/dev%')
+            AND pv.created_at >= CURRENT_DATE - INTERVAL '13 days'
           GROUP BY 1
         )
         SELECT
@@ -243,6 +331,8 @@ router.get('/stats', requireAdmin, async (req, res) => {
           (v.last_seen > now() - INTERVAL '5 minutes') AS is_active
         FROM site_visitors v
         LEFT JOIN users u ON u.id = v.user_id
+        WHERE (u.role IS NULL OR u.role != 'admin')
+          AND NOT (v.last_path LIKE '/dev%')
         ORDER BY v.last_seen DESC
         LIMIT 50
       `)

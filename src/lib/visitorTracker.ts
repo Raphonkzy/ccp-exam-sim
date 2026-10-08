@@ -1,6 +1,6 @@
-// src/lib/visitorTracker.ts
 import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 const VISITOR_ID_KEY = 'clf02_vid'
 const HEARTBEAT_INTERVAL_MS = 45000 // 45 seconds
@@ -47,25 +47,34 @@ async function sendPing(path: string, isPageView: boolean, referrer?: string) {
 }
 
 /**
- * React hook to track route views and active-session heartbeats
+ * React hook to track route views and active-session heartbeats.
+ * Excludes administrators and dev routes completely.
  */
 export function useVisitorTracker() {
+  const { user } = useAuth()
   const location = useLocation()
   const lastPingTime = useRef<number>(Date.now())
   const prevPath = useRef<string>('')
 
-  // 1. Trigger page view whenever route changes
+  const isAdmin = user?.role === 'admin'
+  const isDevRoute = location.pathname.startsWith('/dev')
+
+  // 1. Trigger page view whenever route changes (skip for admin)
   useEffect(() => {
+    if (isAdmin || isDevRoute) return
+
     const currentPath = location.pathname + location.search
     if (currentPath !== prevPath.current) {
       prevPath.current = currentPath
       sendPing(location.pathname, true)
       lastPingTime.current = Date.now()
     }
-  }, [location.pathname, location.search])
+  }, [location.pathname, location.search, isAdmin, isDevRoute])
 
-  // 2. Periodic heartbeat while user is actively viewing the tab
+  // 2. Periodic heartbeat while user is actively viewing the tab (skip for admin)
   useEffect(() => {
+    if (isAdmin || isDevRoute) return
+
     const interval = setInterval(() => {
       if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
         sendPing(location.pathname, false)
@@ -90,5 +99,5 @@ export function useVisitorTracker() {
       clearInterval(interval)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
-  }, [location.pathname])
+  }, [location.pathname, isAdmin, isDevRoute])
 }
