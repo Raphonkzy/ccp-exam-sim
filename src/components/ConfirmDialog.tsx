@@ -29,7 +29,7 @@ export function ConfirmDialog({ open, title, children, confirmLabel, cancelLabel
       ref={ref}
       onCancel={(e) => { e.preventDefault(); onCancel() }}
       aria-labelledby="dialog-title"
-      className="m-auto w-[min(92vw,28rem)] rounded-xl border p-0 shadow-lg backdrop:bg-black/40 backdrop:backdrop-blur-sm"
+      className="m-auto w-[min(92vw,30rem)] rounded-xl border p-0 shadow-lg backdrop:bg-black/40 backdrop:backdrop-blur-sm"
       style={{ background: 'var(--surface-cream)', color: 'var(--text)', borderColor: 'var(--color-pencil-gray)' }}
     >
       <div className="p-6">

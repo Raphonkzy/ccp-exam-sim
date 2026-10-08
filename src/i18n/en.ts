@@ -129,9 +129,10 @@ export const en = {
   'exam.unanswered': 'Unanswered',
   'exam.navigator': 'Question navigator',
   'exam.submit': 'Submit exam',
-  'exam.submitTitle': 'Submit your exam?',
+  'exam.submitTitle': 'Are you sure you want to submit?',
   'exam.submitBody': 'You answered {a} of {n} questions. Unanswered questions count as incorrect. {f} flagged.',
-  'exam.submitKeep': 'Keep working',
+  'exam.submitKeep': 'Check answers first',
+  'exam.submitConfirm': 'Yes, submit exam',
   'exam.timeUp': 'Time is up. Your exam was submitted automatically.',
   'exam.langNote': 'All questions and answer options are presented in official English exam format.',
 

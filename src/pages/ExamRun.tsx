@@ -67,6 +67,8 @@ export default function ExamRun() {
   const sel = exam.selections[q.id] ?? []
   const flagged = exam.flagged.includes(q.id)
   const answeredCount = questions.filter((x) => (exam.selections[x.id] ?? []).length > 0).length
+  const unansweredCount = questions.length - answeredCount
+  const isLast = exam.index === questions.length - 1
 
   const patch = (p: Partial<typeof exam>) => setActiveExam({ ...exam, ...p })
   const go = (i: number) => patch({ index: Math.max(0, Math.min(questions.length - 1, i)) })
@@ -126,7 +128,24 @@ export default function ExamRun() {
               </>
             )}
           </button>
-          <button type="button" className="btn-primary !px-3 sm:!px-4 !text-xs sm:!text-sm" disabled={exam.index === questions.length - 1} onClick={() => go(exam.index + 1)}>{t('common.next')} →</button>
+          {isLast ? (
+            <button
+              type="button"
+              className="btn-primary !px-4 sm:!px-5 !text-xs sm:!text-sm font-semibold inline-flex items-center gap-1.5 shadow-sm"
+              onClick={() => setConfirm(true)}
+            >
+              <span>{t('exam.submit')}</span>
+              <span aria-hidden="true">✓</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="btn-primary !px-3 sm:!px-4 !text-xs sm:!text-sm"
+              onClick={() => go(exam.index + 1)}
+            >
+              {t('common.next')} →
+            </button>
+          )}
         </div>
       </div>
 
@@ -168,12 +187,58 @@ export default function ExamRun() {
       <ConfirmDialog
         open={confirm}
         title={t('exam.submitTitle')}
-        confirmLabel={t('exam.submit')}
+        confirmLabel={t('exam.submitConfirm')}
         cancelLabel={t('exam.submitKeep')}
         onCancel={() => setConfirm(false)}
         onConfirm={() => { setConfirm(false); submit() }}
       >
-        {t('exam.submitBody', { a: answeredCount, n: questions.length, f: exam.flagged.length })}
+        <div className="space-y-3.5 pt-1 text-left">
+          <p className="text-xs text-[var(--color-forest-ink)]/80 leading-relaxed">
+            Please double-check your answers before submitting. Once submitted, your exam will be finalized and graded immediately.
+          </p>
+
+          <div className="grid grid-cols-3 gap-2 rounded-lg border border-[var(--color-pencil-gray)]/70 bg-[var(--surface)] p-3 text-center shadow-xs">
+            <div className="space-y-0.5">
+              <div className="text-base sm:text-lg font-bold font-mono text-[var(--color-forest-ink)]">{answeredCount}</div>
+              <div className="text-[11px] font-medium text-[var(--color-forest-ink)]/70">{t('exam.answered')}</div>
+            </div>
+            <div className="space-y-0.5">
+              <div className={`text-base sm:text-lg font-bold font-mono ${unansweredCount > 0 ? 'text-[var(--color-terracotta)]' : 'text-[var(--color-forest-ink)]'}`}>
+                {unansweredCount}
+              </div>
+              <div className="text-[11px] font-medium text-[var(--color-forest-ink)]/70">{t('exam.unanswered')}</div>
+            </div>
+            <div className="space-y-0.5">
+              <div className={`text-base sm:text-lg font-bold font-mono ${exam.flagged.length > 0 ? 'text-[var(--accent)]' : 'text-[var(--color-forest-ink)]'}`}>
+                {exam.flagged.length}
+              </div>
+              <div className="text-[11px] font-medium text-[var(--color-forest-ink)]/70">{t('exam.flagged')}</div>
+            </div>
+          </div>
+
+          {unansweredCount > 0 ? (
+            <div className="rounded-lg border border-[var(--color-terracotta)]/40 bg-[var(--color-terracotta)]/10 px-3 py-2.5 text-xs text-[var(--color-forest-ink)] flex items-start gap-2">
+              <span className="text-sm leading-none mt-0.5" aria-hidden="true">⚠️</span>
+              <div>
+                <strong>You still have {unansweredCount} unanswered {unansweredCount === 1 ? 'question' : 'questions'}!</strong>
+                <p className="mt-0.5 text-[var(--color-forest-ink)]/80">Unanswered questions count as incorrect (0 points). You can check and answer them first.</p>
+              </div>
+            </div>
+          ) : exam.flagged.length > 0 ? (
+            <div className="rounded-lg border border-[var(--color-pencil-gray)] bg-[var(--surface-2)] px-3 py-2.5 text-xs text-[var(--color-forest-ink)] flex items-start gap-2">
+              <span className="text-sm leading-none mt-0.5" aria-hidden="true">📌</span>
+              <div>
+                <strong>You have {exam.flagged.length} flagged {exam.flagged.length === 1 ? 'question' : 'questions'} for review.</strong>
+                <p className="mt-0.5 text-[var(--color-forest-ink)]/80">Click &ldquo;Check answers first&rdquo; to review any questions you marked.</p>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-lg border border-[var(--accent)]/30 bg-[var(--surface-2)] px-3 py-2.5 text-xs text-[var(--color-forest-ink)] flex items-center gap-2">
+              <span className="text-sm leading-none" aria-hidden="true">✓</span>
+              <span>All <strong>{questions.length}</strong> questions have been answered. Ready to see your score?</span>
+            </div>
+          )}
+        </div>
       </ConfirmDialog>
 
       <ConfirmDialog
