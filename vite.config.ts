@@ -6,7 +6,6 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    historyApiFallback: true,
     proxy: {
       // Forward all /api/* requests to the backend during local dev
       '/api': {
