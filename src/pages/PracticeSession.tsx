@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { useT } from '../i18n'
@@ -28,6 +28,33 @@ export default function PracticeSession() {
   const [checked, setChecked] = useState<string[]>([])
   const [confirmEnd, setConfirmEnd] = useState(false)
 
+  // Keep refs in sync so the unmount cleanup always has the latest values
+  const selectionsRef = useRef(selections)
+  const checkedRef = useRef(checked)
+  const addSessionRef = useRef(addSession)
+  useEffect(() => { selectionsRef.current = selections }, [selections])
+  useEffect(() => { checkedRef.current = checked }, [checked])
+  useEffect(() => { addSessionRef.current = addSession }, [addSession])
+
+  // Auto-save when user navigates away without finishing
+  useEffect(() => {
+    return () => {
+      const answered = checkedRef.current
+      if (answered.length === 0) return // nothing answered — don't save ghost session
+      const answeredQuestions = questions.filter((q) => answered.includes(q.id))
+      const session = summarize(
+        sessionId.current,
+        'practice',
+        startedAt.current,
+        answeredQuestions,
+        selectionsRef.current,
+        [],
+      )
+      addSessionRef.current(session)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // intentionally empty — runs only on unmount
+
   if (!ids || questions.length === 0) return <Navigate to="/practice" replace />
 
   const q = questions[index]
@@ -39,8 +66,9 @@ export default function PracticeSession() {
   const finish = (answeredOnly: boolean) => {
     const done = answeredOnly ? questions.filter((x) => checked.includes(x.id)) : questions
     if (done.length === 0) return navigate('/practice', { replace: true })
-    const flagged: string[] = []
-    const session = summarize(sessionId.current, 'practice', startedAt.current, done, selections, flagged)
+    const session = summarize(sessionId.current, 'practice', startedAt.current, done, selections, [])
+    // Mark as finished so the unmount cleanup doesn't double-save
+    checkedRef.current = [] // clear so cleanup sees 0 answered
     addSession(session)
     navigate(`/results/${session.id}`, { replace: true })
   }
@@ -106,3 +134,4 @@ export default function PracticeSession() {
     </div>
   )
 }
+
