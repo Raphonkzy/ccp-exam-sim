@@ -1732,7 +1732,7 @@
     "domain": 1,
     "taskStatement": "1.1",
     "type": "single",
-    "question": "Which cloud deployment model connects on-premises infrastructure with AWS Cloud, allowing workloads to be distributed across both environments?",
+    "question": "A regional bank must keep customer account data on-premises due to regulatory requirements, but wants to run its data analytics and reporting workloads on AWS to reduce costs. Which cloud deployment model does this architecture represent?",
     "options": [
       {
         "id": "A",
@@ -1965,7 +1965,7 @@
     "domain": 1,
     "taskStatement": "1.1",
     "type": "single",
-    "question": "What is the core definition of cloud computing?",
+    "question": "A CTO is explaining to the board why the company is moving away from its own data center. She describes a model where IT resources such as servers and databases are delivered over the internet and billed only for what is used. Which term best describes this model?",
     "options": [
       {
         "id": "A",
@@ -4836,7 +4836,7 @@
     "domain": 1,
     "taskStatement": "1.1",
     "type": "single",
-    "question": "Which term describes moving funds from heavy upfront physical asset purchases (such as servers, racks, and cooling) to ongoing operational costs based on actual consumption?",
+    "question": "A CFO is reviewing the company's IT budget after migrating to AWS. She notices that large upfront server purchases have been replaced by monthly usage-based AWS bills. How does this change in spending pattern illustrate a key financial benefit of cloud computing?",
     "options": [
       {
         "id": "A",
@@ -6077,7 +6077,7 @@
     "domain": 1,
     "taskStatement": "1.4",
     "type": "single",
-    "question": "Which term describes the reduction in unit cost that AWS achieves through purchasing large volumes of IT equipment and running operations at global scale?",
+    "question": "AWS is able to offer lower prices to customers partly because it purchases hardware in massive quantities and operates data centers at global scale, spreading costs across millions of customers. Which cloud economics concept does this describe?",
     "options": [
       {
         "id": "A",

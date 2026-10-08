@@ -2824,7 +2824,7 @@
     "domain": 3,
     "taskStatement": "3.1",
     "type": "single",
-    "question": "What is an AWS CloudFormation StackSet?",
+    "question": "A platform team needs to deploy the same CloudFormation stack — including VPC, subnets, and IAM roles — to all 12 AWS accounts in their AWS Organization and across three Regions, using a single operation from a central administrator account. Which CloudFormation feature should they use?",
     "options": [
       {
         "id": "A",
@@ -3206,7 +3206,7 @@
     "domain": 3,
     "taskStatement": "3.2",
     "type": "single",
-    "question": "What is the purpose of an Amazon CloudFront Regional Edge Cache in the AWS Global Infrastructure?",
+    "question": "A media company notices that content cached at a nearby CloudFront edge location is sometimes evicted because of low request frequency. Users then experience slower load times as the request is forwarded further upstream. Which CloudFront infrastructure tier is designed to hold this content longer before going back to the origin?",
     "options": [
       {
         "id": "A",
@@ -3438,7 +3438,7 @@
     "domain": 3,
     "taskStatement": "3.3",
     "type": "single",
-    "question": "What is the maximum execution time limit for a single invocation of an AWS Lambda function?",
+    "question": "A developer writes an AWS Lambda function to process large video transcription jobs. During testing, the function fails with a timeout error on files longer than 10 minutes. What is the maximum duration a single Lambda function invocation is allowed to run?",
     "options": [
       {
         "id": "A",
@@ -4240,7 +4240,7 @@
     "domain": 3,
     "taskStatement": "3.4",
     "type": "single",
-    "question": "What is the durability design standard for data stored in the Amazon S3 Standard storage class across multiple Availability Zones?",
+    "question": "A company is choosing a storage service for critical financial records that must never be lost, even in the event of simultaneous hardware failures across multiple data centers. A solutions architect recommends Amazon S3 Standard, citing its durability design. What is the designed annual durability of data stored in Amazon S3 Standard?",
     "options": [
       {
         "id": "A",
@@ -4381,7 +4381,7 @@
     "domain": 3,
     "taskStatement": "3.5",
     "type": "single",
-    "question": "Which AWS database service provides fully managed, serverless NoSQL key-value and document storage with single-digit millisecond latency at any scale, with optional Global Tables for multi-Region active-active replication?",
+    "question": "A mobile gaming company needs a database that scales automatically to handle millions of concurrent players worldwide, requires no server management, and delivers consistent single-digit millisecond response times. Which AWS database service meets these requirements?",
     "options": [
       {
         "id": "A",
@@ -5195,7 +5195,7 @@
     "domain": 3,
     "taskStatement": "3.6",
     "type": "single",
-    "question": "What is the function of an Amazon Virtual Private Cloud (Amazon VPC) in AWS?",
+    "question": "A financial services company is deploying an application on AWS and requires that its database servers are not reachable from the public internet. The network team needs full control over IP address ranges, routing, and traffic filtering. Which AWS service provides this isolated network environment?",
     "options": [
       {
         "id": "A",
@@ -6664,7 +6664,7 @@
     "domain": 3,
     "taskStatement": "3.1",
     "type": "single",
-    "question": "What is an advantage of using AWS CloudFormation compared to manually creating AWS resources in the AWS Management Console?",
+    "question": "A DevOps team needs to spin up identical environments for development, staging, and production. They want to ensure every environment is configured the same way and can be recreated quickly after a destructive change. Which AWS service would best support this repeatable infrastructure deployment?",
     "options": [
       {
         "id": "A",

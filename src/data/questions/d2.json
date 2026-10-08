@@ -804,7 +804,7 @@
     "domain": 2,
     "taskStatement": "2.3",
     "type": "single",
-    "question": "What is the principle of least privilege as it applies to AWS IAM?",
+    "question": "A security audit reveals that all developers at a company have administrator-level AWS access, even though their daily tasks only require reading from Amazon S3 and deploying AWS Lambda functions. Which IAM best practice should the security team enforce to address this finding?",
     "options": [
       {
         "id": "A",
@@ -3445,7 +3445,7 @@
     "domain": 2,
     "taskStatement": "2.2",
     "type": "single",
-    "question": "What is the primary benefit of Service Control Policies (SCPs) when used with AWS Organizations?",
+    "question": "A company's security team wants to prevent any AWS account in its organization from ever disabling AWS CloudTrail, regardless of what individual account administrators do. Which AWS Organizations feature can enforce this restriction across all accounts?",
     "options": [
       {
         "id": "A",
@@ -3827,7 +3827,7 @@
     "domain": 2,
     "taskStatement": "2.3",
     "type": "single",
-    "question": "What is the security principle that dictates users and systems should only be granted the minimum permissions necessary to perform their job functions?",
+    "question": "An IAM administrator is setting up permissions for a new data analyst who only needs to run Amazon Athena queries against a specific S3 bucket. The administrator wants to follow AWS security best practices. Which principle should guide how much access the analyst is granted?",
     "options": [
       {
         "id": "A",
@@ -4296,7 +4296,7 @@
     "domain": 2,
     "taskStatement": "2.3",
     "type": "single",
-    "question": "What type of AWS credential consists of an Access Key ID and Secret Access Key, used to authenticate programmatic requests via the AWS CLI or SDKs?",
+    "question": "A developer is writing a Python script that needs to call the AWS SDK to list objects in an Amazon S3 bucket. Instead of signing in through the Management Console, the developer configures credentials in the script. Which type of AWS credential is the developer using?",
     "options": [
       {
         "id": "A",
@@ -4342,7 +4342,7 @@
     "domain": 2,
     "taskStatement": "2.3",
     "type": "single",
-    "question": "What is the function of an IAM User Group in AWS?",
+    "question": "A company is onboarding 20 new developers. The IAM administrator wants all of them to have the same set of read-only permissions across Amazon EC2 and Amazon S3, without attaching policies to each user individually. Which IAM feature should the administrator use?",
     "options": [
       {
         "id": "A",
@@ -4481,7 +4481,7 @@
     "domain": 2,
     "taskStatement": "2.3",
     "type": "single",
-    "question": "What is an AWS Managed Policy in IAM?",
+    "question": "An IAM administrator needs to grant a team of analysts read-only access to Amazon S3. Instead of writing a custom JSON policy, the administrator searches for a pre-built policy maintained and updated by AWS. What type of IAM policy is the administrator using?",
     "options": [
       {
         "id": "A",
@@ -5043,7 +5043,7 @@
     "domain": 2,
     "taskStatement": "2.4",
     "type": "single",
-    "question": "What is a key difference in how rules are configured in a Security Group compared to a Network ACL (NACL)?",
+    "question": "A network engineer configures a Security Group to allow inbound HTTP traffic on port 80. They notice there is no need to create a separate outbound rule for the response traffic. However, when configuring a Network ACL for the same use case, they must explicitly allow outbound port 80 responses. What characteristic of Security Groups explains this difference?",
     "options": [
       {
         "id": "A",
@@ -5555,7 +5555,7 @@
     "domain": 2,
     "taskStatement": "2.4",
     "type": "single",
-    "question": "What is the default configuration of the default Network Access Control List (default NACL) created with an Amazon VPC?",
+    "question": "A developer creates a new Amazon VPC and immediately launches an EC2 instance in one of its subnets. Without any additional configuration, the instance can reach the internet and receive inbound connections. Which default VPC component is responsible for allowing all traffic by default?",
     "options": [
       {
         "id": "A",
@@ -6022,7 +6022,7 @@
     "domain": 2,
     "taskStatement": "2.1",
     "type": "single",
-    "question": "Which of the following describes an inherited security control that customers receive automatically by using AWS Cloud services?",
+    "question": "A startup moves its infrastructure to AWS. The security team realizes they no longer need to manage physical server rack security, data center badge access, or hardware disposal procedures. Under the AWS shared responsibility model, what type of security control describes these protections the startup now inherits from AWS?",
     "options": [
       {
         "id": "A",
@@ -6534,7 +6534,7 @@
     "domain": 2,
     "taskStatement": "2.2",
     "type": "single",
-    "question": "What type of data encryption is occurring when Amazon S3 encrypts an object before writing it to physical disks and automatically decrypts it when an authorized user downloads it?",
+    "question": "A compliance officer confirms that all data stored in Amazon S3 is encrypted using AES-256 before being written to disk, and decrypted automatically when retrieved by authorized users. Which type of encryption does this describe?",
     "options": [
       {
         "id": "A",

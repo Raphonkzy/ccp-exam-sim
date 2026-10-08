@@ -2055,7 +2055,7 @@
       },
       {
         "id": "B",
-        "text": "Instance Savings Plans are locked to a specific instance family in a Region but offer higher discounts; Compute Savings Plans apply flexibly across families, Regions, Fargate, and Lambda"
+        "text": "Instance Savings Plans offer higher discounts but are locked to a specific instance family and Region; Compute Savings Plans apply flexibly across families, Regions, Fargate, and Lambda"
       },
       {
         "id": "C",
@@ -3025,7 +3025,7 @@
     "domain": 4,
     "taskStatement": "4.3",
     "type": "single",
-    "question": "Which digital catalog allows customers to find, test, buy, and instantly deploy third-party software products and SaaS solutions that run on AWS, with charges consolidated directly on their AWS invoice?",
+    "question": "A startup wants to add a third-party intrusion detection system to its AWS environment. The security team needs the tool up and running within an hour and wants all charges to appear on the same AWS bill. Where should the team look for this software?",
     "options": [
       {
         "id": "A",
