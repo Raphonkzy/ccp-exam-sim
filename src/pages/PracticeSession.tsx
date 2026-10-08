@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { useT } from '../i18n'
@@ -12,90 +12,120 @@ import type { Question } from '../types/question'
 
 export default function PracticeSession() {
   const { t } = useT()
-  const { recordAnswer, addSession } = useApp()
+  const { data, recordAnswer, addSession, setActivePractice } = useApp()
   const navigate = useNavigate()
   const location = useLocation()
-  const ids = (location.state as { ids?: string[] } | null)?.ids
+
+  // IDs passed from PracticeSetup when starting a new session
+  const incomingIds = (location.state as { ids?: string[] } | null)?.ids
+
+  // On first render: if new IDs are provided, initialise a fresh activePractice
+  // (this runs once — subsequent renders read from data.activePractice)
+  const [initialised] = useState(() => {
+    if (incomingIds && incomingIds.length > 0) {
+      setActivePractice({
+        id: newId(),
+        questionIds: incomingIds,
+        selections: {},
+        checked: [],
+        startedAt: Date.now(),
+        index: 0,
+      })
+      return true
+    }
+    return false
+  })
+
+  const practice = data.activePractice
+  const [confirmEnd, setConfirmEnd] = useState(false)
+  const [confirmDiscard, setConfirmDiscard] = useState(false)
 
   const questions = useMemo(
-    () => (ids ?? []).map(getQuestion).filter((q): q is Question => !!q),
-    [ids],
+    () => (practice?.questionIds ?? []).map(getQuestion).filter((q): q is Question => !!q),
+    [practice?.questionIds],
   )
-  const sessionId = useRef(newId())
-  const startedAt = useRef(Date.now())
-  const [index, setIndex] = useState(0)
-  const [selections, setSelections] = useState<Record<string, string[]>>({})
-  const [checked, setChecked] = useState<string[]>([])
-  const [confirmEnd, setConfirmEnd] = useState(false)
 
-  // Keep refs in sync so the unmount cleanup always has the latest values
-  const selectionsRef = useRef(selections)
-  const checkedRef = useRef(checked)
-  const addSessionRef = useRef(addSession)
-  useEffect(() => { selectionsRef.current = selections }, [selections])
-  useEffect(() => { checkedRef.current = checked }, [checked])
-  useEffect(() => { addSessionRef.current = addSession }, [addSession])
+  // No active session and no incoming IDs → go back to setup
+  if (!practice || questions.length === 0) return <Navigate to="/practice" replace />
 
-  // Auto-save when user navigates away without finishing
-  useEffect(() => {
-    return () => {
-      const answered = checkedRef.current
-      if (answered.length === 0) return // nothing answered — don't save ghost session
-      const answeredQuestions = questions.filter((q) => answered.includes(q.id))
-      const session = summarize(
-        sessionId.current,
-        'practice',
-        startedAt.current,
-        answeredQuestions,
-        selectionsRef.current,
-        [],
-      )
-      addSessionRef.current(session)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // intentionally empty — runs only on unmount
-
-  if (!ids || questions.length === 0) return <Navigate to="/practice" replace />
-
-  const q = questions[index]
-  const sel = selections[q.id] ?? []
-  const isChecked = checked.includes(q.id)
+  const q = questions[practice.index]
+  const sel = practice.selections[q.id] ?? []
+  const isChecked = practice.checked.includes(q.id)
   const need = q.correctOptionIds.length
-  const last = index === questions.length - 1
+  const last = practice.index === questions.length - 1
 
-  const finish = (answeredOnly: boolean) => {
-    const done = answeredOnly ? questions.filter((x) => checked.includes(x.id)) : questions
-    if (done.length === 0) return navigate('/practice', { replace: true })
-    const session = summarize(sessionId.current, 'practice', startedAt.current, done, selections, [])
-    // Mark as finished so the unmount cleanup doesn't double-save
-    checkedRef.current = [] // clear so cleanup sees 0 answered
-    addSession(session)
-    navigate(`/results/${session.id}`, { replace: true })
-  }
+  const patch = (p: Partial<typeof practice>) =>
+    setActivePractice({ ...practice, ...p })
 
   const check = () => {
     if (sel.length !== need || isChecked) return
     recordAnswer(q.id, sel, isCorrect(q, sel), 'practice')
-    setChecked((c) => [...c, q.id])
+    patch({ checked: [...practice.checked, q.id] })
+  }
+
+  const finish = (answeredOnly: boolean) => {
+    const done = answeredOnly
+      ? questions.filter((x) => practice.checked.includes(x.id))
+      : questions
+    if (done.length === 0) {
+      setActivePractice(null)
+      return navigate('/practice', { replace: true })
+    }
+    const session = summarize(practice.id, 'practice', practice.startedAt, done, practice.selections, [])
+    setActivePractice(null)
+    addSession(session)
+    navigate(`/results/${session.id}`, { replace: true })
+  }
+
+  const discard = () => {
+    setActivePractice(null)
+    navigate('/practice', { replace: true })
   }
 
   return (
     <div className="mx-auto grid max-w-3xl gap-4">
-      <div className="flex items-center gap-3">
-        <div className="h-2 flex-1 overflow-hidden rounded-full bg-[var(--surface-2)] border border-[var(--color-pencil-gray)]/50" role="progressbar" aria-valuemin={0} aria-valuemax={questions.length} aria-valuenow={checked.length}>
-          <div className="h-full rounded-full transition-all duration-300" style={{ width: `${(checked.length / questions.length) * 100}%`, background: 'var(--color-forest-ink)' }} />
+      {/* Resume banner — shown when user comes back to an existing session */}
+      {!initialised && (
+        <div className="card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 border-l-[var(--color-forest-ink)] !py-3">
+          <div>
+            <p className="font-semibold text-sm text-[var(--color-forest-ink)]">Resuming practice session</p>
+            <p className="text-xs text-[var(--color-forest-ink)]/70 mt-0.5">
+              {practice.checked.length}/{questions.length} answered · pick up where you left off
+            </p>
+          </div>
+          <button type="button" className="btn btn-sm text-xs shrink-0 text-[var(--color-terracotta)]" onClick={() => setConfirmDiscard(true)}>
+            Discard session
+          </button>
         </div>
-        <button type="button" className="btn btn-sm text-xs" onClick={() => setConfirmEnd(true)}>{t('practice.endEarly')}</button>
+      )}
+
+      {/* Progress bar */}
+      <div className="flex items-center gap-3">
+        <div
+          className="h-2 flex-1 overflow-hidden rounded-full bg-[var(--surface-2)] border border-[var(--color-pencil-gray)]/50"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={questions.length}
+          aria-valuenow={practice.checked.length}
+        >
+          <div
+            className="h-full rounded-full transition-all duration-300"
+            style={{ width: `${(practice.checked.length / questions.length) * 100}%`, background: 'var(--color-forest-ink)' }}
+          />
+        </div>
+        <button type="button" className="btn btn-sm text-xs" onClick={() => setConfirmEnd(true)}>
+          {t('practice.endEarly')}
+        </button>
       </div>
 
       <QuestionCard
         key={q.id}
         question={q}
         selected={sel}
-        index={index + 1}
+        index={practice.index + 1}
         total={questions.length}
         reveal={isChecked}
-        onChange={(v) => setSelections((s) => ({ ...s, [q.id]: v }))}
+        onChange={(v) => patch({ selections: { ...practice.selections, [q.id]: v } })}
       />
 
       {isChecked && <ReviewPanel question={q} selected={sel} />}
@@ -103,7 +133,9 @@ export default function PracticeSession() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         {!isChecked ? (
           <>
-            <p className="text-xs text-[var(--color-forest-ink)]/70 font-mono" role="status">{sel.length !== need ? t('practice.selectToCheck') : ''}</p>
+            <p className="text-xs text-[var(--color-forest-ink)]/70 font-mono" role="status">
+              {sel.length !== need ? t('practice.selectToCheck') : ''}
+            </p>
             <button type="button" className="btn-primary" disabled={sel.length !== need} onClick={check}>
               {t('practice.check')}
             </button>
@@ -112,9 +144,11 @@ export default function PracticeSession() {
           <>
             <span />
             {last ? (
-              <button type="button" className="btn-primary" onClick={() => finish(false)}>{t('practice.finish')}</button>
+              <button type="button" className="btn-primary" onClick={() => finish(false)}>
+                {t('practice.finish')}
+              </button>
             ) : (
-              <button type="button" className="btn-primary" onClick={() => setIndex((i) => i + 1)} autoFocus>
+              <button type="button" className="btn-primary" onClick={() => patch({ index: practice.index + 1 })} autoFocus>
                 {t('practice.nextQuestion')}
               </button>
             )}
@@ -122,6 +156,7 @@ export default function PracticeSession() {
         )}
       </div>
 
+      {/* End early confirm */}
       <ConfirmDialog
         open={confirmEnd}
         title={t('practice.endConfirmTitle')}
@@ -131,7 +166,18 @@ export default function PracticeSession() {
       >
         {t('practice.endConfirmBody')}
       </ConfirmDialog>
+
+      {/* Discard confirm */}
+      <ConfirmDialog
+        open={confirmDiscard}
+        title="Discard session?"
+        danger
+        confirmLabel="Discard"
+        onCancel={() => setConfirmDiscard(false)}
+        onConfirm={() => { setConfirmDiscard(false); discard() }}
+      >
+        This will permanently delete your in-progress session. Answers already recorded will remain in your stats.
+      </ConfirmDialog>
     </div>
   )
 }
-

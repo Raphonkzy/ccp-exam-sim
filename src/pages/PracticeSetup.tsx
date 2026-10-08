@@ -12,7 +12,7 @@ const COUNTS = [5, 10, 20, 40]
 
 export default function PracticeSetup() {
   const { t } = useT()
-  const { data } = useApp()
+  const { data, setActivePractice } = useApp()
   const navigate = useNavigate()
   const location = useLocation()
   const preset = (location.state as { domain?: number } | null)?.domain
@@ -21,6 +21,8 @@ export default function PracticeSetup() {
   const [unanswered, setUnanswered] = useState(false)
   const [wrongOnly, setWrongOnly] = useState(false)
   const [bookmarked, setBookmarked] = useState(false)
+
+  const activePractice = data.activePractice
 
   const pool = useMemo(() => {
     const wrong = new Set(latestWrongIds(data))
@@ -38,6 +40,8 @@ export default function PracticeSetup() {
   const start = () => {
     const take = count === 0 ? pool.length : Math.min(count, pool.length)
     const ids = shuffle(pool).slice(0, take).map((q) => q.id)
+    // Clear any existing session so the new one starts fresh
+    setActivePractice(null)
     navigate('/practice/run', { state: { ids } })
   }
 
@@ -59,6 +63,34 @@ export default function PracticeSetup() {
         <h1 className="h1 text-[var(--color-forest-ink)]">{t('practice.title')}</h1>
         <p className="text-sm text-[var(--color-forest-ink)]/70 mt-1">{t('practice.subtitle')}</p>
       </div>
+
+      {/* Resume banner */}
+      {activePractice && (
+        <div className="card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 border-l-[var(--color-forest-ink)] !py-3">
+          <div>
+            <p className="font-semibold text-sm text-[var(--color-forest-ink)]">You have an unfinished session</p>
+            <p className="text-xs text-[var(--color-forest-ink)]/70 mt-0.5">
+              {activePractice.checked.length}/{activePractice.questionIds.length} questions answered
+            </p>
+          </div>
+          <div className="flex gap-2 shrink-0">
+            <button
+              type="button"
+              className="btn-primary !py-1.5 !px-3.5 !text-xs"
+              onClick={() => navigate('/practice/run')}
+            >
+              Resume
+            </button>
+            <button
+              type="button"
+              className="btn btn-sm text-xs text-[var(--color-terracotta)]"
+              onClick={() => setActivePractice(null)}
+            >
+              Discard
+            </button>
+          </div>
+        </div>
+      )}
 
       <fieldset className="card">
         <legend className="h2 mb-3 px-1 text-[var(--color-forest-ink)]">{t('practice.domains')}</legend>

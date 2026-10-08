@@ -701,7 +701,7 @@
     "options": [
       {
         "id": "A",
-        "text": "Rehost (lift-and-shift)"
+        "text": "Rehost"
       },
       {
         "id": "B",
@@ -709,7 +709,7 @@
       },
       {
         "id": "C",
-        "text": "Refactor (re-architect)"
+        "text": "Refactor"
       },
       {
         "id": "D",
@@ -1084,15 +1084,15 @@
     "options": [
       {
         "id": "A",
-        "text": "Refactor (re-architect)"
+        "text": "Refactor"
       },
       {
         "id": "B",
-        "text": "Replatform (lift, tinker, and shift)"
+        "text": "Replatform"
       },
       {
         "id": "C",
-        "text": "Rehost (lift and shift)"
+        "text": "Rehost"
       },
       {
         "id": "D",
@@ -3236,7 +3236,7 @@
       },
       {
         "id": "D",
-        "text": "Replatform (lift-tinker-and-shift)"
+        "text": "Replatform"
       }
     ],
     "correctOptionIds": [
@@ -3374,7 +3374,7 @@
       },
       {
         "id": "D",
-        "text": "Database as a Service (DBaaS)"
+        "text": "Database as a Service"
       }
     ],
     "correctOptionIds": [
@@ -3609,7 +3609,7 @@
       },
       {
         "id": "D",
-        "text": "Public cloud (all-in-cloud)"
+        "text": "Public cloud"
       }
     ],
     "correctOptionIds": [
@@ -4008,23 +4008,23 @@
     "options": [
       {
         "id": "A",
-        "text": "Operational Excellence (running and operating systems)"
+        "text": "Operational Excellence"
       },
       {
         "id": "B",
-        "text": "Security (protecting data and systems)"
+        "text": "Security"
       },
       {
         "id": "C",
-        "text": "Sustainability (reducing carbon footprint)"
+        "text": "Sustainability"
       },
       {
         "id": "D",
-        "text": "Cost Optimization (reducing waste)"
+        "text": "Cost Optimization"
       },
       {
         "id": "E",
-        "text": "Reliability (recovery from failures)"
+        "text": "Reliability"
       }
     ],
     "correctOptionIds": [
@@ -4437,7 +4437,7 @@
       },
       {
         "id": "D",
-        "text": "AWS Trusted Advisor (Cost Optimization checks)"
+        "text": "AWS Trusted Advisor"
       }
     ],
     "correctOptionIds": [
@@ -5438,7 +5438,7 @@
     "options": [
       {
         "id": "A",
-        "text": "Repurchase ('drop and shop')"
+        "text": "Repurchase"
       },
       {
         "id": "B",
@@ -5576,11 +5576,11 @@
     "options": [
       {
         "id": "A",
-        "text": "Rehost (lift and shift)"
+        "text": "Rehost"
       },
       {
         "id": "B",
-        "text": "Replatform (lift, tinker, and shift)"
+        "text": "Replatform"
       },
       {
         "id": "C",

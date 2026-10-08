@@ -2157,11 +2157,11 @@
     "options": [
       {
         "id": "A",
-        "text": "Amazon CloudWatch Logs (log collection)"
+        "text": "Amazon CloudWatch Logs"
       },
       {
         "id": "B",
-        "text": "AWS CloudTrail (application log storage)"
+        "text": "AWS CloudTrail"
       },
       {
         "id": "C",
@@ -2169,11 +2169,11 @@
       },
       {
         "id": "D",
-        "text": "AWS Config (log analysis)"
+        "text": "AWS Config"
       },
       {
         "id": "E",
-        "text": "AWS Trusted Advisor (log storage)"
+        "text": "AWS Trusted Advisor"
       }
     ],
     "correctOptionIds": [

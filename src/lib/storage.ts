@@ -11,6 +11,7 @@ export function defaultData(): AppData {
     confusing: [],
     sessions: [],
     activeExam: null,
+    activePractice: null,
   }
 }
 
@@ -32,6 +33,7 @@ export function normalizeData(raw: unknown): AppData {
     confusing: Array.isArray(r.confusing) ? r.confusing : [],
     sessions: Array.isArray(r.sessions) ? r.sessions : [],
     activeExam: r.activeExam ?? null,
+    activePractice: r.activePractice ?? null,
   }
 }
 

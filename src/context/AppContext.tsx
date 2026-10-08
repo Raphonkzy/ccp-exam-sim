@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import type { ActiveExam, AppData, SessionMode, Session, Settings } from '../types/progress'
+import type { ActiveExam, ActivePractice, AppData, SessionMode, Session, Settings } from '../types/progress'
 import { defaultData, loadData, saveData } from '../lib/storage'
 import { useAuth } from './AuthContext'
 
@@ -15,6 +15,7 @@ interface AppContextValue {
   addSession: (s: Session) => void
   deleteSession: (id: string) => void
   setActiveExam: (e: ActiveExam | null) => void
+  setActivePractice: (p: ActivePractice | null) => void
   replaceData: (d: AppData) => void
   resetData: () => Promise<void>
 }
@@ -129,7 +130,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
           bookmarks: Array.isArray(serverState.bookmarks) ? serverState.bookmarks : [],
           confusing: Array.isArray(serverState.progress?.confusing) ? serverState.progress.confusing : [],
           sessions: mappedSessions,
-          activeExam: null,
+          activeExam: prev.activeExam ?? null,
+          activePractice: prev.activePractice ?? null,
         }
       })
       setLastSyncedAt(new Date())
@@ -273,6 +275,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [],
   )
 
+  const setActivePractice = useCallback(
+    (p: ActivePractice | null) => setData((d) => ({ ...d, activePractice: p })),
+    [],
+  )
+
   const replaceData = useCallback((nd: AppData) => setData(nd), [])
 
   const resetData = useCallback(async () => {
@@ -305,6 +312,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       addSession,
       deleteSession,
       setActiveExam,
+      setActivePractice,
       replaceData,
       resetData,
     }),
@@ -320,6 +328,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       addSession,
       deleteSession,
       setActiveExam,
+      setActivePractice,
       replaceData,
       resetData,
     ],

@@ -49,6 +49,16 @@ export interface ActiveExam {
   index: number
 }
 
+/** A practice session that is in progress; persisted so navigation does not lose answers. */
+export interface ActivePractice {
+  id: string
+  questionIds: string[]
+  selections: Record<string, string[]>
+  checked: string[]   // question IDs that have been submitted/checked
+  startedAt: number
+  index: number
+}
+
 export interface AppData {
   version: 1
   settings: Settings
@@ -57,6 +67,7 @@ export interface AppData {
   confusing: string[]
   sessions: Session[]
   activeExam: ActiveExam | null
+  activePractice: ActivePractice | null
 }
 
 export interface BackupFile {
