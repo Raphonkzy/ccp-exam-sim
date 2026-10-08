@@ -10,12 +10,15 @@ interface AppContextValue {
   syncWithDatabase: () => Promise<void>
   setSettings: (patch: Partial<Settings>) => void
   recordAnswer: (qid: string, selected: string[], correct: boolean, mode: SessionMode) => void
+  recordAnswersBatch: (records: { qid: string; selected: string[]; correct: boolean; mode: SessionMode }[]) => void
   toggleBookmark: (qid: string) => void
   toggleConfusing: (qid: string) => void
   addSession: (s: Session) => void
   deleteSession: (id: string) => void
   setActiveExam: (e: ActiveExam | null) => void
   setActivePractice: (p: ActivePractice | null) => void
+  discardExam: () => void
+  discardPractice: () => void
   replaceData: (d: AppData) => void
   resetData: () => Promise<void>
 }
@@ -169,22 +172,39 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [user],
   )
 
-  const recordAnswer = useCallback(
-    (qid: string, selected: string[], correct: boolean, mode: SessionMode) => {
-      setData((d) => ({
-        ...d,
-        answers: { ...d.answers, [qid]: [...(d.answers[qid] ?? []), { ts: Date.now(), selected, correct, mode }] },
-      }))
+  const recordAnswersBatch = useCallback(
+    (records: { qid: string; selected: string[]; correct: boolean; mode: SessionMode }[]) => {
+      if (records.length === 0) return
+      const now = Date.now()
+      setData((d) => {
+        const nextAnswers = { ...d.answers }
+        for (const r of records) {
+          nextAnswers[r.qid] = [
+            ...(nextAnswers[r.qid] ?? []),
+            { ts: now, selected: r.selected, correct: r.correct, mode: r.mode },
+          ]
+        }
+        return { ...d, answers: nextAnswers }
+      })
       if (user) {
-        fetch('/api/user/answer', {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ qid, selected, correct, mode }),
-        }).catch(() => {})
+        for (const r of records) {
+          fetch('/api/user/answer', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(r),
+          }).catch(() => {})
+        }
       }
     },
     [user],
+  )
+
+  const recordAnswer = useCallback(
+    (qid: string, selected: string[], correct: boolean, mode: SessionMode) => {
+      recordAnswersBatch([{ qid, selected, correct, mode }])
+    },
+    [recordAnswersBatch],
   )
 
   const toggleBookmark = useCallback(
@@ -280,6 +300,56 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [],
   )
 
+  const discardExam = useCallback(() => {
+    setData((d) => {
+      const exam = d.activeExam
+      if (!exam) return { ...d, activeExam: null }
+      const startedAt = exam.startedAt
+      const qidSet = new Set(exam.questionIds)
+      const nextAnswers: Record<string, typeof d.answers[string]> = {}
+      for (const [qid, records] of Object.entries(d.answers)) {
+        if (qidSet.has(qid)) {
+          const remaining = records.filter((r) => r.mode !== 'exam' || r.ts < startedAt)
+          if (remaining.length > 0) {
+            nextAnswers[qid] = remaining
+          }
+        } else {
+          nextAnswers[qid] = records
+        }
+      }
+      return {
+        ...d,
+        activeExam: null,
+        answers: nextAnswers,
+      }
+    })
+  }, [])
+
+  const discardPractice = useCallback(() => {
+    setData((d) => {
+      const practice = d.activePractice
+      if (!practice) return { ...d, activePractice: null }
+      const startedAt = practice.startedAt
+      const qidSet = new Set(practice.questionIds)
+      const nextAnswers: Record<string, typeof d.answers[string]> = {}
+      for (const [qid, records] of Object.entries(d.answers)) {
+        if (qidSet.has(qid)) {
+          const remaining = records.filter((r) => r.mode !== 'practice' || r.ts < startedAt)
+          if (remaining.length > 0) {
+            nextAnswers[qid] = remaining
+          }
+        } else {
+          nextAnswers[qid] = records
+        }
+      }
+      return {
+        ...d,
+        activePractice: null,
+        answers: nextAnswers,
+      }
+    })
+  }, [])
+
   const replaceData = useCallback((nd: AppData) => setData(nd), [])
 
   const resetData = useCallback(async () => {
@@ -307,12 +377,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
       syncWithDatabase,
       setSettings,
       recordAnswer,
+      recordAnswersBatch,
       toggleBookmark,
       toggleConfusing,
       addSession,
       deleteSession,
       setActiveExam,
       setActivePractice,
+      discardExam,
+      discardPractice,
       replaceData,
       resetData,
     }),
@@ -323,12 +396,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
       syncWithDatabase,
       setSettings,
       recordAnswer,
+      recordAnswersBatch,
       toggleBookmark,
       toggleConfusing,
       addSession,
       deleteSession,
       setActiveExam,
       setActivePractice,
+      discardExam,
+      discardPractice,
       replaceData,
       resetData,
     ],

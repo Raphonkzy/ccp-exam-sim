@@ -152,10 +152,7 @@ export function Layout() {
                     }`
                   }
                 >
-                  <span className="flex items-center gap-1">
-                    <span>🛠️</span>
-                    <span>{t('nav.devReview')}</span>
-                  </span>
+                  <span>{t('nav.devReview')}</span>
                 </NavLink>
               )}
             </nav>
@@ -236,10 +233,7 @@ export function Layout() {
                             onClick={() => setUserMenuOpen(false)}
                             className="flex items-center justify-between rounded-lg px-2.5 py-2 text-xs font-semibold text-[#1a3300] hover:bg-[#ffe95c]/35 transition-colors no-underline"
                           >
-                            <span className="flex items-center gap-2">
-                              <span>🛠️</span>
-                              <span>Dev Review</span>
-                            </span>
+                            <span>Dev Review</span>
                             <span className="rounded bg-amber-100 border border-amber-300 px-1 text-[9px] font-mono font-bold text-amber-900">
                               ADMIN
                             </span>
@@ -335,7 +329,7 @@ export function Layout() {
                   }`
                 }
               >
-                <span>🛠️ {t('nav.devReview')}</span>
+                <span>{t('nav.devReview')}</span>
               </NavLink>
             )}
           </nav>

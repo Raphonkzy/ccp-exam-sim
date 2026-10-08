@@ -12,7 +12,7 @@ const COUNTS = [5, 10, 20, 40]
 
 export default function PracticeSetup() {
   const { t } = useT()
-  const { data, setActivePractice } = useApp()
+  const { data, setActivePractice, discardPractice } = useApp()
   const navigate = useNavigate()
   const location = useLocation()
   const preset = (location.state as { domain?: number } | null)?.domain
@@ -94,7 +94,7 @@ export default function PracticeSetup() {
             <button
               type="button"
               className="btn btn-sm text-xs text-[var(--color-terracotta)]"
-              onClick={() => setActivePractice(null)}
+              onClick={discardPractice}
             >
               Discard
             </button>

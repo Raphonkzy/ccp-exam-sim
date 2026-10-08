@@ -11,7 +11,7 @@ import type { Question } from '../types/question'
 
 export default function PracticeSession() {
   const { t } = useT()
-  const { data, recordAnswer, addSession, setActivePractice } = useApp()
+  const { data, recordAnswersBatch, addSession, setActivePractice, discardPractice } = useApp()
   const navigate = useNavigate()
 
   const practice = data.activePractice
@@ -37,7 +37,6 @@ export default function PracticeSession() {
 
   const check = () => {
     if (sel.length !== need || isChecked) return
-    recordAnswer(q.id, sel, isCorrect(q, sel), 'practice')
     patch({ checked: [...practice.checked, q.id] })
   }
 
@@ -46,9 +45,21 @@ export default function PracticeSession() {
       ? questions.filter((x) => practice.checked.includes(x.id))
       : questions
     if (done.length === 0) {
-      setActivePractice(null)
+      discardPractice()
       return navigate('/practice', { replace: true })
     }
+    // Only save answers when session is completed/ended
+    const answeredQuestions = questions.filter((x) => practice.checked.includes(x.id))
+    const toRecord = answeredQuestions.map((item) => {
+      const itemSel = practice.selections[item.id] ?? []
+      return {
+        qid: item.id,
+        selected: itemSel,
+        correct: isCorrect(item, itemSel),
+        mode: 'practice' as const,
+      }
+    })
+    recordAnswersBatch(toRecord)
     const session = summarize(practice.id, 'practice', practice.startedAt, done, practice.selections, [])
     setActivePractice(null)
     addSession(session)
@@ -56,7 +67,7 @@ export default function PracticeSession() {
   }
 
   const discard = () => {
-    setActivePractice(null)
+    discardPractice()
     navigate('/practice', { replace: true })
   }
 
@@ -72,7 +83,7 @@ export default function PracticeSession() {
             </p>
           </div>
           <button type="button" className="btn btn-sm text-xs shrink-0 text-[var(--color-terracotta)]" onClick={() => setConfirmDiscard(true)}>
-            Discard session
+            {t('practice.discard')}
           </button>
         </div>
       )}
@@ -91,6 +102,13 @@ export default function PracticeSession() {
             style={{ width: `${(practice.checked.length / questions.length) * 100}%`, background: 'var(--color-forest-ink)' }}
           />
         </div>
+        <button
+          type="button"
+          className="btn btn-sm text-xs text-[var(--color-terracotta)]"
+          onClick={() => setConfirmDiscard(true)}
+        >
+          {t('practice.discard')}
+        </button>
         <button type="button" className="btn btn-sm text-xs" onClick={() => setConfirmEnd(true)}>
           {t('practice.endEarly')}
         </button>
@@ -148,13 +166,14 @@ export default function PracticeSession() {
       {/* Discard confirm */}
       <ConfirmDialog
         open={confirmDiscard}
-        title="Discard session?"
+        title={t('practice.discardConfirmTitle')}
         danger
         confirmLabel="Discard"
+        cancelLabel={t('exam.submitKeep')}
         onCancel={() => setConfirmDiscard(false)}
         onConfirm={() => { setConfirmDiscard(false); discard() }}
       >
-        This will permanently delete your in-progress session. Answers already recorded will remain in your stats.
+        {t('practice.discardConfirmBody')}
       </ConfirmDialog>
     </div>
   )

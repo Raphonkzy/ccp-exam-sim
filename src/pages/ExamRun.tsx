@@ -11,10 +11,11 @@ import type { Question } from '../types/question'
 
 export default function ExamRun() {
   const { t } = useT()
-  const { data, setActiveExam, recordAnswer, addSession } = useApp()
+  const { data, setActiveExam, discardExam, recordAnswersBatch, addSession } = useApp()
   const navigate = useNavigate()
   const exam = data.activeExam
   const [confirm, setConfirm] = useState(false)
+  const [confirmDiscard, setConfirmDiscard] = useState(false)
   const [timeUp, setTimeUp] = useState(false)
 
   const questions = useMemo(
@@ -24,14 +25,25 @@ export default function ExamRun() {
 
   const submit = () => {
     if (!exam) return
-    for (const q of questions) {
+    const toRecord = questions.map((q) => {
       const sel = exam.selections[q.id] ?? []
-      recordAnswer(q.id, sel, isCorrect(q, sel), 'exam')
-    }
+      return {
+        qid: q.id,
+        selected: sel,
+        correct: isCorrect(q, sel),
+        mode: 'exam' as const,
+      }
+    })
+    recordAnswersBatch(toRecord)
     const session = summarize(exam.id, 'exam', exam.startedAt, questions, exam.selections, exam.flagged)
     addSession(session)
     setActiveExam(null)
     navigate(`/results/${session.id}`, { replace: true })
+  }
+
+  const discard = () => {
+    discardExam()
+    navigate('/exam', { replace: true })
   }
 
   // The countdown effect captures its callback once, so route through a ref to always call the latest submit.
@@ -58,7 +70,18 @@ export default function ExamRun() {
         <div className="card flex flex-wrap items-center justify-between gap-2.5 !py-2.5 sm:!py-3 px-3 sm:px-5">
           <Timer seconds={left} label={t('exam.timeLeft')} />
           <span className="text-xs text-[var(--color-forest-ink)]/70 font-mono font-medium">{t('exam.answered')}: {answeredCount}/{questions.length}</span>
-          <button type="button" className="btn-primary !py-1.5 !px-3.5 sm:!px-4 !text-xs" onClick={() => setConfirm(true)}>{t('exam.submit')}</button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              className="btn btn-sm text-xs text-[var(--color-terracotta)]"
+              onClick={() => setConfirmDiscard(true)}
+            >
+              {t('exam.discard')}
+            </button>
+            <button type="button" className="btn-primary !py-1.5 !px-3.5 sm:!px-4 !text-xs" onClick={() => setConfirm(true)}>
+              {t('exam.submit')}
+            </button>
+          </div>
         </div>
 
         {timeUp && <p className="chip chip-bad !whitespace-normal !text-sm" role="alert">{t('exam.timeUp')}</p>}
@@ -144,6 +167,18 @@ export default function ExamRun() {
         onConfirm={() => { setConfirm(false); submit() }}
       >
         {t('exam.submitBody', { a: answeredCount, n: questions.length, f: exam.flagged.length })}
+      </ConfirmDialog>
+
+      <ConfirmDialog
+        open={confirmDiscard}
+        title={t('exam.discardConfirmTitle')}
+        danger
+        confirmLabel={t('exam.discardConfirmLabel')}
+        cancelLabel={t('exam.submitKeep')}
+        onCancel={() => setConfirmDiscard(false)}
+        onConfirm={() => { setConfirmDiscard(false); discard() }}
+      >
+        {t('exam.discardConfirmBody')}
       </ConfirmDialog>
     </div>
   )

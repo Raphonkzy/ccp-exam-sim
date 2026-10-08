@@ -8,7 +8,7 @@ import { formatDuration } from '../lib/stats'
 
 export default function ExamIntro() {
   const { t } = useT()
-  const { data, setActiveExam } = useApp()
+  const { data, setActiveExam, discardExam } = useApp()
   const navigate = useNavigate()
   const size = examSize(allQuestions)
   const active = data.activeExam
@@ -45,7 +45,7 @@ export default function ExamIntro() {
               <span>{t('exam.resume')}</span>
               <span className="font-mono">→</span>
             </Link>
-            <button type="button" className="btn" onClick={() => setActiveExam(null)}>{t('exam.discard')}</button>
+            <button type="button" className="btn" onClick={discardExam}>{t('exam.discard')}</button>
           </div>
         </section>
       )}
