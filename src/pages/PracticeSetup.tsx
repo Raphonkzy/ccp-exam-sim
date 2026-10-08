@@ -22,7 +22,8 @@ export default function PracticeSetup() {
   const [wrongOnly, setWrongOnly] = useState(false)
   const [bookmarked, setBookmarked] = useState(false)
 
-  const activePractice = data.activePractice
+  // Only show the resume banner when user has actually answered at least one question
+  const activePractice = (data.activePractice?.checked.length ?? 0) > 0 ? data.activePractice : null
 
   const pool = useMemo(() => {
     const wrong = new Set(latestWrongIds(data))
